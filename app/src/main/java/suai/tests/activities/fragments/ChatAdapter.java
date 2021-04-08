@@ -30,6 +30,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    @NonNull
     @Override
     public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
         ChatClass chat = chats.get(position);
