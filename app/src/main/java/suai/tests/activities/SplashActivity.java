@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import suai.tests.R;
+import suai.tests.common.api.RetrofitConnection;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -16,6 +17,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        new RetrofitConnection().CreateConnection();
 
         new Timer().schedule(new TimerTask()
         {
