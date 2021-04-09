@@ -6,7 +6,7 @@
     app:startDestination="@id/navigation_tests">
 
     <fragment
-        android:id="@+id/navigation_messager"
+        android:id="@+id/navigation_messenger"
         android:name="suai.tests.activities.fragments.MessengerFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_messenger" />
