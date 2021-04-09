@@ -20,7 +20,7 @@ import suai.tests.common.api.messengerAPI;
 
 import suai.tests.R;
 
-public class MessagerFragment extends Fragment
+public class MessengerFragment extends Fragment
 {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)

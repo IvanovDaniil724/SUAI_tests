@@ -6,8 +6,8 @@
     app:startDestination="@id/navigation_tests">
 
     <fragment
-        android:id="@+id/navigation_messager"
-        android:name="suai.tests.activities.fragments.MessagerFragment"
+        android:id="@+id/navigation_messenger"
+        android:name="suai.tests.activities.fragments.MessengerFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_messenger" />
 
@@ -15,11 +15,21 @@
         android:id="@+id/navigation_tests"
         android:name="suai.tests.activities.fragments.TestsFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_tests" />
+        tools:layout="@layout/fragment_tests" >
+        <action
+            android:id="@+id/action_navigation_tests_to_navigation_messenger"
+            app:destination="@id/navigation_messenger"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_account"
         android:name="suai.tests.activities.fragments.AccountFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_account_to_navigation_messenger"
+            app:destination="@id/navigation_messenger" />
+    </fragment>
 </navigation>

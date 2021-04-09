@@ -48,8 +48,8 @@ public class TestPOJO
 
     private String[] TestPOJO;
 
-    public String[] getTestPOJO ()
-    {
+    public String[] getTestPOJO()
+    { 
         return TestPOJO;
     }
 }
