@@ -1,4 +1,4 @@
-package suai.tests.activities.fragments;
+package suai.tests.common.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import suai.tests.R;
+import suai.tests.common.api.pojo.messenger.ChatClass;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_messager"
-        android:name="suai.tests.activities.fragments.MessagerFragment"
+        android:name="suai.tests.activities.fragments.MessengerFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_messenger" />
 
