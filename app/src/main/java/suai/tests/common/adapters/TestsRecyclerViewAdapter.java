@@ -50,8 +50,8 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 
         TestPOJO test = tests[position];
 
-//        holder.TestsTitleTextView.setText(test.getTestPOJO()[1]);
-//        holder.TestsDescriptionTextView.setText(test.getTestPOJO()[2]);
+        holder.TestsTitleTextView.setText(test.getTestPOJO()[1]);
+        holder.TestsDescriptionTextView.setText(test.getTestPOJO()[2]);
     }
 
     @Override
