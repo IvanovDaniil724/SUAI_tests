@@ -1,10 +1,11 @@
-package suai.tests.activities.fragments;
+package suai.tests.common.api;
 
 import android.media.Image;
 
 import java.util.Date;
 
 public class ChatClass {
+  /*  private Integer id;
     private String name;
     private Integer photo;
     private Date lastMessage;
@@ -14,6 +15,14 @@ public class ChatClass {
         this.name = name;
         this.photo = photo;
         this.lastMessage = lastMessage;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -38,5 +47,11 @@ public class ChatClass {
 
     public void setLastMessage(Date lastMessage) {
         this.lastMessage = lastMessage;
+    } */
+
+    private String[] Chats;
+    public String[] getChats ()
+    {
+        return Chats;
     }
 }

@@ -1,4 +1,4 @@
-package suai.tests.activities.fragments;
+package suai.tests.common.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,15 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import suai.tests.R;
+import suai.tests.common.api.ChatClass;
+import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private final LayoutInflater inflater;
-    private final List<ChatClass> chats;
+    private final ChatClass[] chats;
+    private Context context;
 
-    ChatAdapter(Context context, List<ChatClass> chats) {
+    public ChatAdapter(Context context, ChatClass[] chats) {
         this.chats = chats;
         this.inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @Override
@@ -33,24 +37,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @NonNull
     @Override
     public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
-        ChatClass chat = chats.get(position);
-        holder.imageView.setImageResource(chat.getPhoto());
-        holder.nameView.setText(chat.getName());
-        holder.dateView.setText(chat.getLastMessage().toString());
+
+        ChatClass chat = chats[position];
+       // holder.imageView.setImageResource(chat.getPhoto());
+        holder.nameView.setText(chat.getChats()[0]);
+        holder.dateView.setText(chat.getChats()[1]);
     }
 
     @Override
     public int getItemCount() {
-        return chats.size();
+        return chats.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final ImageView imageView;
+       // final ImageView imageView;
         final TextView nameView, dateView;
 
         ViewHolder(View view){
             super(view);
-            imageView = (ImageView)view.findViewById(R.id.image);
+          //  imageView = (ImageView)view.findViewById(R.id.image);
             nameView = (TextView)view.findViewById(R.id.name);
             dateView = (TextView)view.findViewById(R.id.date);
         }
