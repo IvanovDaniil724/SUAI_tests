@@ -17,6 +17,7 @@ import retrofit2.Response;
 import suai.tests.R;
 import suai.tests.common.adapters.TestsRecyclerViewAdapter;
 import suai.tests.common.api.RetrofitConnection;
+import suai.tests.common.api.pojo.ItemsPOJO;
 import suai.tests.common.api.pojo.tests.TestPOJO;
 import suai.tests.common.api.testsAPI;
 
@@ -29,20 +30,37 @@ public class TestsFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_tests, container, false);
 
+        getTests(root);
+
+        root.findViewById(R.id.TestsRefreshImageButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerView testsRecyclerView = root.findViewById(R.id.TestsRecyclerView);
+                TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), new ItemsPOJO[]{});
+                testsRecyclerView.setAdapter(adapter);
+                testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                getTests(root);
+            }
+        });
+
+        return root;
+    }
+
+    public void getTests(View root)
+    {
         RecyclerView testsRecyclerView = root.findViewById(R.id.TestsRecyclerView);
         testsAPI service = RetrofitConnection.testsApi;
 
-        Call<TestPOJO[]> call = service.getTests();
-
-        call.enqueue(new Callback<TestPOJO[]>()
+        Call<ItemsPOJO[]> call = service.getTests();
+        call.enqueue(new Callback<ItemsPOJO[]>()
         {
             @Override
-            public void onResponse(@NonNull Call<TestPOJO[]> call, @NonNull Response<TestPOJO[]> response)
+            public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
             {
-                TestPOJO[] tests = response.body();
+                ItemsPOJO[] tests = response.body();
 
-                //TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), tests);
-                testsRecyclerView.setAdapter(new TestsRecyclerViewAdapter(root.getContext(), tests));
+                TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), tests);
+                testsRecyclerView.setAdapter(adapter);
                 testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
                 //Log.e("test", tests[0][0]);
@@ -53,12 +71,10 @@ public class TestsFragment extends Fragment
             }
 
             @Override
-            public void onFailure(@NonNull Call<TestPOJO[]> call, @NonNull Throwable t)
+            public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
             {
                 Log.e("retrofitError", t.getMessage());
             }
         });
-
-        return root;
     }
 }

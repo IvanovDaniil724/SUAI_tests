@@ -5,8 +5,8 @@ import retrofit2.http.GET;
 import suai.tests.common.api.pojo.ItemsPOJO;
 import suai.tests.common.api.pojo.tests.TestPOJO;
 
-public interface testsAPI
+public interface commonAPI
 {
-    @GET("tests/tests/GetTests.php")
-    Call<ItemsPOJO[]> getTests();
+    @GET("common/GetUsers.php")
+    Call<ItemsPOJO[]> getUsers();
 }

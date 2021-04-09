@@ -10,15 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
+import suai.tests.common.api.pojo.ItemsPOJO;
 import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecyclerViewAdapter.ViewHolder>
 {
     private LayoutInflater inflater;
-    private TestPOJO[] tests;
+    private ItemsPOJO[] tests;
     private Context context;
 
-    public TestsRecyclerViewAdapter(Context context, TestPOJO[] tests)
+    public TestsRecyclerViewAdapter(Context context, ItemsPOJO[] tests)
     {
         this.tests = tests;
         this.context = context;
@@ -48,10 +49,10 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
         holder.CountryRegion_TextView.setText("Region: " + country.getRegion());
         holder.CountrySubregion_TextView.setText("Subregion: " + country.getSubregion());*/
 
-        TestPOJO test = tests[position];
+        ItemsPOJO test = tests[position];
 
-        holder.TestsTitleTextView.setText(test.getTestPOJO()[1]);
-        holder.TestsDescriptionTextView.setText(test.getTestPOJO()[2]);
+        holder.TestsTitleTextView.setText(test.getItems()[1]);
+        holder.TestsDescriptionTextView.setText(test.getItems()[2]);
     }
 
     @Override
