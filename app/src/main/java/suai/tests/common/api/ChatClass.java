@@ -1,4 +1,4 @@
-package suai.tests.common.api.pojo.messenger;
+package suai.tests.common.api;
 
 import android.media.Image;
 

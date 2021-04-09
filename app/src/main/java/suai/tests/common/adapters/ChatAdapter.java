@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import suai.tests.R;
-import suai.tests.common.api.pojo.messenger.ChatClass;
+import suai.tests.common.api.ChatClass;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 

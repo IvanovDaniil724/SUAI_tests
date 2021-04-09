@@ -10,8 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
-import suai.tests.common.api.pojo.ItemsPOJO;
-import suai.tests.common.api.pojo.tests.TestPOJO;
+import suai.tests.common.api.ItemsPOJO;
 
 public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecyclerViewAdapter.ViewHolder>
 {

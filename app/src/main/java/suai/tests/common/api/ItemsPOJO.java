@@ -1,4 +1,4 @@
-package suai.tests.common.api.pojo;
+package suai.tests.common.api;
 
 public class ItemsPOJO
 {

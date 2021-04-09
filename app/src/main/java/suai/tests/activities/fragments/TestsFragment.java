@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,10 +16,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
+import suai.tests.common.OnSwipeListener;
 import suai.tests.common.adapters.TestsRecyclerViewAdapter;
 import suai.tests.common.api.RetrofitConnection;
-import suai.tests.common.api.pojo.ItemsPOJO;
-import suai.tests.common.api.pojo.tests.TestPOJO;
+import suai.tests.common.api.ItemsPOJO;
 import suai.tests.common.api.testsAPI;
 
 public class TestsFragment extends Fragment
@@ -29,6 +30,14 @@ public class TestsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_tests, container, false);
+
+        root.setOnTouchListener(new OnSwipeListener(root.getContext())
+        {
+            public void onSwipeTop() {  }
+            public void onSwipeRight() { }
+            public void onSwipeLeft() { Navigation.findNavController(root).navigate(R.id.action_navigation_tests_to_navigation_messenger); }
+            public void onSwipeBottom() {  }
+        });
 
         getTests(root);
 
