@@ -40,8 +40,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         ChatClass chat = chats[position];
         // holder.imageView.setImageResource(chat.getPhoto());
-        holder.nameView.setText(chat.getChats()[0]);
-        holder.dateView.setText(chat.getChats()[1]);
+        holder.nameView.setText(chat.getChats()[1]);
+        holder.messageView.setText(chat.getChats()[2]);
+        holder.dateView.setText(chat.getChats()[3]);
     }
 
     @Override
@@ -51,13 +52,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // final ImageView imageView;
-        final TextView nameView, dateView;
+        final TextView nameView, messageView, dateView;
 
         ViewHolder(View view){
             super(view);
             //  imageView = (ImageView)view.findViewById(R.id.image);
             nameView = (TextView)view.findViewById(R.id.name);
             dateView = (TextView)view.findViewById(R.id.date);
+            messageView = (TextView)view.findViewById(R.id.message);
         }
 
     }
