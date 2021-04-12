@@ -9,7 +9,11 @@
         android:id="@+id/navigation_messenger"
         android:name="suai.tests.activities.fragments.MessengerFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_messenger" />
+        tools:layout="@layout/fragment_messenger" >
+        <action
+            android:id="@+id/action_navigation_messenger_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_tests"
@@ -32,4 +36,9 @@
             android:id="@+id/action_navigation_account_to_navigation_messenger"
             app:destination="@id/navigation_messenger" />
     </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="suai.tests.activities.fragments.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

@@ -18,14 +18,20 @@ import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
+    public interface OnChatClickListener{
+        void onStateClick(ChatClass chats, int position);
+    }
+    private final OnChatClickListener onClickListener;
+
     private final LayoutInflater inflater;
     private final ChatClass[] chats;
     private Context context;
 
-    public ChatAdapter(Context context, ChatClass[] chats) {
+    public ChatAdapter(Context context, ChatClass[] chats, OnChatClickListener onClickListener) {
         this.chats = chats;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -37,12 +43,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @NonNull
     @Override
     public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
-
         ChatClass chat = chats[position];
         // holder.imageView.setImageResource(chat.getPhoto());
         holder.nameView.setText(chat.getChats()[1]);
         holder.messageView.setText(chat.getChats()[2]);
         holder.dateView.setText(chat.getChats()[3]);
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                onClickListener.onStateClick(chat, position);
+            }
+        });
     }
 
     @Override
