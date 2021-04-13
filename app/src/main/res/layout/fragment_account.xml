@@ -152,16 +152,6 @@
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
-            <ImageButton
-                android:id="@+id/AccountBirthdayEditImageButton"
-                style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_edit_24"
-                android:tint="@color/suai_primary" />
         </LinearLayout>
 
         <include layout="@layout/layouts_divider"/>

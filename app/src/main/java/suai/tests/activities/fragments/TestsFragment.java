@@ -19,7 +19,7 @@ import suai.tests.R;
 import suai.tests.common.OnSwipeListener;
 import suai.tests.common.adapters.TestsRecyclerViewAdapter;
 import suai.tests.common.api.RetrofitConnection;
-import suai.tests.common.api.ItemsPOJO;
+import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.testsAPI;
 
 public class TestsFragment extends Fragment
