@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="suai_primary">#7D31FF</color>
+    <color name="suai_primary">#005AAA</color>
+    <color name="suai_secondary">#AB3A8D</color>
 </resources>

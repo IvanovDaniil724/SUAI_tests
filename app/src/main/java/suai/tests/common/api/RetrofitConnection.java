@@ -13,7 +13,7 @@ public class RetrofitConnection //extends AppCompatActivity
 {
     public static final String BASE_URL = "http://f0530060.xsph.ru/api/"; //"http://10.0.2.2:80/suailabs/api/";
     public Retrofit retrofit;
-    public static testsAPI testsApi; public static messengerAPI messengerApi;
+    public static testsAPI testsApi; public static messengerAPI messengerApi; public static commonAPI commonAPI;
 
     private OkHttpClient CreateOkHttpClient()
     {
@@ -33,6 +33,8 @@ public class RetrofitConnection //extends AppCompatActivity
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        testsApi = retrofit.create(testsAPI.class); messengerApi = retrofit.create(messengerAPI.class);
+        testsApi = retrofit.create(testsAPI.class);
+        messengerApi = retrofit.create(messengerAPI.class);
+        commonAPI = retrofit.create(commonAPI.class);
     }
 }
