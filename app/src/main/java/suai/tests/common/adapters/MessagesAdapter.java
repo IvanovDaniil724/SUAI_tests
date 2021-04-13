@@ -1,6 +1,7 @@
 package suai.tests.common.adapters;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
+import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.api.MessagesClass;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
@@ -40,8 +42,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
-
         holder.messageView.setText(message.getMessages()[2]);
+        if (Integer.parseInt(message.getMessages()[0]) == AccountFragment.idUser)
+        {
+            holder.messageView.setGravity(Gravity.RIGHT);
+            holder.messageView.setBackgroundResource(R.drawable.message_box_post);
+        }
         holder.dateView.setText(message.getMessages()[1]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
