@@ -4,19 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import suai.tests.R;
 import suai.tests.common.api.ChatClass;
-import suai.tests.common.api.pojo.tests.TestPOJO;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
 
     public interface OnChatClickListener{
         void onStateClick(ChatClass chats, int position);
@@ -27,7 +23,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private final ChatClass[] chats;
     private Context context;
 
-    public ChatAdapter(Context context, ChatClass[] chats, OnChatClickListener onClickListener) {
+    public ChatsAdapter(Context context, ChatClass[] chats, OnChatClickListener onClickListener) {
         this.chats = chats;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -35,14 +31,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     @Override
-    public ChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.chat_item, parent, false);
         return new ViewHolder(view);
     }
 
     @NonNull
     @Override
-    public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ChatsAdapter.ViewHolder holder, int position) {
         ChatClass chat = chats[position];
         // holder.imageView.setImageResource(chat.getPhoto());
         holder.nameView.setText(chat.getChats()[1]);

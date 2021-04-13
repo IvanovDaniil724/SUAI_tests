@@ -14,6 +14,7 @@ public class RetrofitConnection //extends AppCompatActivity
     public static final String BASE_URL = "http://f0530060.xsph.ru/api/"; //"http://10.0.2.2:80/suailabs/api/";
     public Retrofit retrofit;
     public static testsAPI testsApi; public static messengerAPI messengerApi; public static commonAPI commonAPI;
+    public static messagesAPI messagesApi;
 
     private OkHttpClient CreateOkHttpClient()
     {
@@ -35,6 +36,7 @@ public class RetrofitConnection //extends AppCompatActivity
 
         testsApi = retrofit.create(testsAPI.class);
         messengerApi = retrofit.create(messengerAPI.class);
+        messagesApi = retrofit.create(messagesAPI.class);
         commonAPI = retrofit.create(commonAPI.class);
     }
 }
