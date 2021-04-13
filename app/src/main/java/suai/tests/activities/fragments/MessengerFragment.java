@@ -1,6 +1,7 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,13 @@ public class MessengerFragment extends Fragment
         ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
             @Override
             public void onStateClick(ChatClass chat, int position) {
-                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment);
+                Bundle bundle = new Bundle();
+                bundle.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
+                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundle);
             }
         };
 
-        Call<ChatClass[]> call = service.getChats(2,0);
+        Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role);
         call.enqueue(new Callback<ChatClass[]>() {
             @Override
             public void onResponse(Call<ChatClass[]> call, Response<ChatClass[]> response) {

@@ -25,13 +25,15 @@ import suai.tests.R;
 
 public class ChatFragment extends Fragment
 {
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
         messagesAPI service = RetrofitConnection.messagesApi;
-
+        Integer idChat = getArguments().getInt("idChat");
+        Log.e("", String.valueOf(idChat));
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
@@ -40,7 +42,7 @@ public class ChatFragment extends Fragment
             }
         };
 
-        Call<MessagesClass[]> call = service.getMessages(2);
+        Call<MessagesClass[]> call = service.getMessages(idChat);
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
