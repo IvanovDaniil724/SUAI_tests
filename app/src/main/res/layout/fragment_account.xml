@@ -157,36 +157,6 @@
         <include layout="@layout/layouts_divider"/>
 
         <LinearLayout
-            android:id="@+id/AccountSpecialtyLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/AccountSpecialtyTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Специальность:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountSpecialtyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="Информационная безопасность\n(10.03.01)"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <include layout="@layout/layouts_divider"/>
-
-        <LinearLayout
             android:id="@+id/AccountGroupLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -214,13 +184,46 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <include layout="@layout/layouts_divider"/>
+        <include layout="@layout/layouts_divider" />
+
+        <LinearLayout
+            android:id="@+id/AccountSpecialtyLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/AccountSpecialtyTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp"
+                android:layout_weight="0"
+                android:text="Специальность:"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/AccountSpecialtyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Информационная безопасность\n(10.03.01)"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/layouts_divider"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/AccountSubjectsLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/AccountSubjectsTitleTextView"
@@ -239,18 +242,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="Программирование, базы данных....."
+                android:text="Операционные системы"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <include layout="@layout/layouts_divider"/>
+        <include
+            layout="@layout/layouts_divider"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/AccountEducationLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/AccountEducationTitleTextView"
