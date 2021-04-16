@@ -1,24 +1,29 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import suai.tests.common.adapters.ChatAdapter;
-import suai.tests.common.api.RetrofitConnection;
+import suai.tests.common.adapters.ChatsAdapter;
+import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.ChatClass;
-import suai.tests.common.api.messengerAPI;
+import suai.tests.common.api.RetrofitConnection;
+import suai.tests.common.api.messagesAPI;
+import suai.tests.common.api.MessagesClass;
 
 import suai.tests.R;
+import suai.tests.common.api.messengerAPI;
 
 public class MessengerFragment extends Fragment
 {
@@ -27,15 +32,24 @@ public class MessengerFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
 
-        RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
         messengerAPI service = RetrofitConnection.messengerApi;
 
-        Call<ChatClass[]> call = service.getChats(2,0);
+        RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
+        ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
+            @Override
+            public void onStateClick(ChatClass chat, int position) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
+                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundle);
+            }
+        };
+
+        Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role);
         call.enqueue(new Callback<ChatClass[]>() {
             @Override
             public void onResponse(Call<ChatClass[]> call, Response<ChatClass[]> response) {
                 ChatClass[] chats = response.body();
-                recyclerViewChats.setAdapter(new ChatAdapter(root.getContext(),chats));
+                recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
                 recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
             }
 
