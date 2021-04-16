@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -52,13 +54,19 @@ public class MessengerFragment extends Fragment
                 recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
                 recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
             }
-
             @Override
             public void onFailure(Call<ChatClass[]> call, Throwable t) {
 
             }
         });
 
+        ImageButton buttonNewChat = root.findViewById(R.id.imageButtonNewChat);
+        buttonNewChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_newChatFragment);
+            }
+        });
         return root;
     }
 }
