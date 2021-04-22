@@ -39,7 +39,7 @@ public class NewChatFragment extends Fragment
             }
         };
 
-        Call<UserClass[]> call = service.getUsers(AccountFragment.idUser,AccountFragment.role);
+        Call<UserClass[]> call = service.getStudentsOrTeachers(AccountFragment.idUser,AccountFragment.role);
         call.enqueue(new Callback<UserClass[]>() {
             @Override
             public void onResponse(Call<UserClass[]> call, Response<UserClass[]> response) {
