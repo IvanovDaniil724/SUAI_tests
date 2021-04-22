@@ -14,13 +14,10 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +27,6 @@ import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.commonAPI;
-import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.pojo.common.UserPOJO;
 
 public class AuthorizationActivity extends AppCompatActivity
@@ -100,15 +96,20 @@ public class AuthorizationActivity extends AppCompatActivity
                                     {
                                         AccountFragment.idUser = Integer.parseInt(user[0]);
                                         AccountFragment.email = user[1];
-                                        AccountFragment.lastName = user[3];
-                                        AccountFragment.firstName = user[4];
-                                        AccountFragment.patronymic = user[5];
+                                        AccountFragment.lastName = user[2];
+                                        AccountFragment.firstName = user[3];
+                                        AccountFragment.patronymic = user[4];
 
                                         Calendar calendar = Calendar.getInstance();
                                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
-                                        try { calendar.setTime(sdf.parse(user[6])); }
+                                        try { calendar.setTime(sdf.parse(user[5])); }
                                         catch (ParseException e) { e.printStackTrace(); }
                                         AccountFragment.birthDay = calendar;
+
+                                        AccountFragment.role = Integer.parseInt(user[6]);
+
+                                        AccountFragment.data = new String[user.length - 7];
+                                        for (int i = 0; i < AccountFragment.data.length; i++) { AccountFragment.data[i] = user[i + 7]; }
 
                                         startActivity(new Intent(AuthorizationActivity.this, MainActivity.class)); finish();
                                     }

@@ -18,10 +18,7 @@ public class AlertDialogBuilder
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
         {
             @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-
-            }
+            public void onClick(DialogInterface dialog, int id) { }
         });
         builder.setMessage(message).setTitle(title);
         AlertDialog dialog = builder.create(); dialog.show();

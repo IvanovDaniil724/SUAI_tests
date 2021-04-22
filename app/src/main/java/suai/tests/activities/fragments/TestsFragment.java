@@ -24,9 +24,6 @@ import suai.tests.common.api.testsAPI;
 
 public class TestsFragment extends Fragment
 {
-    //private RetrofitConnection retrofitConnection;
-    //private API api;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_tests, container, false);
@@ -71,12 +68,6 @@ public class TestsFragment extends Fragment
                 TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), tests);
                 testsRecyclerView.setAdapter(adapter);
                 testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-
-                //Log.e("test", tests[0][0]);
-                //Log.e("test", String.valueOf(tests[1].getMaxMark()));
-                //Log.e("test", String.valueOf(tests[0].getTestPOJO()[5]));
-
-                //Log.e("success", connectionResponse);
             }
 
             @Override
