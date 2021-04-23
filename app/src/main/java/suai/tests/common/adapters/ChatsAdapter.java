@@ -44,8 +44,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public void onBindViewHolder(ChatsAdapter.ViewHolder holder, int position) {
         ChatClass chat = chats[position];
         // holder.imageView.setImageResource(chat.getPhoto());
-        holder.nameView.setText(chat.getChats()[1]);
-        if (Integer.parseInt(chat.getChats()[2])==AccountFragment.idUser)
+        holder.nameView.setText(chat.getChats()[2]);
+        if (Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
             holder.messageView.setText("Вы: "+chat.getChats()[3]);
         else holder.messageView.setText(chat.getChats()[3]);
         holder.dateView.setText(chat.getChats()[4]);
