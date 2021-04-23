@@ -2,7 +2,7 @@ package suai.tests.common.api.pojo.common;
 
 public class UserPOJO
 {
-    private String email, password;
+    /*private String email, password;
 
     public UserPOJO(String email, String password) {
         this.email = email;
@@ -21,4 +21,11 @@ public class UserPOJO
     public void setPassword(String password) {
         this.password = password;
     }
+
+    private String[] items, subjects;
+    public String[] getItems()
+    {
+        return items;
+    }*/
+
 }

@@ -8,5 +8,8 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 public interface testsAPI
 {
     @GET("tests/tests/GetTests.php")
-    Call<ItemsPOJO[]> getTests(@Query("idUser") int idUser);
+    Call<ItemsPOJO[]> getStudentTests(@Query("idUser") int idUser);
+
+    @GET("tests/tests/GetTeacherTests.php")
+    Call<ItemsPOJO[]> getTeacherTests(@Query("idUser") int idUser);
 }

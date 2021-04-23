@@ -18,7 +18,7 @@ public class AccountFragment extends Fragment
 {
     public static int role, idUser;
     public static String email = "", lastName = "", firstName = "", patronymic = "";
-    public static Calendar birthDay = new GregorianCalendar();
+    public static Calendar birthday = new GregorianCalendar();
     public static String[] data;
 
     private TextView EmailTextView, BirthdayTextView, NameTextView, RoleTextView, AvatarNameTextView;
@@ -29,8 +29,10 @@ public class AccountFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_account, container, false);
 
-        int birthMonthInt = birthDay.get(Calendar.MONTH) + 1; String birthMonth = "";
+        int birthMonthInt = birthday.get(Calendar.MONTH) + 1; String birthMonth = "";
+        int birthDayInt = birthday.get(Calendar.DAY_OF_MONTH); String birthDay = "";
         if (birthMonthInt < 10) { birthMonth = "0" + birthMonthInt; } else { birthMonth = String.valueOf(birthMonthInt); }
+        if (birthDayInt < 10) { birthDay = "0" + birthDayInt; } else { birthDay = String.valueOf(birthDayInt); }
 
         EmailTextView = root.findViewById(R.id.AccountEmailTextView);
         BirthdayTextView = root.findViewById(R.id.AccountBirthdayTextView);
@@ -39,7 +41,7 @@ public class AccountFragment extends Fragment
         AvatarNameTextView = root.findViewById(R.id.AccountAvatarNameTextView);
 
         NameTextView.setText(lastName + "\n" + firstName + "\n" + patronymic);
-        BirthdayTextView.setText(birthDay.get(Calendar.DAY_OF_MONTH) + "." + birthMonth + "." + birthDay.get(Calendar.YEAR));
+        BirthdayTextView.setText(birthDay + "." + birthMonth + "." + birthday.get(Calendar.YEAR));
         EmailTextView.setText(email); AvatarNameTextView.setText(lastName.substring(0, 1));
 
         AccountLayout = root.findViewById(R.id.AccountLinearLayout);
@@ -48,7 +50,8 @@ public class AccountFragment extends Fragment
         {
             RoleTextView.setText("Преподаватель");
             setInformation(inflater, true,"Образование", data[0]);
-            setInformation(inflater, false,"Должность", data[1]);
+            setInformation(inflater, true,"Должность", data[1]);
+            setInformation(inflater, false,"Предметы", data[2]);
         }
         else
         {
@@ -72,6 +75,24 @@ public class AccountFragment extends Fragment
 
         if (isBordered) { AccountLayout.addView(informationDivider); }
     }
+
+    /*public void setInformation(LayoutInflater inflater, boolean isBordered, String title, String[] data)
+    {
+        informationItem = inflater.inflate(R.layout.account_information_item, AccountLayout, false);
+        informationDivider = inflater.inflate(R.layout.layouts_divider, AccountLayout, false);
+
+        TextView TitleTextView = informationItem.findViewById(R.id.AccountInformationTitleTextView);
+        TextView DataTextView = informationItem.findViewById(R.id.AccountInformationDataTextView);
+
+        TitleTextView.setText(title + ":"); StringBuilder subjects = new StringBuilder();
+        for (int i = 0; i < data.length; i++)
+        {
+            if (i < data.length - 1) { subjects.append(data[i]).append(", "); } else { subjects.append(data[i]); }
+        }
+        DataTextView.setText(subjects.toString());  AccountLayout.addView(informationItem);
+
+        if (isBordered) { AccountLayout.addView(informationDivider); }
+    }*/
 
     public static class TeacherInformation
     {

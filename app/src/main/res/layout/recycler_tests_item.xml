@@ -38,11 +38,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/TestsSubjectTextView"
+        android:id="@+id/TestsStudentOrSubjectTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="subject"
+        android:text="student_subject"
         app:layout_constraintEnd_toEndOf="@+id/TestsTitleTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TestsTitleTextView" />
@@ -54,7 +54,7 @@
         android:layout_marginTop="4dp"
         android:text="19.03.2021"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TestsSubjectTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/TestsStudentOrSubjectTextView" />
 
     <TextView
         android:id="@+id/TestsTitleTextView"

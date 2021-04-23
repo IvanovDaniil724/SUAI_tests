@@ -32,7 +32,9 @@
             android:id="@+id/action_navigation_tests_to_testDetailsFragment"
             app:destination="@id/testDetailsFragment"
             app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_close_exit"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/navigation_tests" />
     </fragment>
 

@@ -108,7 +108,7 @@ public class AuthorizationActivity extends AppCompatActivity
                                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
                                         try { calendar.setTime(sdf.parse(user[5])); }
                                         catch (ParseException e) { e.printStackTrace(); }
-                                        AccountFragment.birthDay = calendar;
+                                        AccountFragment.birthday = calendar;
 
                                         AccountFragment.role = Integer.parseInt(user[6]);
 
