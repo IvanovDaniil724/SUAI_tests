@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="suai_primary">#005AAA</color>
+    <color name="alpha_suai_primary">#66005AAA</color>
     <color name="suai_secondary">#AB3A8D</color>
 </resources>

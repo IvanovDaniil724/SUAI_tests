@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,16 +15,19 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecyclerViewAdapter.ViewHolder>
 {
-    private LayoutInflater inflater;
-    private ItemsPOJO[] tests;
-    private Context context;
+    private LayoutInflater inflater; private ItemsPOJO[] tests; private Context context;
 
-    public TestsRecyclerViewAdapter(Context context, ItemsPOJO[] tests)
+    public interface OnTestClickListener{
+        void onStateClick(ItemsPOJO test, int position);
+    }
+    private final TestsRecyclerViewAdapter.OnTestClickListener onClickListener;
+
+    public TestsRecyclerViewAdapter(Context context, OnTestClickListener onClickListener, ItemsPOJO[] tests)
     {
         this.tests = tests;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        //this.mainActivity = context;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
@@ -37,57 +41,57 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
     @Override
     public void onBindViewHolder(TestsRecyclerViewAdapter.ViewHolder holder, int position)
     {
-        //Countries_API country = countries.get(position);
+        ItemsPOJO test_arr = tests[position]; String[] test = test_arr.getItems();
 
-        //Activity activity = (Activity) mainActivity;
+        if (test[0].equals("2"))
+        {
+            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
+            holder.TestsStatusImageView.setImageResource(android.R.drawable.stat_sys_warning);
+        }
 
-        /*holder.CountryName_TextView.setText(country.getName());
-        holder.CountryCapital_TextView.setText("Capital: " + country.getCapital());
-        holder.CountryPopulation_TextView.setText("Population: " + country.getPopulation());
-        holder.CountryArea_TextView.setText("Area: " + country.getArea() + " km²");
-        holder.CountryRegion_TextView.setText("Region: " + country.getRegion());
-        holder.CountrySubregion_TextView.setText("Subregion: " + country.getSubregion());*/
+        if (test[0].equals("0"))
+        {
+            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
+            holder.TestsStatusImageView.setImageResource(android.R.drawable.ic_menu_recent_history);
+        }
 
-        ItemsPOJO test = tests[position];
+        if (test[0].equals("1"))
+        {
+            holder.TestsStatusImageView.setVisibility(View.GONE);
+            holder.TestsStatusMarkTextView.setText(test[1]);
+        }
 
-        holder.TestsTitleTextView.setText(test.getItems()[1]);
-        holder.TestsDescriptionTextView.setText(test.getItems()[2]);
+        holder.TestsTitleTextView.setText(test[2]);
+        holder.TestsSubjectTextView.setText(test[4]);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                onClickListener.onStateClick(test_arr, position);
+            }
+        });
     }
 
     @Override
     public int getItemCount()
     {
-        return tests.length; //countries.size();
+        return tests.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        /*final LinearLayout RecyclerView_Layout;
-        final ImageView CountryBackground_ImageView;
-        final TextView CountryName_TextView;
-        final TextView CountryCapital_TextView;
-        final TextView CountryPopulation_TextView;
-        final TextView CountryArea_TextView;
-        final TextView CountryRegion_TextView;
-        final TextView CountrySubregion_TextView;*/
-
-        final TextView TestsTitleTextView;
-        final TextView TestsDescriptionTextView;
+        final TextView TestsTitleTextView, TestsSubjectTextView, TestsStatusMarkTextView;
+        final ImageView TestsStatusImageView;
 
         ViewHolder(View view)
         {
             super(view);
-            /*RecyclerView_Layout = (LinearLayout) view.findViewById(R.id.RecyclerView_Layout);
-            CountryBackground_ImageView = (ImageView)view.findViewById(R.id.ItemBackground_ImageView);
-            CountryName_TextView = (TextView)view.findViewById(R.id.CountryName_TextView);
-            CountryCapital_TextView = (TextView)view.findViewById(R.id.CountryCapital_TextView);
-            CountryPopulation_TextView = (TextView)view.findViewById(R.id.CountryPopulation_TextView);
-            CountryArea_TextView = (TextView)view.findViewById(R.id.CountryArea_TextView);
-            CountryRegion_TextView = (TextView)view.findViewById(R.id.CountryRegion_TextView);
-            CountrySubregion_TextView = (TextView)view.findViewById(R.id.CountrySubregion_TextView);*/
-
             TestsTitleTextView = view.findViewById(R.id.TestsTitleTextView);
-            TestsDescriptionTextView = view.findViewById(R.id.TestsDescriptionTextView);
+            TestsSubjectTextView = view.findViewById(R.id.TestsSubjectTextView);
+            TestsStatusMarkTextView = view.findViewById(R.id.TestsStatusMarkTextView);;
+            TestsStatusImageView = view.findViewById(R.id.TestsStatusImageView);
+
         }
     }
 }

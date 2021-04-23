@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/AccountAvatarFrameLayout" />
 
     <LinearLayout
-        android:id="@+id/AccountExternalLinearLayout"
+        android:id="@+id/AccountLinearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -156,11 +156,12 @@
 
         <include layout="@layout/layouts_divider"/>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/AccountGroupLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/AccountGroupTitleTextView"
@@ -184,13 +185,16 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <include layout="@layout/layouts_divider" />
+        <include
+            layout="@layout/layouts_divider"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/AccountSpecialtyLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/AccountSpecialtyTitleTextView"
@@ -278,7 +282,7 @@
                 android:text="СПБ ГУАП Магистр по направлению &quot;Информационные системы в экономике&quot;"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
