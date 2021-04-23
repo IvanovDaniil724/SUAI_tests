@@ -15,16 +15,16 @@ import suai.tests.common.api.UserClass;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
-    public interface OnChatClickListener{
+    public interface OnUserClickListener{
         void onStateClick(UserClass chats, int position);
     }
-    private final UsersAdapter.OnChatClickListener onClickListener;
+    private final UsersAdapter.OnUserClickListener onClickListener;
 
     private final LayoutInflater inflater;
     private final UserClass[] users;
     private Context context;
 
-    public UsersAdapter(Context context, UserClass[] users, UsersAdapter.OnChatClickListener onClickListener) {
+    public UsersAdapter(Context context, UserClass[] users, UsersAdapter.OnUserClickListener onClickListener) {
         this.users = users;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -41,7 +41,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(UsersAdapter.ViewHolder holder, int position) {
         UserClass user = users[position];
-        // holder.imageView.setImageResource(chat.getPhoto());
+        // holder.imageView.setImageResource(user.getPhoto());
         holder.fioView.setText(user.getUsers()[1]);
         holder.infoView.setText(user.getUsers()[2]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
