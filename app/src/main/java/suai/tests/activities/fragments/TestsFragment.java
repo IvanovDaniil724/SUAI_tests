@@ -41,11 +41,7 @@ public class TestsFragment extends Fragment
         root.findViewById(R.id.TestsRefreshImageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecyclerView testsRecyclerView = root.findViewById(R.id.TestsRecyclerView);
-                TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), new ItemsPOJO[]{});
-                testsRecyclerView.setAdapter(adapter);
-                testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-                getTests(root);
+                setTests(root, new ItemsPOJO[]{}); getTests(root);
             }
         });
 
@@ -54,20 +50,16 @@ public class TestsFragment extends Fragment
 
     public void getTests(View root)
     {
-        RecyclerView testsRecyclerView = root.findViewById(R.id.TestsRecyclerView);
         testsAPI service = RetrofitConnection.testsApi;
 
-        Call<ItemsPOJO[]> call = service.getTests();
+        Call<ItemsPOJO[]> call = service.getTests(AccountFragment.idUser);
         call.enqueue(new Callback<ItemsPOJO[]>()
         {
             @Override
             public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
             {
                 ItemsPOJO[] tests = response.body();
-
-                TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), tests);
-                testsRecyclerView.setAdapter(adapter);
-                testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                if (AccountFragment.role == 1) { setTests(root, tests); }
             }
 
             @Override
@@ -76,5 +68,21 @@ public class TestsFragment extends Fragment
                 Log.e("retrofitError", t.getMessage());
             }
         });
+    }
+
+    public void setTests(View root, ItemsPOJO[] tests)
+    {
+        RecyclerView testsRecyclerView = root.findViewById(R.id.TestsRecyclerView);
+        TestsRecyclerViewAdapter.OnTestClickListener testClickListener = new TestsRecyclerViewAdapter.OnTestClickListener() {
+            @Override
+            public void onStateClick(ItemsPOJO test, int position) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("idTest", Integer.parseInt(tests[position].getItems()[0]));
+                Navigation.findNavController(root).navigate(R.id.action_navigation_tests_to_testDetailsFragment, bundle);
+            }
+        };
+        TestsRecyclerViewAdapter adapter = new TestsRecyclerViewAdapter(root.getContext(), testClickListener, tests);
+        testsRecyclerView.setAdapter(adapter);
+        testsRecyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
     }
 }

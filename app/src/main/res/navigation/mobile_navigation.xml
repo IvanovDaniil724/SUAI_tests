@@ -28,6 +28,12 @@
             app:destination="@id/navigation_messenger"
             app:enterAnim="@android:anim/slide_out_right"
             app:exitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_navigation_tests_to_testDetailsFragment"
+            app:destination="@id/testDetailsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popUpTo="@id/navigation_tests" />
     </fragment>
 
     <fragment
@@ -53,4 +59,13 @@
         android:name="suai.tests.activities.fragments.NewChatFragment"
         android:label="fragment_new_chat"
         tools:layout="@layout/fragment_new_chat" />
+    <fragment
+        android:id="@+id/testDetailsFragment"
+        android:name="suai.tests.activities.fragments.TestDetailsFragment"
+        android:label="fragment_test_details"
+        tools:layout="@layout/fragment_test_details" >
+        <argument
+            android:name="idTest"
+            app:argType="integer" />
+    </fragment>
 </navigation>

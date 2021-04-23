@@ -25,11 +25,24 @@
         app:tint="@color/suai_secondary" />
 
     <TextView
-        android:id="@+id/TestsDescriptionTextView"
+        android:id="@+id/TestsStatusMarkTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="5"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TestsSubjectTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="description"
+        android:text="subject"
         app:layout_constraintEnd_toEndOf="@+id/TestsTitleTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TestsTitleTextView" />
@@ -41,7 +54,7 @@
         android:layout_marginTop="4dp"
         android:text="19.03.2021"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TestsDescriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/TestsSubjectTextView" />
 
     <TextView
         android:id="@+id/TestsTitleTextView"

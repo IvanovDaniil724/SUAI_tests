@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
@@ -66,12 +69,11 @@ public class AuthorizationActivity extends AppCompatActivity
                 {
                     if (Patterns.EMAIL_ADDRESS.matcher(emailText).matches())
                         {
+                            startLoading();
+
                             final HashCode password = Hashing.sha1().hashString(passwordText, Charset.defaultCharset());
 
-                            UserPOJO user = new UserPOJO(emailText, password.toString());
-
                             commonAPI service = RetrofitConnection.commonAPI;
-                            //Call<String> call = service.getUser(user);
                             Call<String[]> call = service.getUser(emailText, password.toString());
                             call.enqueue(new Callback<String[]>()
                             {
@@ -82,12 +84,14 @@ public class AuthorizationActivity extends AppCompatActivity
 
                                     if (user[0].equals("unknown"))
                                     {
+                                        endLoading();
                                         new AlertDialogBuilder(AuthorizationActivity.this)
                                                 .alert("Ошибка авторизации", "Данного пользователя не существует.\n" +
                                                         "Пожалуйста, введите корректные данные и повторите попытку.");
                                     }
                                     else if (user[0].equals("access denied"))
                                     {
+                                        endLoading();
                                         new AlertDialogBuilder(AuthorizationActivity.this)
                                                 .alert("Ошибка авторизации", "Пароль введён неверно.\n" +
                                                         "Пожалуйста, введите корректные данные и повторите попытку.");
@@ -111,6 +115,7 @@ public class AuthorizationActivity extends AppCompatActivity
                                         AccountFragment.data = new String[user.length - 7];
                                         for (int i = 0; i < AccountFragment.data.length; i++) { AccountFragment.data[i] = user[i + 7]; }
 
+                                        endLoading();
                                         startActivity(new Intent(AuthorizationActivity.this, MainActivity.class)); finish();
                                     }
                                 }
@@ -118,12 +123,17 @@ public class AuthorizationActivity extends AppCompatActivity
                                 @Override
                                 public void onFailure(@NonNull Call<String[]> call, @NonNull Throwable t)
                                 {
+                                    endLoading();
+                                    new AlertDialogBuilder(AuthorizationActivity.this)
+                                            .alert("Ошибка подключения", "Невозможно подключиться к серверу.\n" +
+                                                    "Проверьте соединение с Интернетом или попробуйте позже.");
                                     Log.e("retrofitError", t.getMessage());
                                 }
                             });
                         }
                         else
                         {
+                            endLoading();
                             new AlertDialogBuilder(AuthorizationActivity.this)
                                     .alert("Ошибка авторизации", "Неверный формат ввода адреса элестронной почты.\n" +
                                             "Пожалуйста, введите верный адрес.");
@@ -131,5 +141,17 @@ public class AuthorizationActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private void startLoading()
+    {
+        FrameLayout LoadingFrameLayout = findViewById(R.id.LoadingFrameLayout);
+        LoadingFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void endLoading()
+    {
+        FrameLayout LoadingFrameLayout = findViewById(R.id.LoadingFrameLayout);
+        LoadingFrameLayout.setVisibility(View.GONE);
     }
 }

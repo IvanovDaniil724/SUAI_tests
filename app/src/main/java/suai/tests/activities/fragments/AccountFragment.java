@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import suai.tests.R;
 
@@ -20,12 +19,7 @@ public class AccountFragment extends Fragment
     public static int role, idUser;
     public static String email = "", lastName = "", firstName = "", patronymic = "";
     public static Calendar birthDay = new GregorianCalendar();
-    //public static List<String> data; //private static List<String> data;
     public static String[] data;
-
-    //public static void setData(List<String> information) {
-    //    AccountFragment.data = information;
-    //}
 
     private TextView EmailTextView, BirthdayTextView, NameTextView, RoleTextView, AvatarNameTextView;
     private LinearLayout AccountLayout; private View informationItem, informationDivider;
