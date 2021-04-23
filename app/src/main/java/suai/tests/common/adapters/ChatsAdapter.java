@@ -1,5 +1,6 @@
 package suai.tests.common.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
+import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.api.ChatClass;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
@@ -36,14 +38,17 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public void onBindViewHolder(ChatsAdapter.ViewHolder holder, int position) {
         ChatClass chat = chats[position];
         // holder.imageView.setImageResource(chat.getPhoto());
         holder.nameView.setText(chat.getChats()[1]);
-        holder.messageView.setText(chat.getChats()[2]);
-        holder.dateView.setText(chat.getChats()[3]);
+        if (Integer.parseInt(chat.getChats()[2])==AccountFragment.idUser)
+            holder.messageView.setText("Вы: "+chat.getChats()[3]);
+        else holder.messageView.setText(chat.getChats()[3]);
+        holder.dateView.setText(chat.getChats()[4]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
