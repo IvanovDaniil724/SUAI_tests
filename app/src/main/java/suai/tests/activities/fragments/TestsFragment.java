@@ -50,16 +50,16 @@ public class TestsFragment extends Fragment
 
     public void getTests(View root)
     {
-        testsAPI service = RetrofitConnection.testsApi;
+        testsAPI service = RetrofitConnection.testsApi; Call<ItemsPOJO[]> call;
 
-        Call<ItemsPOJO[]> call = service.getTests(AccountFragment.idUser);
+        if (AccountFragment.role == 1) { call = service.getStudentTests(AccountFragment.idUser); }
+        else { call = service.getTeacherTests(AccountFragment.idUser); }
         call.enqueue(new Callback<ItemsPOJO[]>()
         {
             @Override
             public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
             {
-                ItemsPOJO[] tests = response.body();
-                if (AccountFragment.role == 1) { setTests(root, tests); }
+                ItemsPOJO[] tests = response.body(); setTests(root, tests);
             }
 
             @Override

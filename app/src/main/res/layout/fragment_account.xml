@@ -37,6 +37,18 @@
             android:textSize="56sp" />
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/AccountDelimiterImageView"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/layout_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AccountAvatarFrameLayout" />
+
     <TextView
         android:id="@+id/AccountNameTextView"
         style="@android:style/Widget.Material.Light.TextView"
@@ -59,230 +71,100 @@
         app:layout_constraintStart_toEndOf="@+id/AccountAvatarFrameLayout"
         app:layout_constraintTop_toBottomOf="@+id/AccountNameTextView" />
 
-    <ImageView
-        android:id="@+id/AccountDelimiterImageView"
-        android:layout_width="0dp"
-        android:layout_height="8dp"
+    <ScrollView
+        android:id="@+id/AccountScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/layout_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/AccountAvatarFrameLayout" />
-
-    <LinearLayout
-        android:id="@+id/AccountLinearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/AccountDelimiterImageView">
+        app:layout_constraintTop_toTopOf="@+id/AccountDelimiterImageView">
 
         <LinearLayout
-            android:id="@+id/AccountEmailLinearLayout"
+            android:id="@+id/AccountLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-            <TextView
-                android:id="@+id/AccountEmailTitleTextView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/AccountEmailLinearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Эл. почта:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/AccountEmailTextView"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/AccountEmailTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="0"
+                    android:text="Эл. почта:"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/AccountEmailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="email@email.com"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/AccountEmailEditImageButton"
+                    style="@android:style/Widget.Material.ImageButton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    android:tint="@color/suai_primary" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layouts_divider" />
+
+            <LinearLayout
+                android:id="@+id/AccountBirthdayLinearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="email@email.com"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/AccountEmailEditImageButton"
-                style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_edit_24"
-                android:tint="@color/suai_primary" />
+                <TextView
+                    android:id="@+id/AccountBirthdayTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="0"
+                    android:text="Дата рождения:"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/AccountBirthdayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="11.11.1991"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layouts_divider" />
         </LinearLayout>
-
-        <include layout="@layout/layouts_divider"/>
-
-        <LinearLayout
-            android:id="@+id/AccountBirthdayLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/AccountBirthdayTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Дата рождения:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountBirthdayTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="11.11.1991"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <include layout="@layout/layouts_divider"/>
-
-        <!--<LinearLayout
-            android:id="@+id/AccountGroupLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/AccountGroupTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Группа:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountGroupTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="5010М"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <include
-            layout="@layout/layouts_divider"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/AccountSpecialtyLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/AccountSpecialtyTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Специальность:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountSpecialtyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="Информационная безопасность\n(10.03.01)"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <include
-            layout="@layout/layouts_divider"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/AccountSubjectsLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/AccountSubjectsTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Предметы:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountSubjectsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="Операционные системы"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <include
-            layout="@layout/layouts_divider"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/AccountEducationLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/AccountEducationTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
-                android:text="Образование:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/AccountEducationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="СПБ ГУАП Магистр по направлению &quot;Информационные системы в экономике&quot;"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>-->
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

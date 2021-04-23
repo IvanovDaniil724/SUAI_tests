@@ -1,6 +1,7 @@
 package suai.tests.common.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
+import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecyclerViewAdapter.ViewHolder>
@@ -43,26 +46,9 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
     {
         ItemsPOJO test_arr = tests[position]; String[] test = test_arr.getItems();
 
-        if (test[0].equals("2"))
-        {
-            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
-            holder.TestsStatusImageView.setImageResource(android.R.drawable.stat_sys_warning);
-        }
+        if (AccountFragment.role == 1) { setStudentTests(holder, test); } else { setTeacherTests(holder, test); }
 
-        if (test[0].equals("0"))
-        {
-            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
-            holder.TestsStatusImageView.setImageResource(android.R.drawable.ic_menu_recent_history);
-        }
 
-        if (test[0].equals("1"))
-        {
-            holder.TestsStatusImageView.setVisibility(View.GONE);
-            holder.TestsStatusMarkTextView.setText(test[1]);
-        }
-
-        holder.TestsTitleTextView.setText(test[2]);
-        holder.TestsSubjectTextView.setText(test[4]);
 
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -81,17 +67,56 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        final TextView TestsTitleTextView, TestsSubjectTextView, TestsStatusMarkTextView;
+        final TextView TestsTitleTextView, TestsStudentOrSubjectTextView, TestsStatusMarkTextView;
         final ImageView TestsStatusImageView;
 
         ViewHolder(View view)
         {
             super(view);
             TestsTitleTextView = view.findViewById(R.id.TestsTitleTextView);
-            TestsSubjectTextView = view.findViewById(R.id.TestsSubjectTextView);
+            TestsStudentOrSubjectTextView = view.findViewById(R.id.TestsStudentOrSubjectTextView);
             TestsStatusMarkTextView = view.findViewById(R.id.TestsStatusMarkTextView);;
             TestsStatusImageView = view.findViewById(R.id.TestsStatusImageView);
 
         }
+    }
+
+    public void setStudentTests(TestsRecyclerViewAdapter.ViewHolder holder, String[] test)
+    {
+        holder.TestsTitleTextView.setText(test[3]);
+        holder.TestsStudentOrSubjectTextView.setText(test[5]);
+
+        if (test[1].equals("2"))
+        {
+            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
+            holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_error_24);
+            holder.TestsStatusImageView.setColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_light),
+                    PorterDuff.Mode.SRC_IN);
+        }
+
+        if (test[1].equals("0"))
+        {
+            holder.TestsStatusMarkTextView.setVisibility(View.GONE);
+            holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_access_time_24);
+            holder.TestsStatusImageView.setColorFilter(ContextCompat.getColor(context, android.R.color.holo_orange_light),
+                    PorterDuff.Mode.SRC_IN);
+        }
+
+        if (test[1].equals("1"))
+        {
+            holder.TestsStatusImageView.setVisibility(View.GONE);
+            holder.TestsStatusMarkTextView.setText(test[2]);
+        }
+    }
+
+    public void setTeacherTests(TestsRecyclerViewAdapter.ViewHolder holder, String[] test)
+    {
+        holder.TestsTitleTextView.setText(test[1]);
+        holder.TestsStudentOrSubjectTextView.setText(test[4]);
+
+        holder.TestsStatusMarkTextView.setVisibility(View.GONE);
+        if (test[2].equals("1")) { holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24); }
+        else { holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24); }
+        holder.TestsStatusImageView.setColorFilter(ContextCompat.getColor(context, R.color.suai_secondary), PorterDuff.Mode.SRC_IN);
     }
 }
