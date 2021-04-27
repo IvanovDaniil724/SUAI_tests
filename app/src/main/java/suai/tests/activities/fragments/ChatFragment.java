@@ -29,16 +29,47 @@ import suai.tests.R;
 
 public class ChatFragment extends Fragment
 {
+    messagesAPI service = RetrofitConnection.messagesApi;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
-
-        messagesAPI service = RetrofitConnection.messagesApi;
         Integer idChat = getArguments().getInt("idChat");
-        Log.e("", String.valueOf(idChat));
+
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
+        UpdateMessages(recyclerViewMessages, root, idChat);
+        EditText message = root.findViewById(R.id.editTextMessage);
+        ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
+        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (message.getText().length()!=0)
+                {
+                    Call<String[]> call = service.createMessage(idChat.toString(),String.valueOf(AccountFragment.idUser), message.getText().toString());
+                    call.enqueue(new Callback<String[]>() {
+                        @Override
+                        public void onResponse(Call<String[]> call, Response<String[]> response) {
+                            Log.v("result",response.body()[0]);
+                        }
+
+                        @Override
+                        public void onFailure(Call<String[]> call, Throwable t) {
+                            Log.v("result",t.getMessage());
+                        }
+                    });
+                    UpdateMessages(recyclerViewMessages, root, idChat);
+                }
+            }
+        });
+
+        return root;
+
+    }
+
+    public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat)
+    {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
             public void onStateClick(MessagesClass chat, int position) {
@@ -60,31 +91,6 @@ public class ChatFragment extends Fragment
 
             }
         });
-
-        EditText message = root.findViewById(R.id.editTextMessage);
-        ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
-        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (message.getText().length()!=0)
-                {
-                    Call<String[]> call = service.createMessage(idChat.toString(),String.valueOf(AccountFragment.idUser), message.getText().toString());
-                    call.enqueue(new Callback<String[]>() {
-                        @Override
-                        public void onResponse(Call<String[]> call, Response<String[]> response) {
-                            Log.v("result",response.body()[0]);
-                        }
-
-                        @Override
-                        public void onFailure(Call<String[]> call, Throwable t) {
-                            Log.v("result",t.getMessage());
-                        }
-                    });
-                }
-            }
-        });
-
-        return root;
 
     }
 }

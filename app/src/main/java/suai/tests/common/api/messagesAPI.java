@@ -11,6 +11,7 @@ public interface messagesAPI {
     @GET("messenger/chats/GetChat.php")
     Call<MessagesClass[]> getMessages(@Query("chat_id") int chatId);
 
+
     @FormUrlEncoded
     @POST("messenger/chats/CreateMessage.php")
     Call<String[]> createMessage(@Field("chat") String chat, @Field("sender") String sender, @Field("message") String message);

@@ -12,6 +12,9 @@ public interface messengerAPI {
     @GET("messenger/chats/GetChats.php")
     Call<ChatClass[]> getChats(@Query("id") int userId,@Query("role") int role);
 
+    @GET("common/GetChatsWithUser.php")
+    Call<String> getChatsWithUser(@Query("teacher") String teacher, @Query("student") String student);
+
     @FormUrlEncoded
     @POST("messenger/chats/CreateNewChat.php")
     Call<String[]> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
