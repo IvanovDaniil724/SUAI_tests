@@ -26,6 +26,7 @@ import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.UserClass;
 import suai.tests.common.api.UsersAPI;
 import suai.tests.common.api.messengerAPI;
+import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class NewChatFragment extends Fragment
 {
@@ -41,56 +42,18 @@ public class NewChatFragment extends Fragment
         UsersAdapter.OnUserClickListener userClickListener = new UsersAdapter.OnUserClickListener() {
             @Override
             public void onStateClick(UserClass user, int position) {
-                int student, teacher;
-                if (AccountFragment.role==0)
+                if (user.getUsers()[3]==null)
                 {
-                    teacher = AccountFragment.idUser;
-                    student = Integer.parseInt(user.getUsers()[0]);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("idUser", Integer.parseInt(user.getUsers()[0]));
+                    Navigation.findNavController(root).navigate(R.id.action_newChatFragment_to_chatFragment, bundle);
                 }
                 else
                 {
-                    teacher = Integer.parseInt(user.getUsers()[0]);
-                    student = AccountFragment.idUser;
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("idChat", Integer.parseInt(user.getUsers()[3]));
+                    Navigation.findNavController(root).navigate(R.id.action_newChatFragment_to_chatFragment, bundle);
                 }
-
-                Call<String> chat = newChat.getChatsWithUser(String.valueOf(teacher), String.valueOf(student));
-                chat.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        if (response.body().length()>=17)
-                        {
-                            String st = response.body();
-                            Log.v("g",st);
-                            Integer d = Integer.parseInt(st);
-                        }
-
-                     //   }
-                        /*    Call<String[]> g = newChat.createNewChat(String.valueOf(teacher), String.valueOf(student));
-                            g.enqueue(new Callback<String[]>() {
-                                @Override
-                                public void onResponse(Call<String[]> call, Response<String[]> response) {
-                                    Log.v("result",response.body()[0]);
-                                }
-                                @Override
-                                public void onFailure(Call<String[]> call, Throwable t) {
-                                    Log.v("result",t.getMessage());
-                                }
-                            });
-                            Navigation.findNavController(root).navigate(R.id.action_newChatFragment_to_chatFragment);
-                        }
-                        else
-                        {
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("idChat", Integer.parseInt(response.body()[0]));
-                            Navigation.findNavController(root).navigate(R.id.action_newChatFragment_to_chatFragment, bundle);
-                        }*/
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.e("g", t.getMessage());
-                    }
-                });
             }
         };
 
