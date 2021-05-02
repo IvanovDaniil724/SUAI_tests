@@ -29,20 +29,23 @@ import suai.tests.common.api.messengerAPI;
 
 public class MessengerFragment extends Fragment
 {
+    public static String FIO;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
-
         messengerAPI service = RetrofitConnection.messengerApi;
 
         RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
         ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
             @Override
             public void onStateClick(ChatClass chat, int position) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
-                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundle);
+                NewChatFragment.FIO = "";
+                Bundle bundleId = new Bundle();
+                bundleId.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
+                FIO = chat.getChats()[2];
+                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
             }
         };
 

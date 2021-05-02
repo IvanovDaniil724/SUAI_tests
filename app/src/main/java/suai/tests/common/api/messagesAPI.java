@@ -14,5 +14,5 @@ public interface messagesAPI {
 
     @FormUrlEncoded
     @POST("messenger/chats/CreateMessage.php")
-    Call<String[]> createMessage(@Field("chat") String chat, @Field("sender") String sender, @Field("message") String message);
+    Call<String> createMessage(@Field("chat") String chat, @Field("sender") String sender, @Field("message") String message);
 }

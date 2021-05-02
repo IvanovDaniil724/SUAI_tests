@@ -6,6 +6,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public interface messengerAPI {
@@ -13,9 +14,9 @@ public interface messengerAPI {
     Call<ChatClass[]> getChats(@Query("id") int userId,@Query("role") int role);
 
     @GET("common/GetChatsWithUser.php")
-    Call<String> getChatsWithUser(@Query("teacher") String teacher, @Query("student") String student);
+    Call<ItemsPOJO[]> getChatsWithUser(@Query("teacher") String teacher, @Query("student") String student);
 
     @FormUrlEncoded
     @POST("messenger/chats/CreateNewChat.php")
-    Call<String[]> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
+    Call<String> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
 }
