@@ -30,6 +30,8 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class NewChatFragment extends Fragment
 {
+    public static String FIO;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
@@ -42,6 +44,8 @@ public class NewChatFragment extends Fragment
         UsersAdapter.OnUserClickListener userClickListener = new UsersAdapter.OnUserClickListener() {
             @Override
             public void onStateClick(UserClass user, int position) {
+                MessengerFragment.FIO = "";
+
                 if (user.getUsers()[3]==null)
                 {
                     Bundle bundle = new Bundle();
@@ -54,6 +58,7 @@ public class NewChatFragment extends Fragment
                     bundle.putInt("idChat", Integer.parseInt(user.getUsers()[3]));
                     Navigation.findNavController(root).navigate(R.id.action_newChatFragment_to_chatFragment, bundle);
                 }
+                FIO = user.getUsers()[1];
             }
         };
 

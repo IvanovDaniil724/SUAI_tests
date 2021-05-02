@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +44,10 @@ public class ChatFragment extends Fragment
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
 
+        TextView fio = root.findViewById(R.id.fio);
+        if (MessengerFragment.FIO=="")
+            fio.setText(NewChatFragment.FIO);
+        else fio.setText(MessengerFragment.FIO);
         EditText message = root.findViewById(R.id.editTextMessage);
 
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
