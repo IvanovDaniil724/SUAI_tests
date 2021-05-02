@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.util.concurrent.Executors;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,13 +97,16 @@ public class ChatFragment extends Fragment
                                     @Override
                                     public void onFailure(Call<ItemsPOJO[]> call, Throwable t) {
                                         Log.e("g", t.getMessage());
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message);
                                     }
                                 });
+
                             }
 
                             @Override
                             public void onFailure(Call<String> call, Throwable t) {
                                 Log.e("h",t.getMessage());
+                                UpdateMessages(recyclerViewMessages, root, idChat, message);
                             }
                         });
                     }
@@ -159,4 +164,5 @@ public class ChatFragment extends Fragment
             }
         });
     }
+
 }
