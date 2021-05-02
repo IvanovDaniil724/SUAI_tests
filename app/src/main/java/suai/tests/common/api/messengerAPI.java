@@ -18,5 +18,5 @@ public interface messengerAPI {
 
     @FormUrlEncoded
     @POST("messenger/chats/CreateNewChat.php")
-    Call<String[]> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
+    Call<String> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
 }
