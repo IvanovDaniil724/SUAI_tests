@@ -6,12 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
+
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,26 +30,108 @@ import suai.tests.common.api.messagesAPI;
 import suai.tests.common.api.messengerAPI;
 
 import suai.tests.R;
+import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class ChatFragment extends Fragment
 {
+    messagesAPI service = RetrofitConnection.messagesApi;
+    messengerAPI newChat = RetrofitConnection.messengerApi;
+    Integer idChat;
+    Integer user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
+        idChat = getArguments().getInt("idChat");
+        user = getArguments().getInt("idUser");
 
-        messagesAPI service = RetrofitConnection.messagesApi;
-        Integer idChat = getArguments().getInt("idChat");
-        Log.e("", String.valueOf(idChat));
+        TextView fio = root.findViewById(R.id.fio);
+        if (MessengerFragment.FIO=="")
+            fio.setText(NewChatFragment.FIO);
+        else fio.setText(MessengerFragment.FIO);
+        EditText message = root.findViewById(R.id.editTextMessage);
+
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
+        UpdateMessages(recyclerViewMessages, root, idChat, message);
+
+
+        ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
+        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (message.getText().length()!=0)
+                {
+                    if (idChat==0)
+                    {
+                        int teacher, student;
+                        if (AccountFragment.role==0)
+                        {
+                            teacher = AccountFragment.idUser;
+                            student = user;
+                        }
+                        else
+                        {
+                            teacher = user;
+                            student = AccountFragment.idUser;
+                        }
+
+                        Call<String> createNewChat = newChat.createNewChat(String.valueOf(teacher), String.valueOf(student));
+                        createNewChat.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                             //   Log.v("result ", response.body().toString());
+                             //  Integer df = Integer.parseInt(response.body()[0]);
+                           //      Log.v("fc",df.toString());
+                                Call<ItemsPOJO[]> ch = newChat.getChatsWithUser(String.valueOf(teacher), String.valueOf(student));
+                                ch.enqueue(new Callback<ItemsPOJO[]>() {
+                                    @Override
+                                    public void onResponse(Call<ItemsPOJO[]> call, Response<ItemsPOJO[]> response) {
+                                        ItemsPOJO[] idChats = response.body();
+                                        Log.v("df",idChats[0].getItems()[0]);
+                                        idChat = Integer.parseInt(idChats[0].getItems()[0]);
+                                        SendMessages(root, idChat, message);
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ItemsPOJO[]> call, Throwable t) {
+                                        Log.e("g", t.getMessage());
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Log.e("h",t.getMessage());
+                                UpdateMessages(recyclerViewMessages, root, idChat, message);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        SendMessages(root, idChat, message);
+                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                    }
+
+                }
+            }
+        });
+
+        return root;
+
+    }
+
+    public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
+    {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
             public void onStateClick(MessagesClass chat, int position) {
 
             }
         };
-
         Call<MessagesClass[]> call = service.getMessages(idChat);
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
@@ -51,6 +139,7 @@ public class ChatFragment extends Fragment
                 MessagesClass[] messages = response.body();
                 recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
                 recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                message.setText("");
             }
 
             @Override
@@ -58,16 +147,22 @@ public class ChatFragment extends Fragment
 
             }
         });
+    }
 
-        ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
-        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+    public void SendMessages(View root, Integer idChat, EditText message)
+    {
+        Call<String> c = service.createMessage(idChat.toString(),String.valueOf(AccountFragment.idUser), message.getText().toString());
+        c.enqueue(new Callback<String>() {
             @Override
-            public void onClick(View view) {
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.v("result",response.body());
+            }
 
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("result",t.getMessage());
             }
         });
-
-        return root;
-
     }
+
 }
