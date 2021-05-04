@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             holder.messageView.setText("Вы: "+chat.getChats()[3]);
         else holder.messageView.setText(chat.getChats()[3]);
         holder.dateView.setText(chat.getChats()[4]);
+        if (Integer.parseInt(chat.getChats()[5])==1 && Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
+            holder.statusView.setImageResource(R.drawable.ic_message_read);
+        else if (Integer.parseInt(chat.getChats()[5])==0 && Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
+            holder.statusView.setImageResource(R.drawable.ic_message_post);
+        else if (Integer.parseInt(chat.getChats()[5])==0 && Integer.parseInt(chat.getChats()[1])!=AccountFragment.idUser)
+            holder.statusView.setImageResource(R.drawable.avatar_placeholder);
+        else if (Integer.parseInt(chat.getChats()[5])==1 && Integer.parseInt(chat.getChats()[1])!=AccountFragment.idUser)
+            holder.statusView.setVisibility(View.INVISIBLE);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -66,6 +75,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // final ImageView imageView;
         final TextView nameView, messageView, dateView;
+        final ImageView statusView;
 
         ViewHolder(View view){
             super(view);
@@ -73,6 +83,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             nameView = (TextView)view.findViewById(R.id.name);
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
+            statusView = (ImageView)view.findViewById(R.id.status);
         }
 
     }
