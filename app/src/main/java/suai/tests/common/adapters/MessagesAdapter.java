@@ -47,8 +47,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
-        holder.messageView.setText(message.getMessages()[2]);
-        if (Integer.parseInt(message.getMessages()[0]) == AccountFragment.idUser)
+        holder.messageView.setText(message.getMessages()[3]);
+        if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
             holder.messageView.setGravity(Gravity.RIGHT);
          /*   FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(0, 10);
@@ -56,13 +56,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.messageView.setLayoutParams(param);*/
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
         }
-        if (Integer.parseInt(message.getMessages()[3])==1 && Integer.parseInt(message.getMessages()[0])==AccountFragment.idUser)
+        if (Integer.parseInt(message.getMessages()[4])==1 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
             holder.readView.setImageResource(R.drawable.ic_message_read);
-        else if (Integer.parseInt(message.getMessages()[3])==0 && Integer.parseInt(message.getMessages()[0])==AccountFragment.idUser)
+        else if (Integer.parseInt(message.getMessages()[4])==0 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
             holder.readView.setImageResource(R.drawable.ic_message_post);
-        else if (Integer.parseInt(message.getMessages()[0])!=AccountFragment.idUser)
+        else if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
             holder.readView.setVisibility(View.INVISIBLE);
-        holder.dateView.setText(message.getMessages()[1]);
+        holder.dateView.setText(message.getMessages()[2]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)

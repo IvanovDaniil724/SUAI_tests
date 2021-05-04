@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.checkerframework.checker.units.qual.C;
 import org.w3c.dom.Text;
 
 import java.util.concurrent.Executors;
@@ -80,9 +81,6 @@ public class ChatFragment extends Fragment
                         createNewChat.enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
-                             //   Log.v("result ", response.body().toString());
-                             //  Integer df = Integer.parseInt(response.body()[0]);
-                           //      Log.v("fc",df.toString());
                                 Call<ItemsPOJO[]> ch = newChat.getChatsWithUser(String.valueOf(teacher), String.valueOf(student));
                                 ch.enqueue(new Callback<ItemsPOJO[]>() {
                                     @Override
@@ -137,6 +135,22 @@ public class ChatFragment extends Fragment
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
                 MessagesClass[] messages = response.body();
+                for (int i=0;i<messages.length;i++) {
+                    if (Integer.parseInt(messages[i].getMessages()[4]) == 0 && Integer.parseInt(messages[i].getMessages()[1]) != AccountFragment.idUser) {
+                        Call<String> read = service.readMessages(messages[i].getMessages()[0]);
+                        read.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                Log.v("result", response.body());
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Log.e("result", t.getMessage());
+                            }
+                        });
+                    }
+                }
                 recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
                 recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
                 message.setText("");
@@ -144,7 +158,7 @@ public class ChatFragment extends Fragment
 
             @Override
             public void onFailure(Call<MessagesClass[]> call, Throwable t) {
-
+                Log.e("result",t.getMessage());
             }
         });
     }
