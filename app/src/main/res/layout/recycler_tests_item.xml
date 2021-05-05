@@ -9,7 +9,7 @@
     android:layout_marginRight="8dp"
     android:layout_marginBottom="8dp"
     android:background="@drawable/item_border"
-    android:padding="6dp">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/TestsStatusImageView"
@@ -54,6 +54,16 @@
         android:layout_marginTop="4dp"
         android:text="19.03.2021"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TestsStudentOrSubjectTextView" />
+
+    <TextView
+        android:id="@+id/TestsLanguageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Java"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/TestsStudentOrSubjectTextView"
         app:layout_constraintTop_toBottomOf="@+id/TestsStudentOrSubjectTextView" />
 
     <TextView

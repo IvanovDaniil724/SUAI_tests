@@ -20,9 +20,7 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 {
     private LayoutInflater inflater; private ItemsPOJO[] tests; private Context context;
 
-    public interface OnTestClickListener{
-        void onStateClick(ItemsPOJO test, int position);
-    }
+    public interface OnTestClickListener { void onStateClick(ItemsPOJO test, int position); }
     private final TestsRecyclerViewAdapter.OnTestClickListener onClickListener;
 
     public TestsRecyclerViewAdapter(Context context, OnTestClickListener onClickListener, ItemsPOJO[] tests)
@@ -48,9 +46,7 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 
         if (AccountFragment.role == 1) { setStudentTests(holder, test); } else { setTeacherTests(holder, test); }
 
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -67,7 +63,7 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        final TextView TestsTitleTextView, TestsStudentOrSubjectTextView, TestsStatusMarkTextView;
+        final TextView TestsTitleTextView, TestsStudentOrSubjectTextView, TestsStatusMarkTextView, TestsLanguageTextView;
         final ImageView TestsStatusImageView;
 
         ViewHolder(View view)
@@ -75,7 +71,8 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
             super(view);
             TestsTitleTextView = view.findViewById(R.id.TestsTitleTextView);
             TestsStudentOrSubjectTextView = view.findViewById(R.id.TestsStudentOrSubjectTextView);
-            TestsStatusMarkTextView = view.findViewById(R.id.TestsStatusMarkTextView);;
+            TestsStatusMarkTextView = view.findViewById(R.id.TestsStatusMarkTextView);
+            TestsLanguageTextView = view.findViewById(R.id.TestsLanguageTextView);
             TestsStatusImageView = view.findViewById(R.id.TestsStatusImageView);
 
         }
@@ -85,6 +82,9 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
     {
         holder.TestsTitleTextView.setText(test[3]);
         holder.TestsStudentOrSubjectTextView.setText(test[5]);
+
+        if (test[6].equals("1")) { holder.TestsLanguageTextView.setText("C++"); }
+        else { holder.TestsLanguageTextView.setText("Java"); }
 
         if (test[1].equals("2"))
         {
@@ -113,6 +113,9 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
     {
         holder.TestsTitleTextView.setText(test[1]);
         holder.TestsStudentOrSubjectTextView.setText(test[4]);
+
+        if (test[5].equals("1")) { holder.TestsLanguageTextView.setText("C++"); }
+        else { holder.TestsLanguageTextView.setText("Java"); }
 
         holder.TestsStatusMarkTextView.setVisibility(View.GONE);
         if (test[2].equals("1")) { holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24); }
