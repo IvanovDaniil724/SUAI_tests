@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,8 +47,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
-        holder.messageView.setText(message.getMessages()[2]);
-        if (Integer.parseInt(message.getMessages()[0]) == AccountFragment.idUser)
+        holder.messageView.setText(message.getMessages()[3]);
+        if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
             holder.messageView.setGravity(Gravity.RIGHT);
          /*   FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(0, 10);
@@ -55,7 +56,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.messageView.setLayoutParams(param);*/
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
         }
-        holder.dateView.setText(message.getMessages()[1]);
+        if (Integer.parseInt(message.getMessages()[4])==1 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
+            holder.readView.setImageResource(R.drawable.ic_message_read);
+        else if (Integer.parseInt(message.getMessages()[4])==0 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
+            holder.readView.setImageResource(R.drawable.ic_message_post);
+        else if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
+            holder.readView.setVisibility(View.INVISIBLE);
+        holder.dateView.setText(message.getMessages()[2]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -73,12 +80,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // final ImageView imageView;
         final TextView messageView, dateView;
+        final ImageView readView;
 
         ViewHolder(View view){
             super(view);
             //  imageView = (ImageView)view.findViewById(R.id.image);
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
+            readView = (ImageView)view.findViewById(R.id.read);
         }
 
     }

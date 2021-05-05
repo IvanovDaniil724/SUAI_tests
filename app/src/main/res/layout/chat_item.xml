@@ -20,18 +20,18 @@
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
     <ImageView
-        android:id="@+id/avatar2"
+        android:id="@+id/status"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.689"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/message"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_constraintVertical_bias="0.666"
-        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+        app:layout_constraintStart_toEndOf="@+id/name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.307"
+        app:srcCompat="@drawable/avatar_placeholder" />
 
     <TextView
         android:id="@+id/name"
@@ -56,10 +56,10 @@
         android:text="Дата"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.694"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toEndOf="@+id/message"
         app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintVertical_bias="0.916" />
 
     <TextView
         android:id="@+id/message"
