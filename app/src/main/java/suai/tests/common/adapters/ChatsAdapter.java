@@ -55,6 +55,19 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ChatsAdapter.ViewHolder holder, int position) {
         ChatClass chat = chats[position];
+        holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                MenuItem Delete = contextMenu.add(Menu.NONE, 1, 1, "Удалить");
+                Delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        new ConfirmationDialogBuilder(ChatsAdapter.context, chat.getChats()[0]).alert("Удаление", "Вы точно хотите удалить чат?");
+                        return true;
+                    }
+                });
+            }
+        });
         // holder.imageView.setImageResource(chat.getPhoto());
         holder.nameView.setText(chat.getChats()[2]);
         if (Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
@@ -76,6 +89,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                 onClickListener.onStateClick(chat, position);
             }
         });
+
     }
 
     @Override
@@ -95,23 +109,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             statusView = (ImageView)view.findViewById(R.id.status);
-            view.setOnCreateContextMenuListener(this);
+            //view.setOnCreateContextMenuListener(this);
         }
 
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            MenuItem Delete = contextMenu.add(Menu.NONE, 1, 1, "Удалить");
-            Delete.setOnMenuItemClickListener(onEditMenu);
+
         }
 
-        private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                new ConfirmationDialogBuilder(ChatsAdapter.context).alert("Удаление", "Вы точно хотите удалить чат?");
-                return true;
-            }
-        };
+
 
     }
 
