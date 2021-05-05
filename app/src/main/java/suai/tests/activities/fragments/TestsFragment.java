@@ -51,9 +51,7 @@ public class TestsFragment extends Fragment
     public void getTests(View root)
     {
         testsAPI service = RetrofitConnection.testsApi; Call<ItemsPOJO[]> call;
-
-        if (AccountFragment.role == 1) { call = service.getStudentTests(AccountFragment.idUser); }
-        else { call = service.getTeacherTests(AccountFragment.idUser); }
+        call = service.getTests(AccountFragment.idUser, AccountFragment.role);
         call.enqueue(new Callback<ItemsPOJO[]>()
         {
             @Override
