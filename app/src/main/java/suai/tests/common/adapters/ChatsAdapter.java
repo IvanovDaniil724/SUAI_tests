@@ -2,7 +2,11 @@ package suai.tests.common.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,18 +17,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
+import suai.tests.activities.fragments.ChatFragment;
+import suai.tests.activities.fragments.MessengerFragment;
+import suai.tests.common.AlertDialogBuilder;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.ChatClass;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
 
+
     public interface OnChatClickListener{
         void onStateClick(ChatClass chats, int position);
     }
+
     private final OnChatClickListener onClickListener;
 
     private final LayoutInflater inflater;
     private final ChatClass[] chats;
-    private Context context;
+    public static Context context;
 
     public ChatsAdapter(Context context, ChatClass[] chats, OnChatClickListener onClickListener) {
         this.chats = chats;
@@ -38,6 +48,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         View view = inflater.inflate(R.layout.chat_item, parent, false);
         return new ViewHolder(view);
     }
+
 
     @SuppressLint("SetTextI18n")
     @NonNull
@@ -72,7 +83,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         return chats.length;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
         final TextView nameView, messageView, dateView;
         final ImageView statusView;
@@ -84,7 +95,24 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             statusView = (ImageView)view.findViewById(R.id.status);
+            view.setOnCreateContextMenuListener(this);
         }
 
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            MenuItem Delete = contextMenu.add(Menu.NONE, 1, 1, "Удалить");
+            Delete.setOnMenuItemClickListener(onEditMenu);
+        }
+
+        private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                new ConfirmationDialogBuilder(ChatsAdapter.context).alert("Удаление", "Вы точно хотите удалить чат?");
+                return true;
+            }
+        };
+
     }
+
 }
