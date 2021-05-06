@@ -161,4 +161,44 @@
             android:textSize="24sp" />
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/TestDetailsStudentInfoLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/info_item"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/TestsDetailsStudentInfoTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/TestsDetailsStudentTextView"
+        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsStudentTextView">
+
+        <TextView
+            android:id="@+id/TestDetailsStudentInfoGroupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Группа: 2354М"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TestDetailsStudentInfoSpecialtyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="Специальность: авправр вапрвапр авыпрвыап\n(10.10.10)"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TestDetailsStudentInfoEmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Эл. почта: dfgdsfg.sgfddfvsgsd@yandex.ru"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

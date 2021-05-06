@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -37,8 +39,10 @@ public class TestDetailsFragment extends Fragment {
 
     private TextView TestsDetailsTitleTextView, TestsDetailsDescriptionTextView, TestsDetailsResultsOrErrorsTextView,
                      TestsDetailsTimestampTextView, TestsDetailsLanguageTextView, TestsDetailsSubjectTextView,
-                     TestsDetailsStudentTextView, TestsDetailsStudentInfoTextView, TestsDetailsStatusMarkTextView;
+                     TestsDetailsStudentTextView, TestsDetailsStudentInfoTextView, TestsDetailsStatusMarkTextView,
+                     TestDetailsStudentInfoGroupTextView, TestDetailsStudentInfoSpecialtyTextView, TestDetailsStudentInfoEmailTextView;
     private ImageView TestsDetailsStatusImageView;
+    private LinearLayout TestDetailsStudentInfoLinearLayout;
 
     public TestDetailsFragment() {
         // Required empty public constructor
@@ -75,7 +79,23 @@ public class TestDetailsFragment extends Fragment {
         TestsDetailsStudentTextView = root.findViewById(R.id.TestsDetailsStudentTextView);
         TestsDetailsStudentInfoTextView = root.findViewById(R.id.TestsDetailsStudentInfoTextView);
         TestsDetailsStatusMarkTextView = root.findViewById(R.id.TestsDetailsStatusMarkTextView);
+        TestDetailsStudentInfoGroupTextView = root.findViewById(R.id.TestDetailsStudentInfoGroupTextView);
+        TestDetailsStudentInfoSpecialtyTextView = root.findViewById(R.id.TestDetailsStudentInfoSpecialtyTextView);
+        TestDetailsStudentInfoEmailTextView = root.findViewById(R.id.TestDetailsStudentInfoEmailTextView);
+        TestDetailsStudentInfoLinearLayout = root.findViewById(R.id.TestDetailsStudentInfoLinearLayout);
         TestsDetailsStatusImageView = root.findViewById(R.id.TestsDetailsStatusImageView);
+
+        TestsDetailsStudentInfoTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: TestDetailsStudentInfoLinearLayout.setVisibility(View.VISIBLE); break;
+                    case MotionEvent.ACTION_UP: TestDetailsStudentInfoLinearLayout.setVisibility(View.GONE); break;
+                    case MotionEvent.ACTION_CANCEL: TestDetailsStudentInfoLinearLayout.setVisibility(View.GONE); break;
+                }
+                return true;
+            }
+        });
 
         testsAPI service = RetrofitConnection.testsApi; Call<ItemsPOJO[]> call;
         call = service.getTestDetails(idTest, AccountFragment.role);
@@ -162,5 +182,9 @@ public class TestDetailsFragment extends Fragment {
 
         if (test[6] == null) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>" + "\n\nРезультат:\n" + test[7]); }
         else { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n" + test[6] + "\n\nРезультат:\n" + test[7]); }
+
+        TestDetailsStudentInfoGroupTextView.setText("Группа: " + test[12]);
+        TestDetailsStudentInfoSpecialtyTextView.setText("Специальность: " + test[14] + "\n(" + test[13] + ")");
+        TestDetailsStudentInfoEmailTextView.setText("Группа: " + test[8]);
     }
 }
