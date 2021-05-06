@@ -61,6 +61,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                         return true;
                     }
                 });
+                MenuItem Edit = contextMenu.add(Menu.NONE,2,2,"Редактировать");
+                Edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                     //   new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Редактирование", "Вы точно хотите удалить сообщение?", 1);
+                        return true;
+                    }
+                });
             }
         });
         holder.messageView.setText(message.getMessages()[3]);
