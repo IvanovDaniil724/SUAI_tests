@@ -1,6 +1,7 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.concurrent.Executors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.MessagesClass;
 import suai.tests.common.api.RetrofitConnection;
@@ -59,6 +61,19 @@ public class ChatFragment extends Fragment
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
         UpdateMessages(recyclerViewMessages, root, idChat, message);
 
+        Handler h = new Handler();
+        Runnable run = new Runnable() {
+
+            @Override
+            public void run() {
+                if (ConfirmationDialogBuilder.deletedMessage==1) {
+                    //Log.v("g", "f");]
+                    UpdateMessages(recyclerViewMessages,root,idChat,message);
+                    ConfirmationDialogBuilder.deletedMessage=0;
+                }
+                h.postDelayed(this, 1000);
+            }
+        };
 
         ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {

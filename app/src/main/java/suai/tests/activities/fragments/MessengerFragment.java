@@ -1,6 +1,7 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.ChatClass;
@@ -50,6 +52,21 @@ public class MessengerFragment extends Fragment
                 Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_newChatFragment);
             }
         });
+
+        Handler h = new Handler();
+        Runnable run = new Runnable() {
+
+            @Override
+            public void run() {
+                 if (ConfirmationDialogBuilder.deletedChat==1) {
+                     //Log.v("g", "f");]
+                     UpdateChats(recyclerViewChats,root);
+                     ConfirmationDialogBuilder.deletedChat=0;
+                 }
+                h.postDelayed(this, 1000);
+            }
+        };
+        h.postDelayed(run, 1000);
         return root;
     }
 
@@ -78,5 +95,7 @@ public class MessengerFragment extends Fragment
 
             }
         });
+
     }
+
 }

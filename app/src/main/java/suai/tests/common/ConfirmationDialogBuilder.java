@@ -19,6 +19,8 @@ import suai.tests.common.api.messengerAPI;
 public class ConfirmationDialogBuilder {
     private final Context context;
     private final String idChat;
+    public static int deletedChat;
+    public static int deletedMessage;
 
     public ConfirmationDialogBuilder(Context context, String idChat) {
         this.context = context;
@@ -41,12 +43,14 @@ public class ConfirmationDialogBuilder {
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
+
                         }
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
                         }
                     });
+                    deletedChat = 1;
                 }
                 else
                 {
@@ -59,9 +63,9 @@ public class ConfirmationDialogBuilder {
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-
                         }
                     });
+                    deletedMessage = 1;
                 }
             }
         });
