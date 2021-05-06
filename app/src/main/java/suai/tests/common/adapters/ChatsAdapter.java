@@ -62,7 +62,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                 Delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        new ConfirmationDialogBuilder(ChatsAdapter.context, chat.getChats()[0]).alert("Удаление", "Вы точно хотите удалить чат?");
+                        new ConfirmationDialogBuilder(ChatsAdapter.context, chat.getChats()[0]).alert("Удаление", "Вы точно хотите удалить чат?",0);
                         return true;
                     }
                 });

@@ -35,9 +35,12 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class ChatFragment extends Fragment
 {
-    messagesAPI service = RetrofitConnection.messagesApi;
-    messengerAPI newChat = RetrofitConnection.messengerApi;
-    Integer idChat;
+    public static messagesAPI service = RetrofitConnection.messagesApi;
+    public static messengerAPI newChat = RetrofitConnection.messengerApi;
+    public static RecyclerView recyclerViewMessages;
+    public static View root;
+    public static Integer idChat;
+    public static EditText message;
     Integer user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -122,7 +125,7 @@ public class ChatFragment extends Fragment
 
     }
 
-    public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
+    public static void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
     {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override

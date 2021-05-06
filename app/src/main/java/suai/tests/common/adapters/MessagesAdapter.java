@@ -1,8 +1,11 @@
 package suai.tests.common.adapters;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.MessagesClass;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
@@ -24,10 +28,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         void onStateClick(MessagesClass messages, int position);
     }
     private final OnMessagesClickListener onClickListener;
-
     private final LayoutInflater inflater;
     private MessagesClass[] messages;
-    private Context context;
+    private static Context context;
 
     public MessagesAdapter(Context context, MessagesClass[] messages, OnMessagesClickListener onClickListener) {
         this.messages = messages;
@@ -47,6 +50,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
+        holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                MenuItem Delete = contextMenu.add(Menu.NONE, 1, 1, "Удалить");
+                Delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Удаление", "Вы точно хотите удалить сообщение?", 1);
+                        return true;
+                    }
+                });
+            }
+        });
         holder.messageView.setText(message.getMessages()[3]);
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
@@ -77,7 +93,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return messages.length;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
         final TextView messageView, dateView;
         final ImageView readView;
@@ -88,7 +104,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);
+
         }
 
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+        }
     }
 }

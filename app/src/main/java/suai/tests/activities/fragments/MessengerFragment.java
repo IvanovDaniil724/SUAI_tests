@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -30,14 +31,30 @@ import suai.tests.common.api.messengerAPI;
 public class MessengerFragment extends Fragment
 {
     public static String FIO;
+    public static messengerAPI service = RetrofitConnection.messengerApi;
+    public static RecyclerView recyclerViewChats;
+    public static View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
-        messengerAPI service = RetrofitConnection.messengerApi;
 
         RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
+        UpdateChats(recyclerViewChats,root);
+
+        ImageButton buttonNewChat = root.findViewById(R.id.imageButtonNewChat);
+        buttonNewChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_newChatFragment);
+            }
+        });
+        return root;
+    }
+
+    public static void UpdateChats(RecyclerView recyclerViewChats, View root)
+    {
         ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
             @Override
             public void onStateClick(ChatClass chat, int position) {
@@ -48,7 +65,6 @@ public class MessengerFragment extends Fragment
                 Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
             }
         };
-
         Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role);
         call.enqueue(new Callback<ChatClass[]>() {
             @Override
@@ -62,14 +78,5 @@ public class MessengerFragment extends Fragment
 
             }
         });
-
-        ImageButton buttonNewChat = root.findViewById(R.id.imageButtonNewChat);
-        buttonNewChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_newChatFragment);
-            }
-        });
-        return root;
     }
 }
