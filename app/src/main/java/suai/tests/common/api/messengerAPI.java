@@ -22,5 +22,5 @@ public interface messengerAPI {
 
     @FormUrlEncoded
     @POST("messenger/chats/DeleteChat.php")
-    Call<String> deleteChat(@Field("id") String id);
+    Call<String> deleteChat(@Field("id") String id, @Field("role") String role);
 }
