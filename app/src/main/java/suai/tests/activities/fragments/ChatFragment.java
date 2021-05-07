@@ -197,4 +197,20 @@ public class ChatFragment extends Fragment
         });
     }
 
+    public void EditMessages(View root, Integer idMessage, EditText message)
+    {
+        Call<String> call = service.editMessage(idMessage.toString(),message.getText().toString());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.v("result",response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("result",t.getMessage());
+            }
+        });
+    }
+
 }
