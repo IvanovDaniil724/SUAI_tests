@@ -63,10 +63,10 @@ public class MessengerFragment extends Fragment
                      UpdateChats(recyclerViewChats,root);
                      ConfirmationDialogBuilder.deletedChat=0;
                  }
-                h.postDelayed(this, 1000);
+                h.postDelayed(this, 3000);
             }
         };
-        h.postDelayed(run, 1000);
+        h.postDelayed(run, 3000);
         return root;
     }
 

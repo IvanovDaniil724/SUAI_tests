@@ -71,9 +71,10 @@ public class ChatFragment extends Fragment
                     UpdateMessages(recyclerViewMessages,root,idChat,message);
                     ConfirmationDialogBuilder.deletedMessage=0;
                 }
-                h.postDelayed(this, 1000);
+                h.postDelayed(this, 3000);
             }
         };
+        h.postDelayed(run, 3000);
 
         ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
