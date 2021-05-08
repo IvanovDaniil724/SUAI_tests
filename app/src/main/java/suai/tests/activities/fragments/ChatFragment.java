@@ -71,9 +71,10 @@ public class ChatFragment extends Fragment
                     UpdateMessages(recyclerViewMessages,root,idChat,message);
                     ConfirmationDialogBuilder.deletedMessage=0;
                 }
-                h.postDelayed(this, 1000);
+                h.postDelayed(this, 3000);
             }
         };
+        h.postDelayed(run, 3000);
 
         ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +186,22 @@ public class ChatFragment extends Fragment
     {
         Call<String> c = service.createMessage(idChat.toString(),String.valueOf(AccountFragment.idUser), message.getText().toString());
         c.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.v("result",response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("result",t.getMessage());
+            }
+        });
+    }
+
+    public void EditMessages(View root, Integer idMessage, EditText message)
+    {
+        Call<String> call = service.editMessage(idMessage.toString(),message.getText().toString());
+        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.v("result",response.body());
