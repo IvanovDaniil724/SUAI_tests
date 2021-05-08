@@ -149,7 +149,7 @@ public class ChatFragment extends Fragment
 
             }
         };
-        Call<MessagesClass[]> call = service.getMessages(idChat);
+        Call<MessagesClass[]> call = service.getMessages(idChat, String.valueOf(AccountFragment.role));
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
