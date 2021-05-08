@@ -19,4 +19,12 @@ public interface messagesAPI {
     @FormUrlEncoded
     @POST("messenger/chats/ReadMessages.php")
     Call<String> readMessages(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("messenger/chats/DeleteMessage.php")
+    Call<String> deleteMessage(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("messenger/chats/EditMessage.php")
+    Call<String> editMessage(@Field("id") String id, @Field("new_message") String new_message);
 }

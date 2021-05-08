@@ -1,6 +1,7 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.concurrent.Executors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.MessagesClass;
 import suai.tests.common.api.RetrofitConnection;
@@ -35,9 +37,12 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class ChatFragment extends Fragment
 {
-    messagesAPI service = RetrofitConnection.messagesApi;
-    messengerAPI newChat = RetrofitConnection.messengerApi;
-    Integer idChat;
+    public static messagesAPI service = RetrofitConnection.messagesApi;
+    public static messengerAPI newChat = RetrofitConnection.messengerApi;
+    public static RecyclerView recyclerViewMessages;
+    public static View root;
+    public static Integer idChat;
+    public static EditText message;
     Integer user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,6 +61,20 @@ public class ChatFragment extends Fragment
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
         UpdateMessages(recyclerViewMessages, root, idChat, message);
 
+        Handler h = new Handler();
+        Runnable run = new Runnable() {
+
+            @Override
+            public void run() {
+                if (ConfirmationDialogBuilder.deletedMessage==1) {
+                    //Log.v("g", "f");]
+                    UpdateMessages(recyclerViewMessages,root,idChat,message);
+                    ConfirmationDialogBuilder.deletedMessage=0;
+                }
+                h.postDelayed(this, 3000);
+            }
+        };
+        h.postDelayed(run, 3000);
 
         ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +141,7 @@ public class ChatFragment extends Fragment
 
     }
 
-    public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
+    public static void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
     {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
@@ -167,6 +186,22 @@ public class ChatFragment extends Fragment
     {
         Call<String> c = service.createMessage(idChat.toString(),String.valueOf(AccountFragment.idUser), message.getText().toString());
         c.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.v("result",response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("result",t.getMessage());
+            }
+        });
+    }
+
+    public void EditMessages(View root, Integer idMessage, EditText message)
+    {
+        Call<String> call = service.editMessage(idMessage.toString(),message.getText().toString());
+        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.v("result",response.body());

@@ -20,4 +20,7 @@ public interface messengerAPI {
     @POST("messenger/chats/CreateNewChat.php")
     Call<String> createNewChat(@Field("teacher") String teacher, @Field("student") String student);
 
+    @FormUrlEncoded
+    @POST("messenger/chats/DeleteChat.php")
+    Call<String> deleteChat(@Field("id") String id, @Field("role") String role);
 }

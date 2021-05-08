@@ -1,8 +1,11 @@
 package suai.tests.common.adapters;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,8 +17,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
+import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.MessagesClass;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
@@ -24,10 +34,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         void onStateClick(MessagesClass messages, int position);
     }
     private final OnMessagesClickListener onClickListener;
-
     private final LayoutInflater inflater;
     private MessagesClass[] messages;
-    private Context context;
+    private static Context context;
 
     public MessagesAdapter(Context context, MessagesClass[] messages, OnMessagesClickListener onClickListener) {
         this.messages = messages;
@@ -47,6 +56,37 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date messageDate = simpledateformat.parse(message.getMessages()[2],pos);
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(messageDate);
+        instance.add(Calendar.DAY_OF_MONTH, 1);
+        Date newDate = instance.getTime();
+        if ((Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser) && newDate.getTime()>=System.currentTimeMillis())
+        {
+            holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                    MenuItem Delete = contextMenu.add(Menu.NONE, 1, 1, "Удалить");
+                    Delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Удаление", "Вы точно хотите удалить сообщение?", 1);
+                            return true;
+                        }
+                    });
+                    MenuItem Edit = contextMenu.add(Menu.NONE, 2, 2, "Редактировать");
+                    Edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            //   new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Редактирование", "Вы точно хотите удалить сообщение?", 1);
+                            return true;
+                        }
+                    });
+                }
+            });
+        }
         holder.messageView.setText(message.getMessages()[3]);
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
@@ -62,7 +102,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.readView.setImageResource(R.drawable.ic_message_post);
         else if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
             holder.readView.setVisibility(View.INVISIBLE);
-        holder.dateView.setText(message.getMessages()[2]);
+        String messageText;
+        if (message.getMessages()[2].isEmpty())
+            messageText = "Нет сообщений";
+        else messageText = message.getMessages()[2];
+        holder.dateView.setText(messageText);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -77,7 +121,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return messages.length;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
         final TextView messageView, dateView;
         final ImageView readView;
@@ -88,7 +132,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);
+
         }
 
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+        }
     }
 }
