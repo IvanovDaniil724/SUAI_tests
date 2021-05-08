@@ -60,7 +60,6 @@ public class TestDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
             idTest = getArguments().getInt(ID_TEST);
         }
     }

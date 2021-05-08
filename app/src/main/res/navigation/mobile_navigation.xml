@@ -46,6 +46,10 @@
         <action
             android:id="@+id/action_navigation_account_to_navigation_messenger"
             app:destination="@id/navigation_messenger" />
+        <action
+            android:id="@+id/action_navigation_account_to_statisticsFragment"
+            app:destination="@id/statisticsFragment"
+            app:popUpTo="@id/navigation_account" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -72,6 +76,18 @@
         tools:layout="@layout/fragment_test_details" >
         <argument
             android:name="idTest"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="suai.tests.activities.fragments.StatisticsFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_statistics" >
+        <argument
+            android:name="idUser"
+            app:argType="integer" />
+        <argument
+            android:name="role"
             app:argType="integer" />
     </fragment>
 </navigation>
