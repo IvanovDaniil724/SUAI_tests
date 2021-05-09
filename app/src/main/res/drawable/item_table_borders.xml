@@ -6,8 +6,11 @@
         android:left="-2dp"
         android:right="-2dp"
         android:top="-2dp">
-        <shape android:shape="rectangle">
-            <stroke android:width="2dp" android:color="@color/suai_secondary"/>
+        <shape android:id="@+id/itemTableBorderBottomShape" android:shape="rectangle">
+            <stroke
+                android:id="@+id/itemTableBorderBottomStroke"
+                android:width="2dp"
+                android:color="@color/suai_secondary"/>
         </shape>
     </item>
 
@@ -16,8 +19,11 @@
         android:left="-2dp"
         android:right="-2dp"
         android:bottom="-2dp">
-        <shape android:shape="rectangle">
-            <stroke android:width="2dp" android:color="@color/suai_secondary"/>
+        <shape android:id="@+id/itemTableBorderTopShape" android:shape="rectangle">
+            <stroke
+                android:id="@+id/itemTableBorderTopStroke"
+                android:width="2dp"
+                android:color="@color/suai_secondary"/>
         </shape>
     </item>
 
@@ -26,8 +32,11 @@
         android:bottom="-2dp"
         android:right="-2dp"
         android:top="-2dp">
-        <shape android:shape="rectangle">
-            <stroke android:width="2dp" android:color="@color/suai_secondary"/>
+        <shape android:id="@+id/itemTableBorderLeftShape" android:shape="rectangle">
+            <stroke
+                android:id="@+id/itemTableBorderLeftStroke"
+                android:width="2dp"
+                android:color="@color/suai_secondary"/>
         </shape>
     </item>
 
@@ -36,8 +45,11 @@
         android:left="-2dp"
         android:bottom="-2dp"
         android:top="-2dp">
-        <shape android:shape="rectangle">
-            <stroke android:width="2dp" android:color="@color/suai_secondary"/>
+        <shape android:id="@+id/itemTableBorderRightShape" android:shape="rectangle">
+            <stroke
+                android:id="@+id/itemTableBorderRightStroke"
+                android:width="2dp"
+                android:color="@color/suai_secondary"/>
         </shape>
     </item>
 </layer-list>

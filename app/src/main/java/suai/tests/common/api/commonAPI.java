@@ -10,8 +10,11 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public interface commonAPI
 {
+    @GET("common/statistics/GetSubjects.php")
+    Call<ItemsPOJO[]> getUserSubjects(@Query("idUser") int idUser, @Query("role") int role);
+
     @GET("common/statistics/GetStatistics.php")
-    Call<ItemsPOJO[]> getUserStatistics(@Query("idUser") int idUser, @Query("role") int role);
+    Call<ItemsPOJO[]> getUserStatistics(@Query("idUser") int idUser, @Query("role") int role, @Query("subject") String subject);
 
     @FormUrlEncoded
     @POST("common/UserAuth.php")

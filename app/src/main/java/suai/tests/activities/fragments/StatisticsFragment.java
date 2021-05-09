@@ -2,13 +2,19 @@ package suai.tests.activities.fragments;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -19,13 +25,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,14 +47,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
+import suai.tests.activities.MainActivity;
+import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.commonAPI;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.testsAPI;
 
-public class StatisticsFragment extends Fragment {
-
+public class StatisticsFragment extends Fragment
+{
     private ItemsPOJO[] statistics;
+
+    private Spinner StatisticsSubjectsSpinner;
 
     private TableLayout MarksTableLayout;
 
@@ -56,23 +71,34 @@ public class StatisticsFragment extends Fragment {
         root.findViewById(R.id.BackToAccountButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view); navBar.setVisibility(View.VISIBLE);
                 Navigation.findNavController(root).popBackStack();
             }
         });
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view); navBar.setVisibility(View.VISIBLE);
+                Navigation.findNavController(root).popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view); navBar.setVisibility(View.GONE);
+
+        StatisticsSubjectsSpinner = root.findViewById(R.id.StatisticsSubjectsSpinner);
         MarksTableLayout = root.findViewById(R.id.MarksTableLayout);
 
         commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
-        call = service.getUserStatistics(AccountFragment.idUser, AccountFragment.role);
+
+        call = service.getUserSubjects(AccountFragment.idUser, AccountFragment.role);
         call.enqueue(new Callback<ItemsPOJO[]>()
         {
             @Override
             public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
             {
-                ItemsPOJO[] resp = response.body();
-                //String[] test = resp[0].getItems();
-
-                if (AccountFragment.role == 1) { setStudentStatistics(root, resp); } else { setTeacherStatistics(root, resp); }
+                ItemsPOJO[] subjects = response.body(); setUserSubjects(root.getContext(), root, subjects);
             }
 
             @Override
@@ -82,33 +108,58 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
-
-
         return root;
     }
 
-    private String[] exportData(ItemsPOJO[] resp, int exportIndex)
+    private void setUserSubjects(Context context, View root, ItemsPOJO[] resp)
     {
-        String[] items = new String[resp.length];
+        String[] subjects = new String[resp.length];
+        for (int i = 0; i < resp.length; i++) { subjects[i] = resp[i].getItems()[1]; }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(context, R.layout.spinner_style, subjects);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_style);
+        StatisticsSubjectsSpinner.setAdapter(spinnerAdapter);
 
-        for (int i = 0; i < resp.length; i++)
-        {
-            items[i] = resp[i].getItems()[exportIndex];
-        }
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                // Получаем выбранный объект
+                String subject = (String) parent.getItemAtPosition(position);
 
-        return items;
-    }
+                MarksTableLayout.removeAllViews();
 
-    private void appendRowToTable(TableLayout tableLayout, String[] row)
-    {
+                commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
+                call = service.getUserStatistics(AccountFragment.idUser, AccountFragment.role, subject);
+                call.enqueue(new Callback<ItemsPOJO[]>()
+                {
+                    @Override
+                    public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
+                    {
+                        ItemsPOJO[] marks = response.body();
+                        //String[] test = resp[0].getItems();
 
+                        if (AccountFragment.role == 1) { setStudentStatistics(root, marks); } else { setTeacherStatistics(root, marks); }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
+                    {
+                        Log.e("retrofitError", t.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {  }
+        };
+        StatisticsSubjectsSpinner.setOnItemSelectedListener(itemSelectedListener);
     }
 
     private TextView createTextView(LinearLayout container, String text)
     {
         TextView dataTextView = new TextView(container.getContext()); dataTextView.setPadding(4, 4, 4, 4);
         dataTextView.setGravity(Gravity.CENTER); dataTextView.setTextColor(getResources().getColor(R.color.black));
-        dataTextView.setTextSize(14); dataTextView.setText(text); dataTextView.setSingleLine(false);
+        dataTextView.setTextSize(18); dataTextView.setText(text); dataTextView.setSingleLine(false);
 
         dataTextView.setLayoutParams(
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 128, 1f));
@@ -128,7 +179,7 @@ public class StatisticsFragment extends Fragment {
         return dataImageView;
     }
 
-    private LayerDrawable setTableBorders(boolean left, boolean top, boolean right, boolean bottom)
+    private LayerDrawable setCellBorders(boolean left, boolean top, boolean right, boolean bottom)
     {
         LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_borders);
         Drawable borderTop =  borders.findDrawableByLayerId(R.id.itemTableBorderTop),
@@ -144,29 +195,64 @@ public class StatisticsFragment extends Fragment {
         return borders;
     }
 
+    public void setTableBorders(View view, int rowsNumber, int cellsNumber, int rowIndex, int cellIndex)
+    {
+        if (rowIndex == 0)
+        {
+            if (rowsNumber == 1)
+            {
+                if (cellsNumber == 1) { view.setBackground(setCellBorders(false, false, false, false)); }
+                else
+                {
+                    if (cellIndex == 0) { view.setBackground(setCellBorders(false, false, false, false)); }
+                    else { view.setBackground(setCellBorders(true, false, false, false)); }
+                }
+            }
+            else
+            {
+                if (cellsNumber == 1) { view.setBackground(setCellBorders(false, false, false, false)); }
+                else
+                {
+                    if (cellIndex == 0) { view.setBackground(setCellBorders(false, false, false, true)); }
+                    else { view.setBackground(setCellBorders(true, false, false, true)); }
+                }
+            }
+        }
+        else
+        {
+            if (rowIndex + 1 == rowsNumber)
+            {
+                if (cellsNumber == 1) { view.setBackground(setCellBorders(false, false, false, false)); }
+                else
+                {
+                    if (cellIndex == 0) { view.setBackground(setCellBorders(false, false, false, false)); }
+                    else { view.setBackground(setCellBorders(true, false, false, false)); }
+                }
+            }
+            else
+            {
+                if (cellIndex == 0) { view.setBackground(setCellBorders(false, false, false, true)); }
+                else { view.setBackground(setCellBorders(true, false, false, true)); }
+            }
+        }
+    }
+
     private TableRow createTableHeader(Context context, String[] headerData)
     {
-        TableRow tableRow; Space space; LinearLayout linearLayout; TextView cell;
+        TableRow tableRow; LinearLayout linearLayout; TextView cell;
 
         tableRow = new TableRow(context); tableRow.setGravity(Gravity.CENTER);
         linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setGravity(Gravity.CENTER);
 
-        /*space = new Space(linearLayout.getContext());
-        space.setLayoutParams(
-                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                        TableLayout.LayoutParams.WRAP_CONTENT, 1f));*/
-        //space.setBackground(setTableBorders(false, false, false, true));
-        //linearLayout.addView(space);
-
         cell = createTextView(linearLayout, "");
-        cell.setBackground(setTableBorders(false, false, false, true));
-        linearLayout.addView(cell);
+        LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
+        cell.setBackground(borders); linearLayout.addView(cell);
 
         for (int i = 0; i < headerData.length; i++)
         {
             cell = createTextView(linearLayout, headerData[i]);
-            cell.setBackground(setTableBorders(true, false, false, true));
+            cell.setBackground(setCellBorders(true, false, false, true));
             linearLayout.addView(cell);
         }
 
@@ -174,90 +260,41 @@ public class StatisticsFragment extends Fragment {
         return tableRow;
     }
 
-    private void setStudentStatistics(View root, ItemsPOJO[] resp)
+    private void setStudentStatistics(View root, ItemsPOJO[] marks)
     {
-        //initializeStatisticsTable(root, resp, MarksTableLayout);
-
-        String[] subjects, labs, marks, status;
-        subjects = exportData(resp, 1);
-        labs = exportData(resp, 0);
-        marks = exportData(resp, 3);
-        status = exportData(resp, 2);
-
         MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
+        TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
 
-        TableRow tableRow; Space space; LinearLayout linearLayout; TextView cell;
+        String[] titles = { "Оценка / статус" };
+        MarksTableLayout.addView(createTableHeader(MarksTableLayout.getContext(), titles));
 
-        //tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-        //linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-        /*space = new Space(linearLayout.getContext());
-        space.setLayoutParams(
-                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                        TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-        linearLayout.addView(space);
-
-        for (int i = 0; i < labs.length; i++)
+        for (int i = 0; i < marks.length; i++)
         {
-            linearLayout.addView(createTextView(linearLayout, labs[i]));
-        }
+            tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+            linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);*/
+            cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
+            cell = createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
+            setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
 
-        MarksTableLayout.addView(createTableHeader(MarksTableLayout.getContext(), labs));
-
-        String subject = resp[0].getItems()[1], currentSubject = resp[0].getItems()[1];
-        tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-        linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        for (int i = 0; i < resp.length; i++)
-        {
-            if (i == 0)
+            if (status == 0)
             {
-                cell = createTextView(linearLayout, subject);
-                if (subjects.length == 1) { cell.setBackground(setTableBorders(false, false, false, false)); }
-                else { cell.setBackground(setTableBorders(false, false, false, true)); }
-                linearLayout.addView(cell);
+                cellImage = createImageView(linearLayout,
+                        R.drawable.ic_baseline_access_time_24, android.R.color.holo_orange_light);
             }
 
-            if (subject.equals(currentSubject))
+            if (status == 2)
             {
-                if (resp[i].getItems()[3] == null)
-                {
-                    ImageView cellImage = createImageView(linearLayout,
-                            R.drawable.ic_baseline_access_time_24, android.R.color.holo_orange_light);
-                    if (subjects.length == 1)
-                    {
-                        cellImage.setBackground(setTableBorders(true, false, false, false));
-                    }
-                    else { cellImage.setBackground(setTableBorders(true, false, false, true)); }
-                    linearLayout.addView(cellImage);
-                }
-                else
-                {
-                    cell = createTextView(linearLayout, resp[i].getItems()[3]);
-                    if (subjects.length == 1) { cell.setBackground(setTableBorders(true, false, false, false)); }
-                    else { cell.setBackground(setTableBorders(true, false, false, true)); }
-                    linearLayout.addView(cell);
-                }
-
-                if (i == resp.length - 1 && currentSubject.equals(resp[i - 1].getItems()[1]))
-                {
-                    tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
-                }
+                cellImage = createImageView(linearLayout,
+                        R.drawable.ic_baseline_error_24, android.R.color.holo_red_light);
             }
-            else
-            {
-                tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
 
-                currentSubject = resp[i].getItems()[1];
+            if (status == 1) { cell = createTextView(linearLayout, marks[i].getItems()[2]); }
 
-                tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-                linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            if (status == 1) { setTableBorders(cell, marks.length, 2, i, cellsIndex); linearLayout.addView(cell); }
+            else { setTableBorders(cellImage, marks.length, 2, i, cellsIndex); linearLayout.addView(cellImage); }
 
-                cell = createTextView(linearLayout, currentSubject);
-                cell.setBackground(setTableBorders(false, true, true, false));
-                linearLayout.addView(cell);
-            }
+            tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
         }
     }
 
@@ -266,37 +303,18 @@ public class StatisticsFragment extends Fragment {
 
     }
 
-    /*private void initializeStatisticsTable(View root, ItemsPOJO[] resp, TableLayout tableLayout)
-    {
-        for (int row = 0; row < resp.length; row++)
-        {
-            TableRow tableRow = new TableRow(tableLayout.getContext());
-            LinearLayout linearLayout = new LinearLayout(tableRow.getContext());
-            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+    class CustomShapeDrawable extends ShapeDrawable {
+        private final Paint fillpaint;
 
-            String[] items = resp[row].getItems();
-
-            TextView dataTextView = new TextView(linearLayout.getContext());
-
-            //dataTextView.setText(items[cell]); linearLayout.addView(dataTextView);
-
-            for (int cell = 0; cell < resp[0].getItems().length; cell++)
-            {
-                String[] items = resp[row].getItems();
-
-                TextView dataTextView = new TextView(linearLayout.getContext());
-                dataTextView.setText(items[cell]); linearLayout.addView(dataTextView);
-            }
-
-            tableRow.addView(linearLayout); tableLayout.addView(tableRow);
-
-            //TextView textView1 = new TextView(linearLayout.getContext());
-            //TextView textView2 = new TextView(linearLayout.getContext());
-            //textView1.setText(String.valueOf(i)); linearLayout.addView(textView1);
-            //textView2.setText(String.valueOf(i) + " -> success"); linearLayout.addView(textView2);
-
-            //tableRow.addView(linearLayout);
-            //MarksTableLayout.addView(tableRow);
+        public CustomShapeDrawable(Shape s, int fill) {
+            super(s);
+            fillpaint = new Paint(this.getPaint());
+            fillpaint.setColor(fill);
         }
-    }*/
+
+        @Override
+        protected void onDraw(Shape shape, Canvas canvas, Paint paint) {
+            shape.draw(canvas, fillpaint);
+        }
+    }
 }
