@@ -65,8 +65,9 @@ public class ChatFragment extends Fragment
         EditText message = root.findViewById(R.id.editTextMessage);
 
         ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderChat);
+        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutFindHeader);
          ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
-        registerForContextMenu(header);
+      // registerForContextMenu(header);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +81,8 @@ public class ChatFragment extends Fragment
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case 0:
-                                //code
+                                findHeader.setVisibility(View.VISIBLE);
+                                header.setVisibility(View.INVISIBLE);
                                 break;
                             case 1:
                                 new ConfirmationDialogBuilder(ChatsAdapter.context, idChat.toString()).alert("Удаление", "Вы точно хотите удалить чат?",0);
