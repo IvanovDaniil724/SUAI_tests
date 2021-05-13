@@ -3,15 +3,21 @@ package suai.tests.activities.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.common.ConfirmationDialogBuilder;
+import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.MessagesClass;
 import suai.tests.common.api.RetrofitConnection;
@@ -51,12 +58,41 @@ public class ChatFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
-
         TextView fio = root.findViewById(R.id.fio);
         if (MessengerFragment.FIO=="")
             fio.setText(NewChatFragment.FIO);
         else fio.setText(MessengerFragment.FIO);
         EditText message = root.findViewById(R.id.editTextMessage);
+
+        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderChat);
+         ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
+        registerForContextMenu(header);
+
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(getActivity(), fio);
+                popup.getMenu().add(Menu.NONE, 0, Menu.NONE, "Поиск");
+                popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Удалить историю");
+                popup.show();
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case 0:
+                                //code
+                                break;
+                            case 1:
+                                new ConfirmationDialogBuilder(ChatsAdapter.context, idChat.toString()).alert("Удаление", "Вы точно хотите удалить чат?",0);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
+
+
 
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
         UpdateMessages(recyclerViewMessages, root, idChat, message);
