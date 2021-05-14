@@ -5,14 +5,11 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -24,11 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.checkerframework.checker.units.qual.C;
-import org.w3c.dom.Text;
-
-import java.util.concurrent.Executors;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +29,6 @@ import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.MessagesClass;
 import suai.tests.common.api.RetrofitConnection;
-import suai.tests.common.api.ChatClass;
 import suai.tests.common.api.messagesAPI;
 import suai.tests.common.api.messengerAPI;
 
@@ -66,8 +57,8 @@ public class ChatFragment extends Fragment
         else fio.setText(MessengerFragment.FIO);
         EditText message = root.findViewById(R.id.editTextMessage);
 
-        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderChat);
-        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutFindHeader);
+        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
+        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutSearchMessaenger);
         ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
         RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
 
@@ -96,15 +87,6 @@ public class ChatFragment extends Fragment
             }
         });
 
-        ImageButton back = root.findViewById(R.id.imageButtonBack);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                findHeader.setVisibility(View.INVISIBLE);
-                header.setVisibility(View.VISIBLE);
-            }
-        });
-
         EditText find = root.findViewById(R.id.editTextFind);
         find.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,6 +105,15 @@ public class ChatFragment extends Fragment
             }
         });
 
+        ImageButton back = root.findViewById(R.id.imageButtonBackChat);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findHeader.setVisibility(View.INVISIBLE);
+                header.setVisibility(View.VISIBLE);
+                find.setText("");
+            }
+        });
 
         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
 
