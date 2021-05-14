@@ -2,6 +2,8 @@ package suai.tests.activities.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -66,8 +68,8 @@ public class ChatFragment extends Fragment
 
         ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderChat);
         ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutFindHeader);
-         ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
-      // registerForContextMenu(header);
+        ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
+        RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,10 +96,35 @@ public class ChatFragment extends Fragment
             }
         });
 
+        ImageButton back = root.findViewById(R.id.imageButtonBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findHeader.setVisibility(View.INVISIBLE);
+                header.setVisibility(View.VISIBLE);
+            }
+        });
+
+        EditText find = root.findViewById(R.id.editTextFind);
+        find.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
-        RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
-        UpdateMessages(recyclerViewMessages, root, idChat, message);
+        UpdateMessages(recyclerViewMessages, root, idChat, message, find);
 
         Handler h = new Handler();
         Runnable run = new Runnable() {
@@ -106,7 +133,7 @@ public class ChatFragment extends Fragment
             public void run() {
                 if (ConfirmationDialogBuilder.deletedMessage==1) {
                     //Log.v("g", "f");]
-                    UpdateMessages(recyclerViewMessages,root,idChat,message);
+                    UpdateMessages(recyclerViewMessages,root,idChat,message, find);
                     ConfirmationDialogBuilder.deletedMessage=0;
                 }
                 h.postDelayed(this, 3000);
@@ -146,13 +173,13 @@ public class ChatFragment extends Fragment
                                         Log.v("df",idChats[0].getItems()[0]);
                                         idChat = Integer.parseInt(idChats[0].getItems()[0]);
                                         SendMessages(root, idChat, message);
-                                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                                     }
 
                                     @Override
                                     public void onFailure(Call<ItemsPOJO[]> call, Throwable t) {
                                         Log.e("g", t.getMessage());
-                                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                                     }
                                 });
 
@@ -161,14 +188,14 @@ public class ChatFragment extends Fragment
                             @Override
                             public void onFailure(Call<String> call, Throwable t) {
                                 Log.e("h",t.getMessage());
-                                UpdateMessages(recyclerViewMessages, root, idChat, message);
+                                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                             }
                         });
                     }
                     else
                     {
                         SendMessages(root, idChat, message);
-                        UpdateMessages(recyclerViewMessages, root, idChat, message);
+                        UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                     }
 
                 }
@@ -179,7 +206,7 @@ public class ChatFragment extends Fragment
 
     }
 
-    public static void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message)
+    public static void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message, EditText find)
     {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
@@ -187,7 +214,7 @@ public class ChatFragment extends Fragment
 
             }
         };
-        Call<MessagesClass[]> call = service.getMessages(idChat, String.valueOf(AccountFragment.role));
+        Call<MessagesClass[]> call = service.getMessages(idChat, String.valueOf(AccountFragment.role), find.getText().toString());
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
