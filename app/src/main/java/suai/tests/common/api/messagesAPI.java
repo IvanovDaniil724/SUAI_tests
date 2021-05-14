@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 
 public interface messagesAPI {
     @GET("messenger/chats/GetChat.php")
-    Call<MessagesClass[]> getMessages(@Query("chat_id") int chatId, @Query("role") String role);
+    Call<MessagesClass[]> getMessages(@Query("chat_id") int chatId, @Query("role") String role, @Query("find") String find);
 
 
     @FormUrlEncoded

@@ -2,15 +2,16 @@ package suai.tests.activities.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,11 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.ChatsAdapter;
-import suai.tests.common.adapters.MessagesAdapter;
 import suai.tests.common.api.ChatClass;
 import suai.tests.common.api.RetrofitConnection;
-import suai.tests.common.api.messagesAPI;
-import suai.tests.common.api.MessagesClass;
 
 import suai.tests.R;
 import suai.tests.common.api.messengerAPI;
@@ -42,8 +40,48 @@ public class MessengerFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
 
+        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
+        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutSearchMessaenger);
         RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
-        UpdateChats(recyclerViewChats,root);
+
+        ImageButton buttonSearch = root.findViewById(R.id.imageButtonSearch);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                header.setVisibility(View.INVISIBLE);
+                findHeader.setVisibility(View.VISIBLE);
+            }
+        });
+
+        EditText find = root.findViewById(R.id.editTextFind);
+        find.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                UpdateChats(recyclerViewChats, root, find);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        ImageButton back = root.findViewById(R.id.imageButtonBackChat);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findHeader.setVisibility(View.INVISIBLE);
+                header.setVisibility(View.VISIBLE);
+                find.setText("");
+            }
+        });
+
+        UpdateChats(recyclerViewChats,root, find);
 
         ImageButton buttonNewChat = root.findViewById(R.id.imageButtonNewChat);
         buttonNewChat.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +98,7 @@ public class MessengerFragment extends Fragment
             public void run() {
                  if (ConfirmationDialogBuilder.deletedChat==1) {
                      //Log.v("g", "f");]
-                     UpdateChats(recyclerViewChats,root);
+                     UpdateChats(recyclerViewChats, root, find);
                      ConfirmationDialogBuilder.deletedChat=0;
                  }
                 h.postDelayed(this, 3000);
@@ -70,7 +108,7 @@ public class MessengerFragment extends Fragment
         return root;
     }
 
-    public static void UpdateChats(RecyclerView recyclerViewChats, View root)
+    public static void UpdateChats(RecyclerView recyclerViewChats, View root, EditText find)
     {
         ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
             @Override
@@ -82,7 +120,7 @@ public class MessengerFragment extends Fragment
                 Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
             }
         };
-        Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role);
+        Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role, find.getText().toString());
         call.enqueue(new Callback<ChatClass[]>() {
             @Override
             public void onResponse(Call<ChatClass[]> call, Response<ChatClass[]> response) {

@@ -11,7 +11,7 @@ import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public interface messengerAPI {
     @GET("messenger/chats/GetChats.php")
-    Call<ChatClass[]> getChats(@Query("id") int userId,@Query("role") int role);
+    Call<ChatClass[]> getChats(@Query("id") int userId,@Query("role") int role, @Query("find") String find);
 
     @GET("common/GetChatsWithUser.php")
     Call<ItemsPOJO[]> getChatsWithUser(@Query("teacher") String teacher, @Query("student") String student);
