@@ -44,8 +44,6 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class StatisticsFragment extends Fragment
 {
-    private ItemsPOJO[] statistics;
-
     private Spinner StatisticsSubjectsSpinner;
 
     private TableLayout MarksTableLayout;

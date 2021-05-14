@@ -1,5 +1,7 @@
 package suai.tests.activities.fragments;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import suai.tests.R;
+import suai.tests.activities.AuthorizationActivity;
+import suai.tests.activities.MainActivity;
 
 public class AccountFragment extends Fragment
 {
@@ -69,6 +73,14 @@ public class AccountFragment extends Fragment
                 Bundle bundle = new Bundle();
                 bundle.putInt("idUser", idUser); bundle.putInt("role", role);
                 Navigation.findNavController(root).navigate(R.id.action_navigation_account_to_statisticsFragment, bundle);
+            }
+        });
+
+        root.findViewById(R.id.ExitButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = AuthorizationActivity.spSavedData.edit(); editor.clear(); editor.commit();
+                startActivity(new Intent(root.getContext(), AuthorizationActivity.class)); getActivity().finish();
             }
         });
 

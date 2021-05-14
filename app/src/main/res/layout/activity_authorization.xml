@@ -82,7 +82,7 @@
 
     <Button
         android:id="@+id/AuthSignInButton"
-        android:layout_width="124dp"
+        android:layout_width="256dp"
         android:layout_height="64dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/suai_primary"
@@ -90,6 +90,18 @@
         android:text="Войти"
         android:textSize="18sp"
         app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RememberMeCheckBox" />
+
+    <CheckBox
+        android:id="@+id/RememberMeCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Запомнить меня"
+        android:textColor="@color/suai_secondary"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AuthPasswordTextInputLayout" />
