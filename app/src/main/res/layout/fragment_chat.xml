@@ -18,7 +18,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayoutSearchMessaenger"
+            android:id="@+id/constraintLayoutEdit"
             android:layout_width="match_parent"
             android:layout_height="68dp"
             android:visibility="invisible"
@@ -27,7 +27,42 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/imageButtonBackChat"
+                android:id="@+id/imageButtonBackFromEdit"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="24dp"
+                android:background="#FFFFFF"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:text="Редактирование"
+                android:textColor="@color/suai_primary"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.058"
+                app:layout_constraintStart_toEndOf="@+id/imageButtonBackFromEdit"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.52" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutSearchMessenger"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/imageButtonBack"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="24dp"
@@ -48,7 +83,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.075"
-                app:layout_constraintStart_toEndOf="@+id/imageButtonBackChat"
+                app:layout_constraintStart_toEndOf="@+id/imageButtonBack"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.521" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,8 +146,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayoutHeaderMessenger"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayoutEdit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -147,8 +181,7 @@
             android:layout_height="45dp"
             android:layout_gravity="bottom|right"
             android:layout_marginEnd="8dp"
-            android:background="#FFFFFF"
-            android:src="@drawable/ic_send"
+            android:background="@drawable/ic_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
