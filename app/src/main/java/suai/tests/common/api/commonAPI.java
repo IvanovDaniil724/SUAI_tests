@@ -5,12 +5,16 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public interface commonAPI
 {
-    @GET("common/GetUsers.php")
-    Call<ItemsPOJO[]> getUsers();
+    @GET("common/statistics/GetSubjects.php")
+    Call<ItemsPOJO[]> getUserSubjects(@Query("idUser") int idUser, @Query("role") int role);
+
+    @GET("common/statistics/GetStatistics.php")
+    Call<ItemsPOJO[]> getUserStatistics(@Query("idUser") int idUser, @Query("role") int role, @Query("subject") String subject);
 
     @FormUrlEncoded
     @POST("common/UserAuth.php")

@@ -3,12 +3,15 @@ package suai.tests.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -16,9 +19,12 @@ import android.widget.ProgressBar;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 
+import org.json.JSONArray;
+
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -34,10 +40,39 @@ import suai.tests.common.api.pojo.common.UserPOJO;
 
 public class AuthorizationActivity extends AppCompatActivity
 {
+    public static SharedPreferences spSavedData;
+    private final String ID_USER = "idUser";
+    private final String ROLE = "role";
+    private final String EMAIL = "email";
+    private final String LAST_NAME = "lastName";
+    private final String FIRST_NAME = "firstName";
+    private final String PATRONYMIC = "patronymic";
+    private final String BIRTHDAY = "birthday";
+    private final String DATA = "data";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        spSavedData = getPreferences(MODE_PRIVATE);
+        if (spSavedData.contains(ID_USER))
+        {
+            AccountFragment.idUser = spSavedData.getInt(ID_USER, 0);
+            AccountFragment.role = spSavedData.getInt(ROLE, 0);
+            AccountFragment.email = spSavedData.getString(EMAIL, "");
+            AccountFragment.lastName = spSavedData.getString(LAST_NAME, "");
+            AccountFragment.firstName = spSavedData.getString(FIRST_NAME, "");
+            AccountFragment.patronymic = spSavedData.getString(PATRONYMIC, "");
+
+            Calendar calendar = Calendar.getInstance(); SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try { calendar.setTime(sdf.parse(spSavedData.getString(BIRTHDAY, ""))); } catch (ParseException e) { e.printStackTrace(); }
+            AccountFragment.birthday = calendar;
+            AccountFragment.data = spSavedData.getString(DATA, "").split("#");
+
+            startActivity(new Intent(AuthorizationActivity.this, MainActivity.class)); finish();
+        }
+
         setContentView(R.layout.activity_authorization);
 
         getSupportActionBar().hide();
@@ -105,7 +140,7 @@ public class AuthorizationActivity extends AppCompatActivity
                                         AccountFragment.patronymic = user[4];
 
                                         Calendar calendar = Calendar.getInstance();
-                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                         try { calendar.setTime(sdf.parse(user[5])); }
                                         catch (ParseException e) { e.printStackTrace(); }
                                         AccountFragment.birthday = calendar;
@@ -114,6 +149,26 @@ public class AuthorizationActivity extends AppCompatActivity
 
                                         AccountFragment.data = new String[user.length - 7];
                                         for (int i = 0; i < AccountFragment.data.length; i++) { AccountFragment.data[i] = user[i + 7]; }
+
+                                        CheckBox RememberMeCheckBox = findViewById(R.id.RememberMeCheckBox);
+                                        if (RememberMeCheckBox.isChecked())
+                                        {
+                                            spSavedData = getPreferences(MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = spSavedData.edit();
+                                            editor.putInt(ID_USER, AccountFragment.idUser);
+                                            editor.putInt(ROLE, AccountFragment.role);
+                                            editor.putString(EMAIL, AccountFragment.email);
+                                            editor.putString(LAST_NAME, AccountFragment.lastName);
+                                            editor.putString(FIRST_NAME, AccountFragment.firstName);
+                                            editor.putString(PATRONYMIC, AccountFragment.patronymic);
+                                            editor.putString(BIRTHDAY, user[5]);
+                                            StringBuilder sb = new StringBuilder();
+                                            for (int i = 0; i < AccountFragment.data.length; i++) {
+                                                sb.append(AccountFragment.data[i]).append("#");
+                                            }
+                                            editor.putString(DATA, sb.toString());
+                                            editor.commit();
+                                        }
 
                                         endLoading();
                                         startActivity(new Intent(AuthorizationActivity.this, MainActivity.class)); finish();
