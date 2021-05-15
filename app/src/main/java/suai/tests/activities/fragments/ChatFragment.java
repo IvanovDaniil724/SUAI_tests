@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.DoubleSummaryStatistics;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +46,14 @@ public class ChatFragment extends Fragment
     public static Integer idChat;
     public static EditText message;
     Integer user;
+    public static String idMessage;
+    public static Integer isEdit = 0;
+    public static ConstraintLayout header;
+    public static ConstraintLayout findHeader;
+    public static ConstraintLayout edit;
+    public static ImageButton buttonMoreAction;
+    public static ImageButton buttonSendMessage;
+    public static ImageButton backFromEdit;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
@@ -51,16 +61,29 @@ public class ChatFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
+        edit = root.findViewById(R.id.constraintLayoutEdit);
         TextView fio = root.findViewById(R.id.fio);
         if (MessengerFragment.FIO=="")
             fio.setText(NewChatFragment.FIO);
         else fio.setText(MessengerFragment.FIO);
-        EditText message = root.findViewById(R.id.editTextMessage);
+        message = root.findViewById(R.id.editTextMessage);
 
-        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
-        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutSearchMessaenger);
-        ImageButton buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
-        RecyclerView recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
+        backFromEdit = root.findViewById(R.id.imageButtonBackFromEdit);
+        backFromEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findHeader.setVisibility(View.INVISIBLE);
+                header.setVisibility(View.VISIBLE);
+                edit.setVisibility(View.INVISIBLE);
+                message.setText("");
+                buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+            }
+        });
+
+        header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
+        findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
+        buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
+        recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +128,7 @@ public class ChatFragment extends Fragment
             }
         });
 
-        ImageButton back = root.findViewById(R.id.imageButtonBackChat);
+        ImageButton back = root.findViewById(R.id.imageButtonBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,7 +155,7 @@ public class ChatFragment extends Fragment
         };
         h.postDelayed(run, 3000);
 
-        ImageButton buttonSendMessage = root.findViewById(R.id.imageButtonSend);
+        buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,7 +208,27 @@ public class ChatFragment extends Fragment
                     }
                     else
                     {
-                        SendMessages(root, idChat, message);
+                        if (isEdit==1)
+                        {
+                           // Log.v(":", idMessage);
+                            Call<String> editMessage = service.editMessage(idMessage, message.getText().toString());
+                            editMessage.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+
+                                }
+                            });
+                            isEdit = 0;
+                            buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+                        }
+                        else {
+                            SendMessages(root, idChat, message);
+                        }
                         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                     }
 
@@ -268,6 +311,13 @@ public class ChatFragment extends Fragment
                 Log.e("result",t.getMessage());
             }
         });
+    }
+
+    public static void OpenEditField(View root)
+    {
+        ChatFragment.edit.setVisibility(View.VISIBLE);
+        ChatFragment.findHeader.setVisibility(View.INVISIBLE);
+        ChatFragment.header.setVisibility(View.INVISIBLE);
     }
 
 }

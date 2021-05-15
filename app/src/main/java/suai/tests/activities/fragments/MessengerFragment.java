@@ -35,16 +35,20 @@ public class MessengerFragment extends Fragment
     public static RecyclerView recyclerViewChats;
     public static View root;
 
+    public static ConstraintLayout header;
+    public static ConstraintLayout findHeader;
+    public static ImageButton buttonSearch;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
 
-        ConstraintLayout header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
-        ConstraintLayout findHeader = root.findViewById(R.id.constraintLayoutSearchMessaenger);
-        RecyclerView recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
+        header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
+        findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
+        recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
 
-        ImageButton buttonSearch = root.findViewById(R.id.imageButtonSearch);
+        buttonSearch = root.findViewById(R.id.imageButtonSearch);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +75,7 @@ public class MessengerFragment extends Fragment
             }
         });
 
-        ImageButton back = root.findViewById(R.id.imageButtonBackChat);
+        ImageButton back = root.findViewById(R.id.imageButtonBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

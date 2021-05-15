@@ -25,6 +25,7 @@ import java.util.Date;
 
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
+import suai.tests.activities.fragments.ChatFragment;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.MessagesClass;
 
@@ -80,6 +81,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                     Edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
+                            ChatFragment.OpenEditField(ChatFragment.root);
+                            ChatFragment.message.setText(message.getMessages()[3]);
+                            ChatFragment.buttonSendMessage.setBackgroundResource(R.drawable.ic_check_circle_outline);
+                            ChatFragment.isEdit = 1;
+                            ChatFragment.idMessage = message.getMessages()[0];
+                          //  message.getMessages()[3];
                             //   new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Редактирование", "Вы точно хотите удалить сообщение?", 1);
                             return true;
                         }
@@ -114,6 +121,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                 onClickListener.onStateClick(message, position);
             }
         });
+        if (Integer.parseInt(message.getMessages()[5])==1)
+            holder.editView.setVisibility(View.VISIBLE);
+        else holder.editView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -123,7 +133,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
-        final TextView messageView, dateView;
+        final TextView messageView, dateView, editView;
         final ImageView readView;
 
         ViewHolder(View view){
@@ -132,6 +142,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);
+            editView = (TextView)view.findViewById(R.id.isEdit);
 
         }
 
