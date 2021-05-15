@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -94,6 +95,9 @@ public class MessengerFragment extends Fragment
                 Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_newChatFragment);
             }
         });
+      //  buttonNewChat.setBackgroundResource(R.drawable.round_button_tint);
+        // Design
+
 
         Handler h = new Handler();
         Runnable run = new Runnable() {

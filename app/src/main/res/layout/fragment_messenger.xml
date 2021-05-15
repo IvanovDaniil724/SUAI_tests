@@ -102,6 +102,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/ic_plus"
+        android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.913"
