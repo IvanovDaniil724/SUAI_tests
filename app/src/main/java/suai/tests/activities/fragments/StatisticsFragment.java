@@ -1,6 +1,8 @@
 package suai.tests.activities.fragments;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -22,12 +24,18 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,10 +52,10 @@ import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class StatisticsFragment extends Fragment
 {
-    private Spinner StatisticsSubjectsSpinner;
+    private Spinner StatisticsSubjectsSpinner, TeacherGroupsSpinner;
 
-    private TableLayout MarksTableLayout;
-    private PieChart StatisticsPieChart;
+    private TableLayout MarksTableLayout, TeacherAverageGroupMarksTableLayout, TeacherGroupMarksTableLayout;
+    private PieChart StatisticsPieChart; private BarChart StatisticsTeacherGroupMarksBarChart;
 
     private TextView StatisticsStudentAverageMark;
 
@@ -56,6 +64,9 @@ public class StatisticsFragment extends Fragment
                              Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        if (AccountFragment.role == 1) { root.findViewById(R.id.StatisticsStudentScrollView).setVisibility(View.VISIBLE); }
+        else { root.findViewById(R.id.StatisticsTeacherScrollView).setVisibility(View.VISIBLE); }
 
         root.findViewById(R.id.BackToAccountButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,8 +88,13 @@ public class StatisticsFragment extends Fragment
         BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view); navBar.setVisibility(View.GONE);
 
         StatisticsSubjectsSpinner = root.findViewById(R.id.StatisticsSpinner);
+        TeacherGroupsSpinner = root.findViewById(R.id.TeacherGroupsSpinner);
         MarksTableLayout = root.findViewById(R.id.StudentMarksTableLayout);
+        TeacherAverageGroupMarksTableLayout = root.findViewById(R.id.TeacherAverageGroupMarksTableLayout);
+        TeacherGroupMarksTableLayout = root.findViewById(R.id.TeacherGroupMarksTableLayout);
+
         StatisticsPieChart = root.findViewById(R.id.StatisticsStudentMarksPieChart);
+        StatisticsTeacherGroupMarksBarChart = root.findViewById(R.id.StatisticsTeacherGroupMarksBarChart);
 
         StatisticsStudentAverageMark = root.findViewById(R.id.StatisticsStudentAverageMark);
 
@@ -111,148 +127,350 @@ public class StatisticsFragment extends Fragment
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_style);
         StatisticsSubjectsSpinner.setAdapter(spinnerAdapter);
 
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener itemSubjectSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                // Получаем выбранный объект
                 String subject = (String) parent.getItemAtPosition(position);
 
-                MarksTableLayout.removeAllViews();
-
-                commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
-                call = service.getUserStatistics(AccountFragment.idUser, AccountFragment.role, subject);
-                call.enqueue(new Callback<ItemsPOJO[]>()
-                {
-                    @Override
-                    public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
-                    {
-                        ItemsPOJO[] marks = response.body();
-                        //String[] test = resp[0].getItems();
-
-                        if (AccountFragment.role == 1) { setStudentStatistics(root, marks); } else { setTeacherStatistics(root, marks); }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
-                    {
-                        Log.e("retrofitError", t.getMessage());
-                    }
-                });
+                if (AccountFragment.role == 1) { setStudentStatistics(root, subject); } else { setTeacherStatistics(context); }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {  }
         };
-        StatisticsSubjectsSpinner.setOnItemSelectedListener(itemSelectedListener);
+        StatisticsSubjectsSpinner.setOnItemSelectedListener(itemSubjectSelectedListener);
     }
 
-    private void setStudentStatistics(View root, ItemsPOJO[] marks)
+    private void setStudentStatistics(View root, String subject)
     {
-        MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
-        TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
+        MarksTableLayout.removeAllViews();
 
-        String[] titles = { "Оценка / статус" };
-        MarksTableLayout.addView(AndroidElementsBuilder.createTableHeader(MarksTableLayout.getContext(), titles));
-
-        int inProgressCounter = 0, errorsCounter = 0, mark_2_counter = 0, mark_3_counter = 0, mark_4_counter = 0, mark_5_counter = 0;
-
-        for (int i = 0; i < marks.length; i++)
+        commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
+        call = service.getUserStatistics(AccountFragment.idUser, AccountFragment.role, subject);
+        call.enqueue(new Callback<ItemsPOJO[]>()
         {
-            tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-            linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-            cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
-            cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
-            AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
-
-            if (status == 0)
+            @Override
+            public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
             {
-                cellImage = AndroidElementsBuilder.createImageView(linearLayout.getContext(),
-                        R.drawable.ic_baseline_access_time_24, android.R.color.holo_orange_light);
-                inProgressCounter++;
+                ItemsPOJO[] marks = response.body();
+
+                MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
+                TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
+
+                String[] titles = { "Оценка / статус" };
+                MarksTableLayout.addView(AndroidElementsBuilder.createTableHeader(MarksTableLayout.getContext(), titles));
+
+                int inProgressCounter = 0, errorsCounter = 0, mark_2_counter = 0, mark_3_counter = 0, mark_4_counter = 0, mark_5_counter = 0;
+
+                for (int i = 0; i < marks.length; i++)
+                {
+                    tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                    linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                    cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
+                    cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
+                    AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
+
+                    if (status == 0)
+                    {
+                        cellImage = AndroidElementsBuilder.createImageView(linearLayout.getContext(),
+                                R.drawable.ic_baseline_access_time_24, android.R.color.holo_orange_light);
+                        inProgressCounter++;
+                    }
+
+                    if (status == 2)
+                    {
+                        cellImage = AndroidElementsBuilder.createImageView(linearLayout.getContext(),
+                                R.drawable.ic_baseline_error_24, android.R.color.holo_red_light);
+                        errorsCounter++;
+                    }
+
+                    if (status == 1)
+                    {
+                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]);
+                        if (marks[i].getItems()[2].equals("2")) { mark_2_counter++; }
+                        if (marks[i].getItems()[2].equals("3")) { mark_3_counter++; }
+                        if (marks[i].getItems()[2].equals("4")) { mark_4_counter++; }
+                        if (marks[i].getItems()[2].equals("5")) { mark_5_counter++; }
+                    }
+
+                    if (status == 1)
+                    {
+                        AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex);
+                        linearLayout.addView(cell);
+                    }
+                    else
+                    {
+                        AndroidElementsBuilder.setTableBorders(cellImage, marks.length, 2, i, cellsIndex);
+                        linearLayout.addView(cellImage);
+                    }
+
+                    tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
+                }
+
+                int averageMark = ((2 * mark_2_counter) + (3 * mark_3_counter) +
+                        (4 * mark_4_counter) + (5 * mark_5_counter)) /
+                        (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter);
+                StatisticsStudentAverageMark.setText(String.valueOf(averageMark)); int colorID = android.R.color.secondary_text_dark;
+                if (averageMark < 2) { StatisticsStudentAverageMark.setText("Нет принятых лабораторных работ"); }
+                else if (averageMark < 3) { colorID = android.R.color.holo_red_dark; }
+                else if (averageMark < 4) { colorID = android.R.color.holo_red_light; }
+                else if (averageMark < 5) { colorID = android.R.color.holo_green_dark; }
+                else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
+                StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
+
+                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>();
+                if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter)); }
+                if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter)); }
+                if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter)); }
+                if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter)); }
+                if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter)); }
+                if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter)); }
+
+                ArrayList<PieEntry> pieChartEntries = new ArrayList<PieEntry>();
+                for (int i = 0; i < pieChartDataArrayList.size(); i++)
+                {
+                    pieChartEntries.add(new PieEntry(pieChartDataArrayList.get(i).getMarksCount(),
+                            pieChartDataArrayList.get(i).getTitle()));
+                }
+
+                PieDataSet pieChartDataSet = new PieDataSet(pieChartEntries, "Количество оценок или статусов по данной дисциплине");
+                pieChartDataSet.setColors(ColorTemplate.COLORFUL_COLORS); pieChartDataSet.setValueTextSize(16);
+                pieChartDataSet.setValueTextColor(R.color.suai_primary);
+                pieChartDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+                pieChartDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
+                PieData data = new PieData(pieChartDataSet);
+                Description chartDescription = new Description(); chartDescription.setText("");
+                StatisticsPieChart.setDescription(chartDescription); StatisticsPieChart.setData(data);
+
+                Legend legend = StatisticsPieChart.getLegend();
+                legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
+                legend.setTextColor(getResources().getColor(R.color.suai_secondary));
+                legend.setXEntrySpace(128);
+
+
+                StatisticsPieChart.setCenterText("Оценки по предмету \"" + StatisticsSubjectsSpinner.getSelectedItem().toString() + "\"");
+                StatisticsPieChart.setEntryLabelColor(R.color.suai_primary);
+                StatisticsPieChart.animateXY(1000,1000); StatisticsPieChart.invalidate();
             }
 
-            if (status == 2)
+            @Override
+            public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
             {
-                cellImage = AndroidElementsBuilder.createImageView(linearLayout.getContext(),
-                        R.drawable.ic_baseline_error_24, android.R.color.holo_red_light);
-                errorsCounter++;
+                Log.e("retrofitError", t.getMessage());
             }
-
-            if (status == 1)
-            {
-                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]);
-                if (marks[i].getItems()[2].equals("2")) { mark_2_counter++; }
-                if (marks[i].getItems()[2].equals("3")) { mark_3_counter++; }
-                if (marks[i].getItems()[2].equals("4")) { mark_4_counter++; }
-                if (marks[i].getItems()[2].equals("5")) { mark_5_counter++; }
-            }
-
-            if (status == 1)
-            {
-                AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex);
-                linearLayout.addView(cell);
-            }
-            else
-            {
-                AndroidElementsBuilder.setTableBorders(cellImage, marks.length, 2, i, cellsIndex);
-                linearLayout.addView(cellImage);
-            }
-
-            tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
-        }
-
-        int averageMark = ((2 * mark_2_counter) + (3 * mark_3_counter) +
-                           (4 * mark_4_counter) + (5 * mark_5_counter)) /
-                           (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter);
-        StatisticsStudentAverageMark.setText(String.valueOf(averageMark)); int colorID = android.R.color.secondary_text_dark;
-        if (averageMark < 2) { StatisticsStudentAverageMark.setText("Нет принятых лабораторных работ"); }
-        if (averageMark < 3) { colorID = android.R.color.holo_red_dark; }
-        if (averageMark < 4) { colorID = android.R.color.holo_red_light; }
-        if (averageMark < 5) { colorID = android.R.color.holo_green_dark; }
-        if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
-        StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
-
-        ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>();
-        if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter)); }
-        if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter)); }
-        if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter)); }
-        if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter)); }
-        if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter)); }
-        if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter)); }
-
-        ArrayList<PieEntry> pieChartEntries = new ArrayList<PieEntry>();
-        for (int i = 0; i < pieChartDataArrayList.size(); i++)
-        {
-            pieChartEntries.add(new PieEntry(pieChartDataArrayList.get(i).getMarksCount(),
-                                             pieChartDataArrayList.get(i).getTitle()));
-        }
-
-        PieDataSet pieChartDataSet = new PieDataSet(pieChartEntries, "Количество оценок или статусов по данной дисциплине");
-        pieChartDataSet.setColors(ColorTemplate.COLORFUL_COLORS); pieChartDataSet.setValueTextSize(16);
-        pieChartDataSet.setValueTextColor(R.color.suai_primary);
-        pieChartDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        pieChartDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-
-        PieData data = new PieData(pieChartDataSet);
-        Description chartDescription = new Description(); chartDescription.setText("");
-        StatisticsPieChart.setDescription(chartDescription); StatisticsPieChart.setData(data);
-
-        Legend legend = StatisticsPieChart.getLegend();
-        legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
-        legend.setTextColor(getResources().getColor(R.color.suai_secondary));
-        legend.setXEntrySpace(128);
-
-
-        StatisticsPieChart.setCenterText("Оценки по предмету \"" + StatisticsSubjectsSpinner.getSelectedItem().toString() + "\"");
-        StatisticsPieChart.setEntryLabelColor(R.color.suai_primary);
-        StatisticsPieChart.animateXY(1000,1000); StatisticsPieChart.invalidate();
+        });
     }
 
-    private void setTeacherStatistics(View root, ItemsPOJO[] resp)
+    private void setTeacherStatistics(Context context)
     {
+        TeacherAverageGroupMarksTableLayout.removeAllViews();
 
+        commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
+        call = service.getTeacherGroupsAverageMarks(AccountFragment.idUser, StatisticsSubjectsSpinner.getSelectedItem().toString());
+        call.enqueue(new Callback<ItemsPOJO[]>()
+        {
+            @Override
+            public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
+            {
+                ItemsPOJO[] averageMarks = response.body();
+
+                TeacherAverageGroupMarksTableLayout.setStretchAllColumns(true); TeacherAverageGroupMarksTableLayout.setShrinkAllColumns(true);
+                TableRow tableRow; LinearLayout linearLayout; TextView cell; int colorID = 0, x = 0;
+
+                tableRow = new TableRow(TeacherAverageGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "Группа");
+                cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                cell.setTextColor(getResources().getColor(R.color.suai_secondary)); linearLayout.addView(cell);
+                AndroidElementsBuilder.setTableBorders(cell, averageMarks.length, 2, 0, 0);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "Средний балл");
+                cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                cell.setTextColor(getResources().getColor(R.color.suai_secondary)); linearLayout.addView(cell);
+                AndroidElementsBuilder.setTableBorders(cell, averageMarks.length, 2, 0, 1);
+
+                tableRow.addView(linearLayout); TeacherAverageGroupMarksTableLayout.addView(tableRow);
+
+                for (int i = 0; i < averageMarks.length; i++)
+                {
+                    tableRow = new TableRow(TeacherAverageGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                    linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                    String group = averageMarks[i].getItems()[0], averageMark = averageMarks[i].getItems()[1];
+                    if (!averageMark.equals("0"))
+                    {
+                        ArrayList<BarEntry> barChartEntries = new ArrayList<>();
+                        barChartEntries.add(new BarEntry(x, Float.parseFloat(averageMark)));
+                        BarDataSet dataSet = new BarDataSet(barChartEntries, group);
+                        if (Double.parseDouble(averageMark) == 0) { colorID = android.R.color.secondary_text_dark; }
+                        else if (Double.parseDouble(averageMark) < 2.6) { colorID = android.R.color.holo_red_dark; }
+                        else if (Double.parseDouble(averageMark) < 3.6) { colorID = android.R.color.holo_red_light; }
+                        else if (Double.parseDouble(averageMark) < 4.6) { colorID = android.R.color.holo_green_dark; }
+                        else if (Double.parseDouble(averageMark) <= 5) { colorID = android.R.color.holo_green_light; }
+                        dataSet.setColor(getResources().getColor(colorID));
+                        dataSet.setValueTextColor(getResources().getColor(R.color.suai_secondary));
+                        dataSet.setValueTextSize(18); BarData data = new BarData(dataSet); x++;
+                        StatisticsTeacherGroupMarksBarChart.setData(data);
+                    }
+
+                    cell = AndroidElementsBuilder.createTextView(linearLayout, group);
+                    AndroidElementsBuilder.setTableBorders(cell, averageMarks.length, 2, i, 0);
+                    cell.setTextColor(getResources().getColor(R.color.suai_primary));
+                    cell.setTypeface(Typeface.DEFAULT_BOLD); linearLayout.addView(cell);
+
+                    cell = AndroidElementsBuilder.createTextView(linearLayout, averageMark);
+                    AndroidElementsBuilder.setTableBorders(cell, averageMarks.length, 2, i, 1);
+
+                    if (Double.parseDouble(averageMark) == 0) { colorID = android.R.color.secondary_text_dark; }
+                    else if (Double.parseDouble(averageMark) < 2.6) { colorID = android.R.color.holo_red_dark; }
+                    else if (Double.parseDouble(averageMark) < 3.6) { colorID = android.R.color.holo_red_light; }
+                    else if (Double.parseDouble(averageMark) < 4.6) { colorID = android.R.color.holo_green_dark; }
+                    else if (Double.parseDouble(averageMark) <= 5) { colorID = android.R.color.holo_green_light; }
+                    cell.setTextColor(getResources().getColor(colorID)); linearLayout.addView(cell);
+
+                    tableRow.addView(linearLayout); TeacherAverageGroupMarksTableLayout.addView(tableRow);
+                }
+
+                if (x == 0) { StatisticsTeacherGroupMarksBarChart.setVisibility(View.GONE); }
+                else
+                {
+                    StatisticsTeacherGroupMarksBarChart.setVisibility(View.VISIBLE);
+
+                    Description chartDescription = new Description(); chartDescription.setTextSize(12);
+                    chartDescription.setTextColor(getResources().getColor(R.color.suai_secondary));
+                    chartDescription.setText("Гистограмма среднего балла по группам");
+                    StatisticsTeacherGroupMarksBarChart.setDescription(chartDescription);
+
+                    StatisticsTeacherGroupMarksBarChart.getXAxis().setEnabled(false);
+                    StatisticsTeacherGroupMarksBarChart.getAxisRight().setEnabled(false);
+                    StatisticsTeacherGroupMarksBarChart.getAxisLeft().setAxisMaximum((float) 5.1);
+                    StatisticsTeacherGroupMarksBarChart.getAxisLeft().setAxisMinimum((float) 1);
+                    StatisticsTeacherGroupMarksBarChart.getAxisLeft().setZeroLineColor(getResources().getColor(R.color.suai_primary));
+                    StatisticsTeacherGroupMarksBarChart.getAxisLeft().setTextColor(getResources().getColor(R.color.suai_primary));
+                    StatisticsTeacherGroupMarksBarChart.getXAxis().setGridColor(getResources().getColor(R.color.suai_primary));
+                    StatisticsTeacherGroupMarksBarChart.getXAxis().setTextColor(getResources().getColor(R.color.suai_primary));
+
+                    Legend legend = StatisticsTeacherGroupMarksBarChart.getLegend();
+                    legend.setDrawInside(false); legend.setWordWrapEnabled(true);
+                    legend.setTextColor(getResources().getColor(R.color.suai_primary));
+
+                    StatisticsTeacherGroupMarksBarChart.animateXY(1000,1000);
+                    StatisticsTeacherGroupMarksBarChart.invalidate();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
+            {
+                Log.e("retrofitError", t.getMessage());
+            }
+        });
+
+        call = service.getTeacherGroups(AccountFragment.idUser, StatisticsSubjectsSpinner.getSelectedItem().toString());
+        call.enqueue(new Callback<ItemsPOJO[]>()
+        {
+            @Override
+            public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
+            {
+                ItemsPOJO[] resp = response.body(); String[] groups = new String[resp.length];
+                for (int i = 0; i < resp.length; i++) { groups[i] = resp[i].getItems()[0]; }
+                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(context, R.layout.spinner_style, groups);
+                spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_style);
+                TeacherGroupsSpinner.setAdapter(spinnerAdapter);
+
+                AdapterView.OnItemSelectedListener itemGroupSelectedListener = new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                    {
+                        TeacherGroupMarksTableLayout.removeAllViews();
+
+                        commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
+                        call = service.getGroupMarks(StatisticsSubjectsSpinner.getSelectedItem().toString(),
+                                                     TeacherGroupsSpinner.getSelectedItem().toString());
+                        call.enqueue(new Callback<ItemsPOJO[]>()
+                        {
+                            @Override
+                            public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
+                            {
+                                ItemsPOJO[] marks = response.body();
+                                int testsCount = Integer.parseInt(marks[0].getItems()[0]),
+                                    studentsCount = Integer.parseInt(marks[0].getItems()[1]);
+
+                                TeacherGroupMarksTableLayout.setStretchAllColumns(true);
+                                //TeacherGroupMarksTableLayout.setShrinkAllColumns(true);
+                                TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell;
+                                int status, cellsIndex = 0;
+
+                                String currentLab = marks[1].getItems()[0];
+                                for (int i = 1; i < marks.length; i++)
+                                {
+                                    tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                                    linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                                    if (i == 1)
+                                    {
+                                        cell = AndroidElementsBuilder.createTextView(linearLayout, "");
+                                        LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
+                                        cell.setBackground(borders); linearLayout.addView(cell); cellsIndex++;
+
+                                        for (int j = 1; j < testsCount * studentsCount; j += studentsCount)
+                                        {
+                                            cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[0]);
+                                            AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, 0, cellsIndex);
+                                            linearLayout.addView(cell); cellsIndex++;
+                                        }
+
+                                        tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
+
+                                        /*for (int j = 1; j < testsCount; j++)
+                                        {
+                                            if (j == 1)
+                                            {
+                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[1]);
+                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i-1, cellsIndex);
+                                                linearLayout.addView(cell); cellsIndex++;
+
+                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[2]);
+                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i-1, cellsIndex);
+                                                linearLayout.addView(cell); cellsIndex++;
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }*/
+
+                                        //continue;
+                                    }
+
+                                    //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
+                            {
+                                Log.e("retrofitError", t.getMessage());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {  }
+                };
+                TeacherGroupsSpinner.setOnItemSelectedListener(itemGroupSelectedListener);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemsPOJO[]> call, @NonNull Throwable t)
+            {
+                Log.e("retrofitError", t.getMessage());
+            }
+        });
     }
 
     private static class PieChartItem {
