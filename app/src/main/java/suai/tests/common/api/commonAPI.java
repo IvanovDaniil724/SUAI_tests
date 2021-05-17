@@ -16,6 +16,15 @@ public interface commonAPI
     @GET("common/statistics/GetStatistics.php")
     Call<ItemsPOJO[]> getUserStatistics(@Query("idUser") int idUser, @Query("role") int role, @Query("subject") String subject);
 
+    @GET("common/statistics/GetTeacherGroups.php")
+    Call<ItemsPOJO[]> getTeacherGroups(@Query("idUser") int idUser, @Query("subject") String subject);
+
+    @GET("common/statistics/GetGroupsAverageMarks.php")
+    Call<ItemsPOJO[]> getTeacherGroupsAverageMarks(@Query("idUser") int idUser, @Query("subject") String subject);
+
+    @GET("common/statistics/GetGroupMarks.php")
+    Call<ItemsPOJO[]> getGroupMarks(@Query("subject") String subject, @Query("group") String group);
+
     @FormUrlEncoded
     @POST("common/UserAuth.php")
     Call<String[]> getUser(@Field("email") String email, @Field("password") String password);
