@@ -397,35 +397,41 @@ public class StatisticsFragment extends Fragment
                             public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
                             {
                                 ItemsPOJO[] marks = response.body();
-                                int testsCount = Integer.parseInt(marks[0].getItems()[0]),
-                                    studentsCount = Integer.parseInt(marks[0].getItems()[1]);
+                                if (marks.length!=0) {
+                                    int testsCount = Integer.parseInt(marks[0].getItems()[3]),
+                                            studentsCount = Integer.parseInt(marks[0].getItems()[4]);
 
-                                TeacherGroupMarksTableLayout.setStretchAllColumns(true);
-                                //TeacherGroupMarksTableLayout.setShrinkAllColumns(true);
-                                TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell;
-                                int status, cellsIndex = 0;
+                                    TeacherGroupMarksTableLayout.setStretchAllColumns(true);
+                                    //TeacherGroupMarksTableLayout.setShrinkAllColumns(true);
+                                    TableRow tableRow;
+                                    LinearLayout linearLayout;
+                                    ImageView cellImage = null;
+                                    TextView cell;
+                                    int status, cellsIndex = 0;
 
-                                String currentLab = marks[1].getItems()[0];
-                                for (int i = 1; i < marks.length; i++)
-                                {
-                                    tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-                                    linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                    String currentLab = marks[1].getItems()[0];
+                                    for (int i = -1; i < marks.length; i++) {
+                                        tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext());
+                                        tableRow.setGravity(Gravity.CENTER);
+                                        linearLayout = new LinearLayout(tableRow.getContext());
+                                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                                    if (i == 1)
-                                    {
-                                        cell = AndroidElementsBuilder.createTextView(linearLayout, "");
-                                        LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
-                                        cell.setBackground(borders); linearLayout.addView(cell); cellsIndex++;
+                                        if (i == -1) {
+                                            cell = AndroidElementsBuilder.createTextView(linearLayout, "");
+                                            LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
+                                            cell.setBackground(borders);
+                                            linearLayout.addView(cell);
+                                            cellsIndex++;
+                                            // Было for (int j = 0; j < testsCount * studentsCount; j += studentsCount)
+                                            for (int j = 0; j < testsCount; j ++) {
+                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[0]);
+                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, 0, cellsIndex);
+                                                linearLayout.addView(cell);
+                                                cellsIndex++;
+                                            }
 
-                                        for (int j = 1; j < testsCount * studentsCount; j += studentsCount)
-                                        {
-                                            cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[0]);
-                                            AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, 0, cellsIndex);
-                                            linearLayout.addView(cell); cellsIndex++;
-                                        }
-
-                                        tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
-
+                                            tableRow.addView(linearLayout);
+                                            TeacherGroupMarksTableLayout.addView(tableRow);
                                         /*for (int j = 1; j < testsCount; j++)
                                         {
                                             if (j == 1)
@@ -444,10 +450,11 @@ public class StatisticsFragment extends Fragment
                                             }
                                         }*/
 
-                                        //continue;
-                                    }
+                                            //continue;
+                                        }
 
-                                    //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
+                                        //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
+                                    }
                                 }
                             }
 
