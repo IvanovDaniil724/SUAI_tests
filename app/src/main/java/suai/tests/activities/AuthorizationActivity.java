@@ -92,12 +92,12 @@ public class AuthorizationActivity extends AppCompatActivity
                     if (emailText.equals(""))
                     {
                         new AlertDialogBuilder(AuthorizationActivity.this)
-                                .alert("Ошибка авторизации", "Поле электронной почты должно быть заполнено");
+                                .alert("Ошибка авторизации", "Поле электронной почты должно быть заполнено.");
                     }
                     else
                     {
                         new AlertDialogBuilder(AuthorizationActivity.this)
-                                .alert("Ошибка авторизации", "Поле пароля должно быть заполнено");
+                                .alert("Ошибка авторизации", "Поле пароля должно быть заполнено.");
                     }
                 }
                 else

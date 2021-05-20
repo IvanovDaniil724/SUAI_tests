@@ -93,6 +93,29 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ChangePasswordButton"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/suai_secondary"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:text="Сменить пароль"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:iconPadding="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeColor="@color/suai_primary"
+                app:strokeWidth="2dp" />
+
+            <include layout="@layout/layouts_divider" />
+
             <LinearLayout
                 android:id="@+id/AccountEmailLinearLayout"
                 android:layout_width="match_parent"
