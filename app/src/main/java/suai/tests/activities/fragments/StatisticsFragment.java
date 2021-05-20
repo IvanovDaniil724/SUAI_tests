@@ -405,7 +405,7 @@ public class StatisticsFragment extends Fragment
                                 TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell;
                                 int status, cellsIndex = 0;
 
-                                String currentLab = marks[1].getItems()[0];
+                                //String currentLab = marks[1].getItems()[0];
                                 for (int i = 1; i < marks.length; i++)
                                 {
                                     tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);

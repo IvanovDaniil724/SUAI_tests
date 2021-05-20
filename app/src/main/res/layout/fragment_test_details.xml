@@ -4,21 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/TestDetailsConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".activities.fragments.TestDetailsFragment">
 
-    <ImageView
-        android:id="@+id/TestsDetailsStatusImageView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/TestsDetailsStatusLinearLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/TestsDetailsTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/TestsDetailsTitleTextView"
-        app:srcCompat="@android:drawable/stat_sys_warning"
-        app:tint="@color/suai_secondary" />
+        app:layout_constraintTop_toTopOf="@+id/TestsDetailsTitleTextView">
+
+        <ImageView
+            android:id="@+id/TestsDetailsStatusImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:srcCompat="@android:drawable/stat_sys_warning"
+            app:tint="@color/suai_secondary" />
+
+        <TextView
+            android:id="@+id/TestsDetailsStatusMarkTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/TestsDetailsStudentInfoTextView"
@@ -35,19 +57,6 @@
         app:layout_constraintTop_toTopOf="@+id/TestsDetailsStudentTextView" />
 
     <TextView
-        android:id="@+id/TestsDetailsStatusMarkTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="5"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/TestsDetailsTitleTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/TestsDetailsTitleTextView" />
-
-    <TextView
         android:id="@+id/TestsDetailsDescriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -56,7 +65,7 @@
         android:text="Description"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsStatusImageView"
+        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintStart_toStartOf="@+id/TestsDetailsTitleTextView"
         app:layout_constraintTop_toBottomOf="@+id/TestsDetailsTitleTextView" />
 
@@ -80,12 +89,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:singleLine="false"
         android:text="C++"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsStatusImageView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionTextView" />
 
     <TextView
@@ -94,13 +104,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:singleLine="false"
         android:text="Title"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/TestsDetailsStatusImageView"
+        app:layout_constraintEnd_toStartOf="@+id/TestsDetailsStatusLinearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -145,20 +155,40 @@
     <ScrollView
         android:id="@+id/TestDetailsScrollView"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsDescriptionTextView"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/TestDetailsTeacherConstraintLayout"
+        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintStart_toStartOf="@+id/TestsDetailsDescriptionTextView"
         app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDelimiterImageView">
 
-        <TextView
-            android:id="@+id/TestsDetailsResultsOrErrorsTextView"
+        <LinearLayout
+            android:id="@+id/TestsDetailsScrollViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:text="Results/Errors"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TestsDetailsTeacherCommentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:singleLine="false"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/TestsDetailsResultsOrErrorsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="Results/Errors"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
@@ -200,5 +230,75 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/TestDetailsTeacherConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Spinner
+            android:id="@+id/TestDetailsTeacherChooseMarkSpinner"
+            style="@android:style/Widget.Material.Light.Spinner"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/info_item"
+            android:padding="8dp"
+            android:popupBackground="@android:color/transparent"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toTopOf="@+id/TestDetailsTeacherChooseMarkButton"
+            app:layout_constraintEnd_toEndOf="@+id/TestDetailsTeacherChooseMarkButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/TestDetailsTeacherChooseMarkButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/suai_primary"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="Поставить оценку"
+            app:cornerRadius="16dp"
+            app:iconPadding="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/suai_secondary"
+            app:strokeWidth="4dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/TestDetailsTeacherCommentTextInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:alpha="1"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/TestDetailsTeacherChooseMarkButton"
+            app:layout_constraintEnd_toStartOf="@+id/TestDetailsTeacherChooseMarkSpinner"
+            app:layout_constraintStart_toStartOf="@+id/TestDetailsTeacherChooseMarkButton">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TestDetailsTeacherCommentEditText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Комментарий"
+                android:inputType="textMultiLine"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
