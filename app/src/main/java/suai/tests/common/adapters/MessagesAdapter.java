@@ -58,12 +58,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(MessagesAdapter.ViewHolder holder, int position) {
         MessagesClass message = messages[position];
+
         ParsePosition pos = new ParsePosition(0);
         SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date messageDate = simpledateformat.parse(message.getMessages()[2],pos);
         Calendar instance = Calendar.getInstance();
         instance.setTime(messageDate);
         instance.add(Calendar.DAY_OF_MONTH, 1);
+
         Date newDate = instance.getTime();
         if ((Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser) && newDate.getTime()>=System.currentTimeMillis())
         {
@@ -95,6 +97,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                 }
             });
         }
+
         holder.messageView.setText(message.getMessages()[3]);
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {

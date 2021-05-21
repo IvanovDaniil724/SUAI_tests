@@ -15,6 +15,8 @@ import suai.tests.common.AndroidElementsBuilder;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    public static MainActivity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
+
+        activity = this;
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each

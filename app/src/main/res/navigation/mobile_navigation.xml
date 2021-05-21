@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_messenger" >
         <action
             android:id="@+id/action_navigation_messenger_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/chatFragment"
+            app:popUpTo="@id/navigation_messenger" />
         <action
             android:id="@+id/action_navigation_messenger_to_newChatFragment"
             app:destination="@id/newChatFragment" />

@@ -2,6 +2,7 @@ package suai.tests.activities.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -55,6 +56,7 @@ public class ChatFragment extends Fragment
     public static ImageButton buttonMoreAction;
     public static ImageButton buttonSendMessage;
     public static ImageButton backFromEdit;
+    private static Parcelable recyclerViewState;
 
     public static MessagesClass[] messages;
 
@@ -152,7 +154,10 @@ public class ChatFragment extends Fragment
             public void run() {
               //  if (ConfirmationDialogBuilder.deletedMessage==1) {
                     //Log.v("g", "f");]
-                    UpdateMessages(recyclerViewMessages,root,idChat,message, find);
+
+                recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
+                Log.v("grt", String.valueOf(recyclerViewState.toString()));
+                UpdateMessages(recyclerViewMessages,root,idChat,message, find);
              //       ConfirmationDialogBuilder.deletedMessage=0;
               //  }
                 h.postDelayed(this, 5000);
@@ -261,11 +266,11 @@ public class ChatFragment extends Fragment
                 {
                     messages = response.body();
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
-                 //   mLayoutManager.setReverseLayout(true);
                     mLayoutManager.setStackFromEnd(true);
                     recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), messages, messageClickListener));
                     recyclerViewMessages.setLayoutManager(mLayoutManager);
-                    message.setText("");
+             //       recyclerViewMessages.scrollToPosition();
+                //    message.setText("");
                 }
                 else
                 {
@@ -273,12 +278,11 @@ public class ChatFragment extends Fragment
                     if (newMessages!=messages)
                     {
                         LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
-                     //   mLayoutManager.setReverseLayout(true);
                         mLayoutManager.setStackFromEnd(true);
                         recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
                         recyclerViewMessages.setLayoutManager(mLayoutManager);
                         recyclerViewMessages.setDrawingCacheEnabled(true);
-                        message.setText("");
+                     //   message.setText("");
                     }
                 }
 
@@ -298,6 +302,8 @@ public class ChatFragment extends Fragment
                         });
                     }
                 }
+
+                recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
              //   recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
              //   recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
              //   message.setText("");
@@ -324,6 +330,7 @@ public class ChatFragment extends Fragment
                 Log.e("result",t.getMessage());
             }
         });
+        recyclerViewMessages.scrollToPosition(0);
     }
 
     public void EditMessages(View root, Integer idMessage, EditText message)

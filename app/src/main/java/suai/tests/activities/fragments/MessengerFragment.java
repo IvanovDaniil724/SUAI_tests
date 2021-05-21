@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.activities.MainActivity;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.api.ChatClass;
@@ -127,7 +128,7 @@ public class MessengerFragment extends Fragment
                 Bundle bundleId = new Bundle();
                 bundleId.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
                 FIO = chat.getChats()[2];
-                Navigation.findNavController(root).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
+                Navigation.findNavController(MainActivity.activity,R.id.nav_host_fragment).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
             }
         };
         Call<ChatClass[]> call = service.getChats(AccountFragment.idUser,AccountFragment.role, find.getText().toString());
