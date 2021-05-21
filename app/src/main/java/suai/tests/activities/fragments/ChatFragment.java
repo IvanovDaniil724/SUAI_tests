@@ -302,7 +302,8 @@ public class ChatFragment extends Fragment
                         });
                     }
                 }
-
+              //  if ()
+                recyclerViewMessages.smoothScrollToPosition(0);
                 recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
              //   recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
              //   recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
@@ -330,7 +331,7 @@ public class ChatFragment extends Fragment
                 Log.e("result",t.getMessage());
             }
         });
-        recyclerViewMessages.scrollToPosition(0);
+        message.setText("");
     }
 
     public void EditMessages(View root, Integer idMessage, EditText message)
