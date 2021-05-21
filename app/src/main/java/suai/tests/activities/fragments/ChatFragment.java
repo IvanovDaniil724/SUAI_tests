@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -75,14 +76,24 @@ public class ChatFragment extends Fragment
         message = root.findViewById(R.id.editTextMessage);
 
         backFromEdit = root.findViewById(R.id.imageButtonBackFromEdit);
-        backFromEdit.setOnClickListener(new View.OnClickListener() {
+
+
+        backFromEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                findHeader.setVisibility(View.INVISIBLE);
-                header.setVisibility(View.VISIBLE);
-                edit.setVisibility(View.INVISIBLE);
-                message.setText("");
-                buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:  backFromEdit.setImageResource(R.drawable.ic_back_arrow_white); break;
+                    case MotionEvent.ACTION_UP:
+                    {
+                        findHeader.setVisibility(View.INVISIBLE);
+                        header.setVisibility(View.VISIBLE);
+                        edit.setVisibility(View.INVISIBLE);
+                        message.setText("");
+                        buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+                    }
+                    case MotionEvent.ACTION_CANCEL:  backFromEdit.setImageResource(R.drawable.ic_back_arrow); break;
+                }
+                return true;
             }
         });
 
@@ -136,12 +147,21 @@ public class ChatFragment extends Fragment
         });
 
         ImageButton back = root.findViewById(R.id.imageButtonBack);
-        back.setOnClickListener(new View.OnClickListener() {
+
+        back.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                findHeader.setVisibility(View.INVISIBLE);
-                header.setVisibility(View.VISIBLE);
-                find.setText("");
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:  back.setImageResource(R.drawable.ic_back_arrow_white); break;
+                    case MotionEvent.ACTION_UP:
+                    {
+                        findHeader.setVisibility(View.INVISIBLE);
+                        header.setVisibility(View.VISIBLE);
+                        find.setText("");
+                    }
+                    case MotionEvent.ACTION_CANCEL:  back.setImageResource(R.drawable.ic_back_arrow); break;
+                }
+                return true;
             }
         });
 
@@ -156,7 +176,6 @@ public class ChatFragment extends Fragment
                     //Log.v("g", "f");]
 
                 recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
-                Log.v("grt", String.valueOf(recyclerViewState.toString()));
                 UpdateMessages(recyclerViewMessages,root,idChat,message, find);
              //       ConfirmationDialogBuilder.deletedMessage=0;
               //  }
@@ -244,8 +263,108 @@ public class ChatFragment extends Fragment
 
                 }
             }
-        });
 
+        });
+        buttonSendMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    {
+                        if (isEdit==1)
+                            buttonSendMessage.setBackgroundResource(R.drawable.ic_check_circle_outline_white);
+                        else buttonSendMessage.setBackgroundResource(R.drawable.ic_baseline_send_24);
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    {
+                        if (message.getText().length()!=0)
+                        {
+                            if (idChat==0)
+                            {
+                                int teacher, student;
+                                if (AccountFragment.role==0)
+                                {
+                                    teacher = AccountFragment.idUser;
+                                    student = user;
+                                }
+                                else
+                                {
+                                    teacher = user;
+                                    student = AccountFragment.idUser;
+                                }
+
+                                Call<String> createNewChat = newChat.createNewChat(String.valueOf(teacher), String.valueOf(student));
+                                createNewChat.enqueue(new Callback<String>() {
+                                    @Override
+                                    public void onResponse(Call<String> call, Response<String> response) {
+                                        Call<ItemsPOJO[]> ch = newChat.getChatsWithUser(String.valueOf(teacher), String.valueOf(student));
+                                        ch.enqueue(new Callback<ItemsPOJO[]>() {
+                                            @Override
+                                            public void onResponse(Call<ItemsPOJO[]> call, Response<ItemsPOJO[]> response) {
+                                                ItemsPOJO[] idChats = response.body();
+                                                Log.v("df",idChats[0].getItems()[0]);
+                                                idChat = Integer.parseInt(idChats[0].getItems()[0]);
+                                                SendMessages(root, idChat, message);
+                                                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ItemsPOJO[]> call, Throwable t) {
+                                                Log.e("g", t.getMessage());
+                                                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+                                            }
+                                        });
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<String> call, Throwable t) {
+                                        Log.e("h",t.getMessage());
+                                        UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                if (isEdit==1)
+                                {
+                                    // Log.v(":", idMessage);
+                                    Call<String> editMessage = service.editMessage(idMessage, message.getText().toString());
+                                    editMessage.enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+
+                                        }
+                                    });
+                                    isEdit = 0;
+                                    message.setText("");
+                                    buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+                                }
+                                else {
+                                    SendMessages(root, idChat, message);
+                                }
+                                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+                            }
+
+                        }
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    {
+                        if (isEdit==1)
+                            buttonSendMessage.setBackgroundResource(R.drawable.ic_check_circle_outline);
+                        else buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
         return root;
 
     }
@@ -269,6 +388,7 @@ public class ChatFragment extends Fragment
                     mLayoutManager.setStackFromEnd(true);
                     recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), messages, messageClickListener));
                     recyclerViewMessages.setLayoutManager(mLayoutManager);
+                  //  recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
              //       recyclerViewMessages.scrollToPosition();
                 //    message.setText("");
                 }
@@ -282,6 +402,8 @@ public class ChatFragment extends Fragment
                         recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
                         recyclerViewMessages.setLayoutManager(mLayoutManager);
                         recyclerViewMessages.setDrawingCacheEnabled(true);
+
+                        recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                      //   message.setText("");
                     }
                 }
@@ -302,9 +424,8 @@ public class ChatFragment extends Fragment
                         });
                     }
                 }
-              //  if ()
-                recyclerViewMessages.smoothScrollToPosition(0);
-                recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+       //         if (!recyclerViewState.equals(null))
+                //    recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
              //   recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
              //   recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
              //   message.setText("");
