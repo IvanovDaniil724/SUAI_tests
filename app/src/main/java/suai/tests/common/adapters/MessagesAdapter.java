@@ -39,6 +39,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     private MessagesClass[] messages;
     private static Context context;
 
+
     public MessagesAdapter(Context context, MessagesClass[] messages, OnMessagesClickListener onClickListener) {
         this.messages = messages;
         this.inflater = LayoutInflater.from(context);

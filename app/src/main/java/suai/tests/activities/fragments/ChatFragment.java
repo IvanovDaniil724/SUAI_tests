@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,9 +56,12 @@ public class ChatFragment extends Fragment
     public static ImageButton buttonSendMessage;
     public static ImageButton backFromEdit;
 
+    public static MessagesClass[] messages;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
+
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
@@ -84,6 +88,7 @@ public class ChatFragment extends Fragment
         findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
         buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
         recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
+
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,15 +150,15 @@ public class ChatFragment extends Fragment
 
             @Override
             public void run() {
-                if (ConfirmationDialogBuilder.deletedMessage==1) {
+              //  if (ConfirmationDialogBuilder.deletedMessage==1) {
                     //Log.v("g", "f");]
                     UpdateMessages(recyclerViewMessages,root,idChat,message, find);
-                    ConfirmationDialogBuilder.deletedMessage=0;
-                }
-                h.postDelayed(this, 3000);
+             //       ConfirmationDialogBuilder.deletedMessage=0;
+              //  }
+                h.postDelayed(this, 5000);
             }
         };
-        h.postDelayed(run, 3000);
+        h.postDelayed(run, 5000);
 
         buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +257,31 @@ public class ChatFragment extends Fragment
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
-                MessagesClass[] messages = response.body();
+                if (messages==null)
+                {
+                    messages = response.body();
+                    LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
+                 //   mLayoutManager.setReverseLayout(true);
+                    mLayoutManager.setStackFromEnd(true);
+                    recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), messages, messageClickListener));
+                    recyclerViewMessages.setLayoutManager(mLayoutManager);
+                    message.setText("");
+                }
+                else
+                {
+                    MessagesClass[] newMessages = response.body();
+                    if (newMessages!=messages)
+                    {
+                        LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
+                     //   mLayoutManager.setReverseLayout(true);
+                        mLayoutManager.setStackFromEnd(true);
+                        recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
+                        recyclerViewMessages.setLayoutManager(mLayoutManager);
+                        recyclerViewMessages.setDrawingCacheEnabled(true);
+                        message.setText("");
+                    }
+                }
+
                 for (int i=0;i<messages.length;i++) {
                     if (Integer.parseInt(messages[i].getMessages()[4]) == 0 && Integer.parseInt(messages[i].getMessages()[1]) != AccountFragment.idUser) {
                         Call<String> read = service.readMessages(messages[i].getMessages()[0]);
@@ -269,9 +298,9 @@ public class ChatFragment extends Fragment
                         });
                     }
                 }
-                recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
-                recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
-                message.setText("");
+             //   recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(),messages, messageClickListener));
+             //   recyclerViewMessages.setLayoutManager(new LinearLayoutManager(root.getContext()));
+             //   message.setText("");
             }
 
             @Override

@@ -40,6 +40,8 @@ public class MessengerFragment extends Fragment
     public static ConstraintLayout findHeader;
     public static ImageButton buttonSearch;
 
+    public static ChatClass[] chats;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
@@ -104,15 +106,15 @@ public class MessengerFragment extends Fragment
 
             @Override
             public void run() {
-                 if (ConfirmationDialogBuilder.deletedChat==1) {
+               //  if (ConfirmationDialogBuilder.deletedChat==1) {
                      //Log.v("g", "f");]
                      UpdateChats(recyclerViewChats, root, find);
-                     ConfirmationDialogBuilder.deletedChat=0;
-                 }
-                h.postDelayed(this, 3000);
+                  //   ConfirmationDialogBuilder.deletedChat=0;
+              //   }
+                h.postDelayed(this, 5000);
             }
         };
-        h.postDelayed(run, 3000);
+        h.postDelayed(run, 5000);
         return root;
     }
 
@@ -132,9 +134,21 @@ public class MessengerFragment extends Fragment
         call.enqueue(new Callback<ChatClass[]>() {
             @Override
             public void onResponse(Call<ChatClass[]> call, Response<ChatClass[]> response) {
-                ChatClass[] chats = response.body();
-                recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
-                recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                if (chats==null)
+                {
+                    chats = response.body();
+                    recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
+                    recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                }
+                else
+                {
+                    ChatClass[] newChats = response.body();
+                    if (newChats!=chats)
+                    {
+                        recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
+                        recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                    }
+                }
             }
             @Override
             public void onFailure(Call<ChatClass[]> call, Throwable t) {
