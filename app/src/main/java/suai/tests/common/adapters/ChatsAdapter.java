@@ -2,23 +2,29 @@ package suai.tests.common.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import suai.tests.R;
+import suai.tests.activities.MainActivity;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.activities.fragments.ChatFragment;
 import suai.tests.activities.fragments.MessengerFragment;
+import suai.tests.activities.fragments.NewChatFragment;
 import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.ChatClass;
@@ -30,6 +36,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         void onStateClick(ChatClass chats, int position);
     }
 
+    public interface OnChatTouchListener{
+        void onTouch(ChatClass chats, int position);
+    }
+
+  //  private final OnChatTouchListener onTouchListener;
     private final OnChatClickListener onClickListener;
 
     private final LayoutInflater inflater;
@@ -90,6 +101,27 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             }
         });
 
+        holder.layoutView.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: holder.layoutView.setBackgroundColor(R.color.primary_tint); break;
+                    case MotionEvent.ACTION_UP:
+                    {
+                        NewChatFragment.FIO = "";
+                        Bundle bundleId = new Bundle();
+                        bundleId.putInt("idChat", Integer.parseInt(chat.getChats()[0]));
+                        MessengerFragment.FIO = chat.getChats()[2];
+                        Navigation.findNavController(MainActivity.activity,R.id.nav_host_fragment).navigate(R.id.action_navigation_messenger_to_chatFragment, bundleId);
+                        holder.layoutView.setBackgroundColor(android.R.color.transparent); break;
+                    }
+                    case MotionEvent.ACTION_CANCEL: holder.layoutView.setBackgroundColor(android.R.color.transparent); break;
+                }
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -101,6 +133,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         // final ImageView imageView;
         final TextView nameView, messageView, dateView;
         final ImageView statusView;
+        final ConstraintLayout layoutView;
 
         ViewHolder(View view){
             super(view);
@@ -109,6 +142,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             statusView = (ImageView)view.findViewById(R.id.status);
+            layoutView = (ConstraintLayout)view.findViewById(R.id.constraintLayoutChat);
             //view.setOnCreateContextMenuListener(this);
         }
 
