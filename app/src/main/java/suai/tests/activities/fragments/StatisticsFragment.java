@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -43,8 +44,11 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -166,8 +170,19 @@ public class StatisticsFragment extends Fragment
                 MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
                 TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
 
-                String[] titles = { "Оценка / статус" };
-                MarksTableLayout.addView(AndroidElementsBuilder.createTableHeader(MarksTableLayout.getContext(), titles));
+                tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "");
+                LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
+                cell.setBackground(borders); linearLayout.addView(cell);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "Оценка / Статус");
+                cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                cell.setTextColor(getResources().getColor(R.color.suai_secondary)); linearLayout.addView(cell);
+                AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, 0, 1);
+
+                tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
 
                 int inProgressCounter = 0, errorsCounter = 0, mark_2_counter = 0, mark_3_counter = 0, mark_4_counter = 0, mark_5_counter = 0;
 
@@ -178,6 +193,8 @@ public class StatisticsFragment extends Fragment
 
                     cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
                     cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
+                    cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                    cell.setTextColor(getResources().getColor(R.color.suai_primary));
                     AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
 
                     if (status == 0)
@@ -196,11 +213,12 @@ public class StatisticsFragment extends Fragment
 
                     if (status == 1)
                     {
-                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]);
-                        if (marks[i].getItems()[2].equals("2")) { mark_2_counter++; }
-                        if (marks[i].getItems()[2].equals("3")) { mark_3_counter++; }
-                        if (marks[i].getItems()[2].equals("4")) { mark_4_counter++; }
-                        if (marks[i].getItems()[2].equals("5")) { mark_5_counter++; }
+                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]); int colorID = 0;
+                        if (marks[i].getItems()[2].equals("2")) { colorID = android.R.color.holo_red_dark; mark_2_counter++; }
+                        if (marks[i].getItems()[2].equals("3")) { colorID = android.R.color.holo_red_light; mark_3_counter++; }
+                        if (marks[i].getItems()[2].equals("4")) { colorID = android.R.color.holo_green_dark; mark_4_counter++; }
+                        if (marks[i].getItems()[2].equals("5")) { colorID = android.R.color.holo_green_light; mark_5_counter++; }
+                        cell.setTextColor(getResources().getColor(colorID));
                     }
 
                     if (status == 1)
@@ -228,13 +246,19 @@ public class StatisticsFragment extends Fragment
                 else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
                 StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
 
-                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>();
-                if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter)); }
-                if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter)); }
-                if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter)); }
-                if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter)); }
-                if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter)); }
-                if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter)); }
+                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>(); List<Integer> COLORS = new ArrayList<Integer>();
+                if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter));
+                    COLORS.add(Color.rgb(128,128,128)); }
+                if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter));
+                    COLORS.add(Color.rgb(255,255,64)); }
+                if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter));
+                    COLORS.add(Color.rgb(255,128,128)); }
+                if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter));
+                    COLORS.add(Color.rgb(255,0,0)); }
+                if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter));
+                    COLORS.add(Color.rgb(128,255,128)); }
+                if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter));
+                    COLORS.add(Color.rgb(0,255,0)); }
 
                 ArrayList<PieEntry> pieChartEntries = new ArrayList<PieEntry>();
                 for (int i = 0; i < pieChartDataArrayList.size(); i++)
@@ -250,11 +274,7 @@ public class StatisticsFragment extends Fragment
                         return "" + ((int) value);
                     }
                 });
-                final int[] COLORS = { Color.rgb(128,128,128),
-                        Color.rgb(255,128,128),
-                        Color.rgb(255,0,0),
-                        Color.rgb(128,255,128),
-                        Color.rgb(0,255,0) };
+
                 ArrayList<Integer> colors = new ArrayList<Integer>(); for(int c: COLORS) colors.add(c); pieChartDataSet.setColors(colors);
                 pieChartDataSet.setValueTextSize(16); pieChartDataSet.setValueTextColor(R.color.suai_primary);
                 pieChartDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
