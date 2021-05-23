@@ -28,4 +28,15 @@ public interface commonAPI
     @FormUrlEncoded
     @POST("common/UserAuth.php")
     Call<String[]> getUser(@Field("email") String email, @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("common/ChangePassword.php")
+    Call<String[]> changePassword(@Field("email") String email,
+                           @Field("currentPassword") String currentPassword,
+                           @Field("newPassword") String newPassword);
+
+    @FormUrlEncoded
+    @POST("common/ChangeEmail.php")
+    Call<String[]> changeEmail(@Field("idUser") int idUser, @Field("newEmail") String newEmail,
+                               @Field("password") String password);
 }

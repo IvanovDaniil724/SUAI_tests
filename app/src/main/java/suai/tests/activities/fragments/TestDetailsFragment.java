@@ -4,6 +4,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -12,9 +14,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
+import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.testsAPI;
@@ -40,9 +51,12 @@ public class TestDetailsFragment extends Fragment {
     private TextView TestsDetailsTitleTextView, TestsDetailsDescriptionTextView, TestsDetailsResultsOrErrorsTextView,
                      TestsDetailsTimestampTextView, TestsDetailsLanguageTextView, TestsDetailsSubjectTextView,
                      TestsDetailsStudentTextView, TestsDetailsStudentInfoTextView, TestsDetailsStatusMarkTextView,
-                     TestDetailsStudentInfoGroupTextView, TestDetailsStudentInfoSpecialtyTextView, TestDetailsStudentInfoEmailTextView;
-    private ImageView TestsDetailsStatusImageView;
-    private LinearLayout TestDetailsStudentInfoLinearLayout;
+                     TestDetailsStudentInfoGroupTextView, TestDetailsStudentInfoSpecialtyTextView, TestDetailsStudentInfoEmailTextView,
+                     TestsDetailsTeacherCommentTextView;
+    private ImageView TestsDetailsStatusImageView; private ConstraintLayout TestDetailsTeacherConstraintLayout;
+    private LinearLayout TestDetailsStudentInfoLinearLayout; private ScrollView TestDetailsScrollView;
+    private TextInputLayout TestDetailsTeacherCommentTextInputLayout; private EditText TestDetailsTeacherCommentEditText;
+    private Spinner TestDetailsTeacherChooseMarkSpinner; private MaterialButton TestDetailsTeacherChooseMarkButton;
 
     public TestDetailsFragment() {
         // Required empty public constructor
@@ -71,6 +85,7 @@ public class TestDetailsFragment extends Fragment {
 
         TestsDetailsTitleTextView = root.findViewById(R.id.TestsDetailsTitleTextView);
         TestsDetailsDescriptionTextView = root.findViewById(R.id.TestsDetailsDescriptionTextView);
+        TestsDetailsTeacherCommentTextView = root.findViewById(R.id.TestsDetailsTeacherCommentTextView);
         TestsDetailsResultsOrErrorsTextView = root.findViewById(R.id.TestsDetailsResultsOrErrorsTextView);
         TestsDetailsTimestampTextView = root.findViewById(R.id.TestsDetailsTimestampTextView);
         TestsDetailsLanguageTextView = root.findViewById(R.id.TestsDetailsLanguageTextView);
@@ -83,6 +98,12 @@ public class TestDetailsFragment extends Fragment {
         TestDetailsStudentInfoEmailTextView = root.findViewById(R.id.TestDetailsStudentInfoEmailTextView);
         TestDetailsStudentInfoLinearLayout = root.findViewById(R.id.TestDetailsStudentInfoLinearLayout);
         TestsDetailsStatusImageView = root.findViewById(R.id.TestsDetailsStatusImageView);
+        TestDetailsScrollView = root.findViewById(R.id.TestDetailsScrollView);
+        TestDetailsTeacherConstraintLayout = root.findViewById(R.id.TestDetailsTeacherConstraintLayout);
+        TestDetailsTeacherCommentTextInputLayout = root.findViewById(R.id.TestDetailsTeacherCommentTextInputLayout);
+        TestDetailsTeacherCommentEditText = root.findViewById(R.id.TestDetailsTeacherCommentEditText);
+        TestDetailsTeacherChooseMarkSpinner = root.findViewById(R.id.TestDetailsTeacherChooseMarkSpinner);
+        TestDetailsTeacherChooseMarkButton = root.findViewById(R.id.TestDetailsTeacherChooseMarkButton);
 
         TestsDetailsStudentInfoTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -143,10 +164,18 @@ public class TestDetailsFragment extends Fragment {
     private void setStudentTestDetails(View root, String[] test)
     {
         TestsDetailsStudentTextView.setVisibility(View.GONE); TestsDetailsStudentInfoTextView.setVisibility(View.GONE);
+        TestDetailsTeacherConstraintLayout.setVisibility(View.GONE);
+
+        ConstraintLayout constraintLayout = root.findViewById(R.id.TestDetailsConstraintLayout);
+        ConstraintSet constraintSet = new ConstraintSet(); constraintSet.clone(constraintLayout);
+        constraintSet.connect(TestDetailsScrollView.getId(), ConstraintSet.BOTTOM, constraintLayout.getId(), ConstraintSet.BOTTOM,16);
+        constraintSet.applyTo(constraintLayout);
 
         if (test[2].equals("2"))
         {
             TestsDetailsStatusMarkTextView.setVisibility(View.GONE);
+            if (test[9] != null) { TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n" + test[9]); }
+            else { TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n<Отсутствует>"); }
             TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_error_24);
             TestsDetailsStatusImageView.setColorFilter(ContextCompat.getColor(root.getContext(),
                     android.R.color.holo_red_light), PorterDuff.Mode.SRC_IN);
@@ -155,6 +184,7 @@ public class TestDetailsFragment extends Fragment {
         if (test[2].equals("0"))
         {
             TestsDetailsStatusMarkTextView.setVisibility(View.GONE);
+            TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n<Отсутствует>");
             TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_access_time_24);
             TestsDetailsStatusImageView.setColorFilter(ContextCompat.getColor(root.getContext(),
                     android.R.color.holo_orange_light), PorterDuff.Mode.SRC_IN);
@@ -163,6 +193,8 @@ public class TestDetailsFragment extends Fragment {
         if (test[2].equals("1"))
         {
             TestsDetailsStatusImageView.setVisibility(View.GONE); TestsDetailsStatusMarkTextView.setText(test[8]);
+            if (test[9] != null) { TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n" + test[9]); }
+            else { TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n<Отсутствует>"); }
         }
 
         if (test[6] == null) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>"); }// + "\n\nРезультат:\n" + test[7]); }
@@ -171,11 +203,29 @@ public class TestDetailsFragment extends Fragment {
 
     private void setTeacherTestDetails(View root, String[] test)
     {
-        TestsDetailsStatusMarkTextView.setVisibility(View.GONE);
-        if (test[2].equals("1")) { TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24); }
-        else { TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24); }
-        TestsDetailsStatusImageView.setColorFilter(ContextCompat.getColor(root.getContext(),
-                R.color.suai_secondary), PorterDuff.Mode.SRC_IN);
+        TestsDetailsTeacherCommentTextView.setVisibility(View.GONE);
+
+        String[] marks = { "5", "4", "3", "2" };
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(root.getContext(), R.layout.spinner_style, marks);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_style);
+        TestDetailsTeacherChooseMarkSpinner.setAdapter(spinnerAdapter);
+
+        if (test[2].equals("1"))
+        {
+            TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24);
+            TestsDetailsStatusMarkTextView.setText(test[15]); TestDetailsTeacherChooseMarkButton.setText("Изменить оценку");
+            if (test[15].equals("2")) { TestDetailsTeacherChooseMarkSpinner.setSelection(3); }
+            if (test[15].equals("3")) { TestDetailsTeacherChooseMarkSpinner.setSelection(2); }
+            if (test[15].equals("4")) { TestDetailsTeacherChooseMarkSpinner.setSelection(1); }
+            if (test[15].equals("5")) { TestDetailsTeacherChooseMarkSpinner.setSelection(0); }
+            TestDetailsTeacherCommentEditText.setText(test[16]);
+        }
+        else
+        {
+            TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24);
+            TestsDetailsStatusMarkTextView.setVisibility(View.GONE);
+        }
+        TestsDetailsStatusImageView.setColorFilter(ContextCompat.getColor(root.getContext(), R.color.suai_secondary), PorterDuff.Mode.SRC_IN);
 
         TestsDetailsStudentTextView.setText(test[9] + " " + test[10] + " " + test[11]);
 
@@ -185,5 +235,27 @@ public class TestDetailsFragment extends Fragment {
         TestDetailsStudentInfoGroupTextView.setText("Группа: " + test[12]);
         TestDetailsStudentInfoSpecialtyTextView.setText("Специальность: " + test[14] + "\n(" + test[13] + ")");
         TestDetailsStudentInfoEmailTextView.setText("Эл. почта: " + test[8]);
+
+        TestDetailsTeacherChooseMarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TestsDetailsStatusMarkTextView.setVisibility(View.VISIBLE);
+                TestsDetailsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24);
+                TestsDetailsStatusMarkTextView.setText(TestDetailsTeacherChooseMarkSpinner.getSelectedItem().toString());
+                TestDetailsTeacherChooseMarkButton.setText("Изменить оценку");
+
+                testsAPI service = RetrofitConnection.testsApi; Call<String[]> call;
+                call = service.setStudentMark(String.valueOf(idTest), TestDetailsTeacherChooseMarkSpinner.getSelectedItem().toString(),
+                                              TestDetailsTeacherCommentEditText.getText().toString());
+                call.enqueue(new Callback<String[]>()
+                {
+                    @Override
+                    public void onResponse(Call<String[]> call, Response<String[]> response) { }
+
+                    @Override
+                    public void onFailure(Call<String[]> call, Throwable t) { Log.e("retrofitError", t.getMessage()); }
+                });
+            }
+        });
     }
 }

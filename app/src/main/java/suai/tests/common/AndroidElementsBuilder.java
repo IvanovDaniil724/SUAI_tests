@@ -34,7 +34,8 @@ public class AndroidElementsBuilder extends AppCompatActivity
         dataTextView.setTextSize(18); dataTextView.setText(text); dataTextView.setSingleLine(false);
 
         dataTextView.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 128, 1f));
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
 
         return dataTextView;
     }
