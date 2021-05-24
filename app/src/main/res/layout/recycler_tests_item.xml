@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/TestsStudentOrSubjectTextView"
+        android:id="@+id/TestsSubjectTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -48,23 +48,36 @@
         app:layout_constraintTop_toBottomOf="@+id/TestsTitleTextView" />
 
     <TextView
+        android:id="@+id/TestsGroupAndStudentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="group"
+        app:layout_constraintEnd_toEndOf="@+id/TestsSubjectTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TestsSubjectTextView" />
+
+    <TextView
         android:id="@+id/TestsTimestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="19.03.2021"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TestsStudentOrSubjectTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/TestsGroupAndStudentTextView" />
 
     <TextView
         android:id="@+id/TestsLanguageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Java"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/TestsStudentOrSubjectTextView"
-        app:layout_constraintTop_toBottomOf="@+id/TestsStudentOrSubjectTextView" />
+        app:layout_constraintEnd_toEndOf="@+id/TestsSubjectTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/TestsTimestampTextView"
+        app:layout_constraintTop_toBottomOf="@+id/TestsGroupAndStudentTextView" />
 
     <TextView
         android:id="@+id/TestsTitleTextView"

@@ -12,6 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
@@ -63,25 +67,27 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        final TextView TestsTitleTextView, TestsStudentOrSubjectTextView, TestsStatusMarkTextView, TestsLanguageTextView;
+        final TextView TestsTitleTextView, TestsSubjectTextView, TestsStatusMarkTextView,
+                       TestsLanguageTextView, TestsGroupAndStudentTextView, TestsTimestampTextView;
         final ImageView TestsStatusImageView;
 
         ViewHolder(View view)
         {
             super(view);
             TestsTitleTextView = view.findViewById(R.id.TestsTitleTextView);
-            TestsStudentOrSubjectTextView = view.findViewById(R.id.TestsStudentOrSubjectTextView);
+            TestsSubjectTextView = view.findViewById(R.id.TestsSubjectTextView);
             TestsStatusMarkTextView = view.findViewById(R.id.TestsStatusMarkTextView);
             TestsLanguageTextView = view.findViewById(R.id.TestsLanguageTextView);
+            TestsGroupAndStudentTextView = view.findViewById(R.id.TestsGroupAndStudentTextView);
             TestsStatusImageView = view.findViewById(R.id.TestsStatusImageView);
-
+            TestsTimestampTextView = view.findViewById(R.id.TestsTimestampTextView);
         }
     }
 
     public void setStudentTests(TestsRecyclerViewAdapter.ViewHolder holder, String[] test)
     {
-        holder.TestsTitleTextView.setText(test[3]);
-        holder.TestsStudentOrSubjectTextView.setText(test[5]);
+        holder.TestsTitleTextView.setText(test[3]); holder.TestsSubjectTextView.setText(test[5]);
+        holder.TestsGroupAndStudentTextView.setVisibility(View.GONE);
 
         if (test[6].equals("1")) { holder.TestsLanguageTextView.setText("C++"); }
         else { holder.TestsLanguageTextView.setText("Java"); }
@@ -107,12 +113,28 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
             holder.TestsStatusImageView.setVisibility(View.GONE);
             holder.TestsStatusMarkTextView.setText(test[2]);
         }
+
+        Calendar timestamp = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+        try { timestamp.setTime(sdf.parse(test[7])); } catch (ParseException e) { e.printStackTrace(); }
+
+        int monthInt = timestamp.get(Calendar.MONTH) + 1; String month = "";
+        int dayInt = timestamp.get(Calendar.DAY_OF_MONTH); String day = "";
+        int hourInt = timestamp.get(Calendar.HOUR_OF_DAY); String hour = "";
+        int minuteInt = timestamp.get(Calendar.MINUTE); String minute = "";
+        if (monthInt < 10) { month = "0" + monthInt; } else { month = String.valueOf(monthInt); }
+        if (dayInt < 10) { day = "0" + dayInt; } else { day = String.valueOf(dayInt); }
+        if (hourInt < 10) { hour = "0" + hourInt; } else { hour = String.valueOf(hourInt); }
+        if (minuteInt < 10) { minute = "0" + minuteInt; } else { minute = String.valueOf(minuteInt); }
+
+        holder.TestsTimestampTextView.setText(day+ "." + month + "." + timestamp.get(Calendar.YEAR) + " " + hour + ":" + minute);
     }
 
     public void setTeacherTests(TestsRecyclerViewAdapter.ViewHolder holder, String[] test)
     {
-        holder.TestsTitleTextView.setText(test[1]);
-        holder.TestsStudentOrSubjectTextView.setText(test[4]);
+        holder.TestsTitleTextView.setText(test[1]); holder.TestsSubjectTextView.setText(test[4]);
+        holder.TestsGroupAndStudentTextView.setVisibility(View.VISIBLE);
+        holder.TestsGroupAndStudentTextView.setText(test[6] + " | " + test[7]);
 
         if (test[5].equals("1")) { holder.TestsLanguageTextView.setText("C++"); }
         else { holder.TestsLanguageTextView.setText("Java"); }
@@ -121,5 +143,20 @@ public class TestsRecyclerViewAdapter extends RecyclerView.Adapter<TestsRecycler
         if (test[2].equals("1")) { holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_24); }
         else { holder.TestsStatusImageView.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24); }
         holder.TestsStatusImageView.setColorFilter(ContextCompat.getColor(context, R.color.suai_secondary), PorterDuff.Mode.SRC_IN);
+
+        Calendar timestamp = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+        try { timestamp.setTime(sdf.parse(test[8])); } catch (ParseException e) { e.printStackTrace(); }
+
+        int monthInt = timestamp.get(Calendar.MONTH) + 1; String month = "";
+        int dayInt = timestamp.get(Calendar.DAY_OF_MONTH); String day = "";
+        int hourInt = timestamp.get(Calendar.HOUR_OF_DAY); String hour = "";
+        int minuteInt = timestamp.get(Calendar.MINUTE); String minute = "";
+        if (monthInt < 10) { month = "0" + monthInt; } else { month = String.valueOf(monthInt); }
+        if (dayInt < 10) { day = "0" + dayInt; } else { day = String.valueOf(dayInt); }
+        if (hourInt < 10) { hour = "0" + hourInt; } else { hour = String.valueOf(hourInt); }
+        if (minuteInt < 10) { minute = "0" + minuteInt; } else { minute = String.valueOf(minuteInt); }
+
+        holder.TestsTimestampTextView.setText(day+ "." + month + "." + timestamp.get(Calendar.YEAR) + " " + hour + ":" + minute);
     }
 }

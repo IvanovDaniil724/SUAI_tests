@@ -133,12 +133,12 @@ public class TestDetailsFragment extends Fragment {
                 else { TestsDetailsLanguageTextView.setText("Java"); }
 
                 timestamp = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
                 try { timestamp.setTime(sdf.parse(test[5])); } catch (ParseException e) { e.printStackTrace(); }
 
                 int monthInt = timestamp.get(Calendar.MONTH) + 1; String month = "";
                 int dayInt = timestamp.get(Calendar.DAY_OF_MONTH); String day = "";
-                int hourInt = timestamp.get(Calendar.HOUR); String hour = "";
+                int hourInt = timestamp.get(Calendar.HOUR_OF_DAY); String hour = "";
                 int minuteInt = timestamp.get(Calendar.MINUTE); String minute = "";
                 if (monthInt < 10) { month = "0" + monthInt; } else { month = String.valueOf(monthInt); }
                 if (dayInt < 10) { day = "0" + dayInt; } else { day = String.valueOf(dayInt); }
