@@ -108,19 +108,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         holder.messageView.setText(message.getMessages()[3]);
 
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-        ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams((int)(width/1.25), ViewGroup.LayoutParams.WRAP_CONTENT);
-        holder.itemView.setLayoutParams(param);
+       // ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams((int)(width/1.25), ViewGroup.LayoutParams.WRAP_CONTENT);
+      //  holder.itemView.setLayoutParams(param);
+        holder.messageView.setMaxWidth((int)(width/1.25));
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
          //   holder.messageView.setGravity(Gravity.RIGHT);
          //   ConstraintLayout constraintLayout = findViewById(R.id.parent_layout);
             ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(holder.layoutView);
-         //   constraintSet.load(context,holder.layoutView.getId());
-           // constraintSet.setHorizontalBias(holder.layoutView.getId(),1);
-           // constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
-            constraintSet.setMargin(holder.messageView.getId(),ConstraintSet.LEFT,100);
-          //  constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
+        //    constraintSet.clone(holder.layoutView);
+            constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
+
+        //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+            constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
+          //  constraintSet.setMargin(holder.messageView.getId(),ConstraintSet.LEFT,100);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT);
            // constraintSet.connect(R.id.imageView,ConstraintSet.RIGHT,R.id.check_answer1,ConstraintSet.RIGHT,0);
            // constraintSet.connect(R.id.imageView,ConstraintSet.TOP,R.id.check_answer1,ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.layoutView);
