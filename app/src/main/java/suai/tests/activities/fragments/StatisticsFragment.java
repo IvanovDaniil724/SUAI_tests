@@ -1,12 +1,14 @@
 package suai.tests.activities.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -42,8 +44,11 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,9 +65,9 @@ public class StatisticsFragment extends Fragment
     private Spinner StatisticsSubjectsSpinner, TeacherGroupsSpinner;
 
     private TableLayout MarksTableLayout, TeacherAverageGroupMarksTableLayout, TeacherGroupMarksTableLayout;
-    private PieChart StatisticsPieChart; private BarChart StatisticsTeacherGroupMarksBarChart;
+    private PieChart StatisticsPieChart, StatisticsTeacherGroupMarksPieChart; private BarChart StatisticsTeacherGroupMarksBarChart;
 
-    private TextView StatisticsStudentAverageMark;
+    private TextView StatisticsStudentAverageMark, StatisticsTeacherGroupMarksPlaceholder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,9 +104,11 @@ public class StatisticsFragment extends Fragment
         TeacherGroupMarksTableLayout = root.findViewById(R.id.TeacherGroupMarksTableLayout);
 
         StatisticsPieChart = root.findViewById(R.id.StatisticsStudentMarksPieChart);
+        StatisticsTeacherGroupMarksPieChart = root.findViewById(R.id.StatisticsTeacherGroupMarksPieChart);
         StatisticsTeacherGroupMarksBarChart = root.findViewById(R.id.StatisticsTeacherGroupMarksBarChart);
 
         StatisticsStudentAverageMark = root.findViewById(R.id.StatisticsStudentAverageMark);
+        StatisticsTeacherGroupMarksPlaceholder = root.findViewById(R.id.StatisticsTeacherGroupMarksPlaceholder);
 
         commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
 
@@ -138,7 +145,6 @@ public class StatisticsFragment extends Fragment
             {
                 String subject = (String) parent.getItemAtPosition(position);
 
-                //root.findViewById(R.id.StatisticsTeacherGroupSpinnerLinearLayout).setVisibility(View.VISIBLE);
                 if (AccountFragment.role == 1) { setStudentStatistics(root, subject); } else { setTeacherStatistics(root, context); }
             }
 
@@ -164,8 +170,19 @@ public class StatisticsFragment extends Fragment
                 MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
                 TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
 
-                String[] titles = { "Оценка / статус" };
-                MarksTableLayout.addView(AndroidElementsBuilder.createTableHeader(MarksTableLayout.getContext(), titles));
+                tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
+                linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "");
+                LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
+                cell.setBackground(borders); linearLayout.addView(cell);
+
+                cell = AndroidElementsBuilder.createTextView(linearLayout, "Оценка / Статус");
+                cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                cell.setTextColor(getResources().getColor(R.color.suai_secondary)); linearLayout.addView(cell);
+                AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, 0, 1);
+
+                tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
 
                 int inProgressCounter = 0, errorsCounter = 0, mark_2_counter = 0, mark_3_counter = 0, mark_4_counter = 0, mark_5_counter = 0;
 
@@ -176,6 +193,8 @@ public class StatisticsFragment extends Fragment
 
                     cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
                     cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
+                    cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                    cell.setTextColor(getResources().getColor(R.color.suai_primary));
                     AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
 
                     if (status == 0)
@@ -194,11 +213,12 @@ public class StatisticsFragment extends Fragment
 
                     if (status == 1)
                     {
-                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]);
-                        if (marks[i].getItems()[2].equals("2")) { mark_2_counter++; }
-                        if (marks[i].getItems()[2].equals("3")) { mark_3_counter++; }
-                        if (marks[i].getItems()[2].equals("4")) { mark_4_counter++; }
-                        if (marks[i].getItems()[2].equals("5")) { mark_5_counter++; }
+                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[2]); int colorID = 0;
+                        if (marks[i].getItems()[2].equals("2")) { colorID = android.R.color.holo_red_dark; mark_2_counter++; }
+                        if (marks[i].getItems()[2].equals("3")) { colorID = android.R.color.holo_red_light; mark_3_counter++; }
+                        if (marks[i].getItems()[2].equals("4")) { colorID = android.R.color.holo_green_dark; mark_4_counter++; }
+                        if (marks[i].getItems()[2].equals("5")) { colorID = android.R.color.holo_green_light; mark_5_counter++; }
+                        cell.setTextColor(getResources().getColor(colorID));
                     }
 
                     if (status == 1)
@@ -226,13 +246,19 @@ public class StatisticsFragment extends Fragment
                 else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
                 StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
 
-                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>();
-                if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter)); }
-                if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter)); }
-                if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter)); }
-                if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter)); }
-                if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter)); }
-                if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter)); }
+                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>(); List<Integer> COLORS = new ArrayList<Integer>();
+                if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter));
+                    COLORS.add(Color.rgb(128,128,128)); }
+                if (errorsCounter != 0) { pieChartDataArrayList.add(new PieChartItem("Ошибки", errorsCounter));
+                    COLORS.add(Color.rgb(255,255,64)); }
+                if (mark_2_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter));
+                    COLORS.add(Color.rgb(255,128,128)); }
+                if (mark_3_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter));
+                    COLORS.add(Color.rgb(255,0,0)); }
+                if (mark_4_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter));
+                    COLORS.add(Color.rgb(128,255,128)); }
+                if (mark_5_counter != 0) { pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter));
+                    COLORS.add(Color.rgb(0,255,0)); }
 
                 ArrayList<PieEntry> pieChartEntries = new ArrayList<PieEntry>();
                 for (int i = 0; i < pieChartDataArrayList.size(); i++)
@@ -242,8 +268,15 @@ public class StatisticsFragment extends Fragment
                 }
 
                 PieDataSet pieChartDataSet = new PieDataSet(pieChartEntries, "Количество оценок или статусов по данной дисциплине");
-                pieChartDataSet.setColors(ColorTemplate.COLORFUL_COLORS); pieChartDataSet.setValueTextSize(16);
-                pieChartDataSet.setValueTextColor(R.color.suai_primary);
+                pieChartDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return "" + ((int) value);
+                    }
+                });
+
+                ArrayList<Integer> colors = new ArrayList<Integer>(); for(int c: COLORS) colors.add(c); pieChartDataSet.setColors(colors);
+                pieChartDataSet.setValueTextSize(16); pieChartDataSet.setValueTextColor(R.color.suai_primary);
                 pieChartDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
                 pieChartDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
@@ -255,7 +288,6 @@ public class StatisticsFragment extends Fragment
                 legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
                 legend.setTextColor(getResources().getColor(R.color.suai_secondary));
                 legend.setXEntrySpace(128);
-
 
                 StatisticsPieChart.setCenterText("Оценки по предмету \"" + StatisticsSubjectsSpinner.getSelectedItem().toString() + "\"");
                 StatisticsPieChart.setEntryLabelColor(R.color.suai_primary);
@@ -273,6 +305,8 @@ public class StatisticsFragment extends Fragment
     private void setTeacherStatistics(View root, Context context)
     {
         TeacherAverageGroupMarksTableLayout.removeAllViews();
+        StatisticsTeacherGroupMarksPlaceholder.setVisibility(View.GONE);
+        StatisticsTeacherGroupMarksPieChart.setVisibility(View.VISIBLE);
 
         commonAPI service = RetrofitConnection.commonAPI; Call<ItemsPOJO[]> call;
         call = service.getTeacherGroupsAverageMarks(AccountFragment.idUser, StatisticsSubjectsSpinner.getSelectedItem().toString());
@@ -404,44 +438,14 @@ public class StatisticsFragment extends Fragment
                             public void onResponse(@NonNull Call<ItemsPOJO[]> call, @NonNull Response<ItemsPOJO[]> response)
                             {
                                 ItemsPOJO[] marks = response.body(); int colorID = 0;
+                                int inProgressCounter = 0, mark_2_counter = 0, mark_3_counter = 0, mark_4_counter = 0, mark_5_counter = 0;
 
                                 if (marks.length > 1)
                                 {
                                     TeacherGroupMarksTableLayout.setStretchAllColumns(true);
-                                    //TeacherGroupMarksTableLayout.setShrinkAllColumns(true); int status, cellsIndex = 0;
                                     TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell;
 
-                                    //root.findViewById(R.id.StatisticsTeacherGroupSpinnerLinearLayout).setVisibility(View.VISIBLE);
-
-                                    Arrays.sort(marks[0].getItems(), Collections.reverseOrder());
-
                                     String[] students = marks[0].getItems(), labs = marks[1].getItems();
-                                    //Arrays.sort(students, Collections.reverseOrder());
-
-                                    //Arrays.sort(labs, Collections.reverseOrder());
-
-                                    //String[] labs = marks[1].getItems();
-                                    //List<String> list = Arrays.asList(marks[0].getItems());
-                                    //List<String> reversed = Lists.reverse(list);
-                                    //String[] students = (String[]) reversed.toArray();
-
-                                    for (int i = 0; i < marks[1].getItems().length; i++)
-                                    {
-                                        //List<String> list = Arrays.asList(marks[0].getItems());
-                                        //List<String> reversed = Lists.reverse(list);
-                                        //String[] students = reversed.toArray();
-
-                                        //if (labs.length > 0) { new AlertDialogBuilder(root.getContext()).alert("", labs[i]); }
-                                        //new AlertDialogBuilder(root.getContext()).alert("", students[i]);
-                                        //students[i] = marks[0].getItems()[i];
-                                    }
-
-                                    //for (int i = 0; students.length > i; i++)
-                                    //{ new AlertDialogBuilder(root.getContext()).alert("", students[i]); }
-
-                                    //String currentLab = marks[0].getItems()[0], currentStudent = marks[0].getItems()[1];
-                                    //int testsCount = Integer.parseInt(marks[2].getItems()[3]),
-                                    //    studentsCount = Integer.parseInt(marks[2].getItems()[4]);
 
                                     tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext());
                                     tableRow.setGravity(Gravity.CENTER);
@@ -452,23 +456,12 @@ public class StatisticsFragment extends Fragment
                                     LayerDrawable borders = (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
                                     cell.setBackground(borders); linearLayout.addView(cell);
 
-                                    /*for (int i = 0; i < marks.length; i++)
-                                    {
-                                        if (!currentLab.equals(marks[i].getItems()[0]) || i == 0)
-                                        {
-                                            cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]);
-                                            AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, 0, cellsIndex);
-                                            linearLayout.addView(cell); cellsIndex++; currentLab = marks[i].getItems()[0];
-                                        }
-                                    }*/
-
-                                    //Arrays.sort(labs);
                                     for (int i = 0; i < labs.length; i++)
                                     {
                                         cell = AndroidElementsBuilder.createTextView(linearLayout, labs[i]);
                                         AndroidElementsBuilder.setTableBorders(cell,
                                                 students.length + 1, labs.length + 1, 0, i + 1);
-                                        linearLayout.addView(cell); //cellsIndex++; //currentLab = marks[i].getItems()[0];
+                                        linearLayout.addView(cell);
                                     }
                                     tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
 
@@ -481,46 +474,30 @@ public class StatisticsFragment extends Fragment
 
                                         for (int j = 0; j < labs.length + 1; j++)
                                         {
-                                            //new AlertDialogBuilder(root.getContext()).alert("", students[i]);
-                                            //Arrays.sort(students);
+                                            cell = AndroidElementsBuilder.createTextView(linearLayout, "-");
+                                            cell.setTypeface(Typeface.DEFAULT_BOLD);
+                                            cell.setTextColor(getResources().getColor(android.R.color.secondary_text_dark));
+                                            
                                             if (j == 0) { cell = AndroidElementsBuilder.createTextView(linearLayout, students[i]); }
                                             else
                                             {
                                                 for (int ii = 2; ii < marks.length; ii++)
                                                 {
-                                                    //new AlertDialogBuilder(root.getContext()).alert("",
-                                                    //    String.valueOf(marks[ii].getItems()[0].equals(labs[j - 1])) + " && " +
-                                                    //            String.valueOf(marks[ii].getItems()[1].equals(students[i])));
-
-                                                    //Arrays.sort(students);
-                                                    new AlertDialogBuilder(root.getContext()).alert("",
-                                                    String.valueOf(marks[ii].getItems()[0]) + " && " +
-                                                             String.valueOf(marks[ii].getItems()[1]) + "\n\n" +
-                                                            labs[j - 1] + " && " + students[i]);
-
-                                                    //new AlertDialogBuilder(root.getContext()).alert("", students[i]);
-
                                                     if (marks[ii].getItems()[0].equals(labs[j - 1]) &&
                                                         marks[ii].getItems()[1].equals(students[i]))
                                                     {
                                                         cell = AndroidElementsBuilder.createTextView(linearLayout, marks[ii].getItems()[2]);
-                                                        if (Double.parseDouble(marks[ii].getItems()[2]) < 2.6)
-                                                            { colorID = android.R.color.holo_red_dark; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) < 3.6)
-                                                            { colorID = android.R.color.holo_red_light; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) < 4.6)
-                                                            { colorID = android.R.color.holo_green_dark; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) <= 5)
-                                                            { colorID = android.R.color.holo_green_light; }
-                                                    }
-                                                    else
-                                                    {
-                                                        cell = AndroidElementsBuilder.createTextView(linearLayout, "-");
-                                                        colorID = android.R.color.secondary_text_dark; cell.setTypeface(Typeface.DEFAULT_BOLD);
-                                                        cell.setTextColor(getResources().getColor(R.color.suai_primary));
+                                                        if (Double.parseDouble(marks[ii].getItems()[2]) == 2)
+                                                            { colorID = android.R.color.holo_red_dark; mark_2_counter++; }
+                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 3)
+                                                            { colorID = android.R.color.holo_red_light; mark_3_counter++; }
+                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 4)
+                                                            { colorID = android.R.color.holo_green_dark; mark_4_counter++; }
+                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 5)
+                                                            { colorID = android.R.color.holo_green_light; mark_5_counter++; }
 
-                                                    }
-                                                    cell.setTextColor(getResources().getColor(colorID));
+                                                        cell.setTextColor(getResources().getColor(colorID));
+                                                    } else { inProgressCounter++; }
                                                 }
                                             }
 
@@ -528,105 +505,76 @@ public class StatisticsFragment extends Fragment
                                                     students.length + 1, labs.length + 1, i + 1, j);
                                             linearLayout.addView(cell);
                                         }
-
                                         tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
                                     }
-
-                                    //TeacherGroupMarksTableLayout.getChildAt(1);
-
-                                    /*for (int i = 0; i < marks.length; i++)
-                                    {
-                                        tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext());
-                                        tableRow.setGravity(Gravity.CENTER);
-                                        linearLayout = new LinearLayout(tableRow.getContext());
-                                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                                        for (int j = 0; j < marks.length; j++)
-                                        {
-                                            if (j == 0)
-                                            {
-                                                if (!currentStudent.equals(marks[i].getItems()[1]))
-                                                {
-                                                    currentStudent = marks[i].getItems()[1];
-                                                }
-
-                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[1]);
-                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i + 1, j);
-                                                linearLayout.addView(cell); //cellsIndex++;
-                                                //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
-                                            }
-                                            else
-                                            {
-                                                cell = AndroidElementsBuilder.createTextView(linearLayout, "");
-                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i + 1, j);
-                                                linearLayout.addView(cell); //cellsIndex++;
-                                                //currentStudent = marks[i].getItems()[1];
-                                            }*/
-
-
-
-                                            /*if (!currentStudent.equals(marks[i].getItems()[1]))
-                                            {
-
-                                            }
-                                            else
-                                            {
-                                                cell = AndroidElementsBuilder.createTextView(linearLayout, "");
-                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i + 1, j);
-                                                linearLayout.addView(cell); //cellsIndex++;
-                                                //currentStudent = marks[i].getItems()[1];
-                                            }*/
-                                        //}
-
-                                        //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
-                                    //}
                                 }
 
-                                /*for (int i = 0; i < marks.length; i++)
+                                ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>();
+                                if (inProgressCounter != 0) {
+                                    pieChartDataArrayList.add(new PieChartItem("Не сдано", inProgressCounter)); }
+                                if (mark_2_counter != 0) {
+                                    pieChartDataArrayList.add(new PieChartItem("Неудовлетворительно (2)", mark_2_counter)); }
+                                if (mark_3_counter != 0) {
+                                    pieChartDataArrayList.add(new PieChartItem("Удовлетворительно (3)", mark_3_counter)); }
+                                if (mark_4_counter != 0) {
+                                    pieChartDataArrayList.add(new PieChartItem("Хорошо (4)", mark_4_counter)); }
+                                if (mark_5_counter != 0) {
+                                    pieChartDataArrayList.add(new PieChartItem("Отлично (5)", mark_5_counter)); }
+
+                                ArrayList<PieEntry> pieChartEntries = new ArrayList<PieEntry>();
+                                for (int i = 0; i < pieChartDataArrayList.size(); i++)
                                 {
-                                    tableRow = new TableRow(TeacherGroupMarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
-                                    linearLayout = new LinearLayout(tableRow.getContext());
-                                    linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                    pieChartEntries.add(new PieEntry(pieChartDataArrayList.get(i).getMarksCount(),
+                                                                     pieChartDataArrayList.get(i).getTitle()));
+                                }
 
-                                    if (i == 0)
-                                    {
-                                        cell = AndroidElementsBuilder.createTextView(linearLayout, "");
-                                        LayerDrawable borders =
-                                                (LayerDrawable) getResources().getDrawable(R.drawable.item_table_header_borders);
-                                        cell.setBackground(borders); linearLayout.addView(cell); cellsIndex++;*/
+                                PieDataSet pieChartDataSet =
+                                        new PieDataSet(pieChartEntries, "Количество оценок по данной дисциплине");
+                                pieChartDataSet.setValueFormatter(new ValueFormatter() {
+                                    @Override
+                                    public String getFormattedValue(float value) {
+                                        return "" + ((int) value);
+                                    }
+                                });
 
-                                        /*for (int j = 0; j < testsCount * studentsCount; j += studentsCount)
-                                        {
-                                            cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[0]);
-                                            AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, 0, cellsIndex);
-                                            linearLayout.addView(cell); cellsIndex++;
-                                        }*/
+                                final int[] COLORS = { Color.rgb(128,128,128),
+                                                       Color.rgb(255,128,128),
+                                                       Color.rgb(255,0,0),
+                                                       Color.rgb(128,255,128),
+                                                       Color.rgb(0,255,0) };
+                                ArrayList<Integer> colors = new ArrayList<Integer>(); for(int c: COLORS) colors.add(c);
+                                pieChartDataSet.setColors(colors);
 
-                                        //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
+                                pieChartDataSet.setValueTextSize(16);
+                                pieChartDataSet.setValueTextColor(R.color.suai_primary);
+                                pieChartDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+                                pieChartDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
-                                        /*for (int j = 1; j < testsCount; j++)
-                                        {
-                                            if (j == 1)
-                                            {
-                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[1]);
-                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i-1, cellsIndex);
-                                                linearLayout.addView(cell); cellsIndex++;
+                                PieData data = new PieData(pieChartDataSet);
+                                Description chartDescription = new Description(); chartDescription.setText("");
+                                StatisticsTeacherGroupMarksPieChart.setDescription(chartDescription);
+                                StatisticsTeacherGroupMarksPieChart.setData(data);
 
-                                                cell = AndroidElementsBuilder.createTextView(linearLayout, marks[j].getItems()[2]);
-                                                AndroidElementsBuilder.setTableBorders(cell, studentsCount, testsCount, i-1, cellsIndex);
-                                                linearLayout.addView(cell); cellsIndex++;
-                                            }
-                                            else
-                                            {
+                                Legend legend = StatisticsTeacherGroupMarksPieChart.getLegend();
+                                legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
+                                legend.setTextColor(getResources().getColor(R.color.suai_secondary)); legend.setXEntrySpace(128);
 
-                                            }
-                                        }*/
+                                StatisticsTeacherGroupMarksPieChart.setCenterText("Соотношение оценок");
+                                StatisticsTeacherGroupMarksPieChart.setEntryLabelColor(R.color.suai_primary);
+                                StatisticsTeacherGroupMarksPieChart.animateXY(1000,1000);
+                                StatisticsTeacherGroupMarksPieChart.invalidate();
 
-                                        //continue;
-                                    //}
-
-                                    //tableRow.addView(linearLayout); TeacherGroupMarksTableLayout.addView(tableRow);
-                                //}
+                                if (inProgressCounter == 0 &&
+                                        mark_2_counter == 0 && mark_3_counter == 0 && mark_4_counter == 0 && mark_5_counter == 0)
+                                {
+                                    StatisticsTeacherGroupMarksPieChart.setVisibility(View.GONE);
+                                    StatisticsTeacherGroupMarksPlaceholder.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    StatisticsTeacherGroupMarksPieChart.setVisibility(View.VISIBLE);
+                                    StatisticsTeacherGroupMarksPlaceholder.setVisibility(View.GONE);
+                                }
                             }
 
                             @Override

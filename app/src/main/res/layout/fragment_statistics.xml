@@ -101,6 +101,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/BackToAccountButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -200,6 +201,25 @@
                         android:isScrollContainer="true" />
                 </HorizontalScrollView>
             </ScrollView>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/StatisticsTeacherGroupMarksPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="256dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/StatisticsTeacherGroupMarksPlaceholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="Нет сданных работ"
+                android:textColor="@color/suai_primary"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </ScrollView>
