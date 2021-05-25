@@ -1,7 +1,10 @@
 package suai.tests.common.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +20,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +31,7 @@ import java.util.Date;
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.activities.fragments.ChatFragment;
+import suai.tests.common.AndroidElementsBuilder;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.MessagesClass;
 
@@ -67,6 +73,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         instance.add(Calendar.DAY_OF_MONTH, 1);
 
         Date newDate = instance.getTime();
+
         if ((Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser) && newDate.getTime()>=System.currentTimeMillis())
         {
             holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -99,12 +106,28 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
 
         holder.messageView.setText(message.getMessages()[3]);
+
+        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+       // ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams((int)(width/1.25), ViewGroup.LayoutParams.WRAP_CONTENT);
+      //  holder.itemView.setLayoutParams(param);
+        holder.messageView.setMaxWidth((int)(width/1.25));
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
-            holder.messageView.setGravity(Gravity.RIGHT);
-         /*   FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(0, 10);
-            param.gravity = Gravity.RIGHT;
-            holder.messageView.setLayoutParams(param);*/
+         //   holder.messageView.setGravity(Gravity.RIGHT);
+         //   ConstraintLayout constraintLayout = findViewById(R.id.parent_layout);
+            ConstraintSet constraintSet = new ConstraintSet();
+        //    constraintSet.clone(holder.layoutView);
+            constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
+
+        //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+            constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
+          //  constraintSet.setMargin(holder.messageView.getId(),ConstraintSet.LEFT,100);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT);
+           // constraintSet.connect(R.id.imageView,ConstraintSet.RIGHT,R.id.check_answer1,ConstraintSet.RIGHT,0);
+           // constraintSet.connect(R.id.imageView,ConstraintSet.TOP,R.id.check_answer1,ConstraintSet.TOP,0);
+            constraintSet.applyTo(holder.layoutView);
+
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
         }
         if (Integer.parseInt(message.getMessages()[4])==1 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
@@ -139,6 +162,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         // final ImageView imageView;
         final TextView messageView, dateView, editView;
         final ImageView readView;
+        final ConstraintLayout layoutView;
 
         ViewHolder(View view){
             super(view);
@@ -147,6 +171,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);
             editView = (TextView)view.findViewById(R.id.isEdit);
+            layoutView = (ConstraintLayout)view.findViewById(R.id.layoutMessage);
 
         }
 

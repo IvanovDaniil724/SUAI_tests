@@ -1,11 +1,13 @@
 package suai.tests.activities.fragments;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +21,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.DoubleSummaryStatistics;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,6 +65,13 @@ public class ChatFragment extends Fragment
     {
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
+      //  Display display = root;
+       // Point size = new Point();
+     //   getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+       // int width = display.getWidth();
+      // int width = getResources().getConfiguration().screenWidthDp;
+       // Log.v("gerg",String.valueOf(width));
+
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
         edit = root.findViewById(R.id.constraintLayoutEdit);
