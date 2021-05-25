@@ -127,8 +127,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT);
             constraintSet.applyTo(holder.layoutView);
-
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
+        }
+        else
+        {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
+            //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+            constraintSet.clear(holder.messageView.getId(),ConstraintSet.RIGHT);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
+            constraintSet.applyTo(holder.layoutView);
+            holder.messageView.setBackgroundResource(R.drawable.message_box_get);
         }
         if (Integer.parseInt(message.getMessages()[4])==1 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
             holder.readView.setImageResource(R.drawable.ic_message_read);
@@ -154,6 +164,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return messages.length;
     }
 
+    public void update(MessagesClass[] newMessages) { this.messages=newMessages;}
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
         final TextView messageView, dateView, editView;
@@ -176,4 +188,5 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         }
     }
+
 }

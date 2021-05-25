@@ -73,7 +73,6 @@ public class MessengerFragment extends Fragment
             }
         });
 
-
         EditText find = root.findViewById(R.id.editTextFind);
         find.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,13 +135,14 @@ public class MessengerFragment extends Fragment
         // Design
 
 
-        Handler h = new Handler();
+    /*    Handler h = new Handler();
         Runnable run = new Runnable() {
 
             @Override
             public void run() {
                //  if (ConfirmationDialogBuilder.deletedChat==1) {
                      //Log.v("g", "f");]
+                if (recyclerViewState==null)
                  recyclerViewState = recyclerViewChats.getLayoutManager().onSaveInstanceState();
                      UpdateChats(recyclerViewChats, root, find);
                   //   ConfirmationDialogBuilder.deletedChat=0;
@@ -150,7 +150,7 @@ public class MessengerFragment extends Fragment
                 h.postDelayed(this, 5000);
             }
         };
-        h.postDelayed(run, 5000);
+        h.postDelayed(run, 5000);*/
         return root;
     }
 
