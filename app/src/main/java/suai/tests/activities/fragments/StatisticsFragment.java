@@ -167,7 +167,7 @@ public class StatisticsFragment extends Fragment
             {
                 ItemsPOJO[] marks = response.body();
 
-                MarksTableLayout.setStretchAllColumns(true); MarksTableLayout.setShrinkAllColumns(true);
+                MarksTableLayout.setStretchAllColumns(true); //MarksTableLayout.setShrinkAllColumns(true);
                 TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
 
                 tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
@@ -179,8 +179,9 @@ public class StatisticsFragment extends Fragment
 
                 cell = AndroidElementsBuilder.createTextView(linearLayout, "Оценка / Статус");
                 cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
-                cell.setTextColor(getResources().getColor(R.color.suai_secondary)); linearLayout.addView(cell);
-                AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, 0, 1);
+                cell.setTextColor(getResources().getColor(R.color.suai_secondary));
+                AndroidElementsBuilder.setTableBorders(cell, 2, 2, 0, 1);
+                linearLayout.addView(cell);
 
                 tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
 
@@ -193,7 +194,7 @@ public class StatisticsFragment extends Fragment
 
                     cellsIndex = 0; status = Integer.parseInt(marks[i].getItems()[1]);
                     cell = AndroidElementsBuilder.createTextView(linearLayout, marks[i].getItems()[0]); linearLayout.addView(cell);
-                    cell.setTextSize(20); cell.setTypeface(Typeface.DEFAULT_BOLD);
+                    cell.setTextSize(18); cell.setTypeface(Typeface.DEFAULT_BOLD);
                     cell.setTextColor(getResources().getColor(R.color.suai_primary));
                     AndroidElementsBuilder.setTableBorders(cell, marks.length, 2, i, cellsIndex); cellsIndex++;
 
@@ -235,16 +236,19 @@ public class StatisticsFragment extends Fragment
                     tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
                 }
 
-                int averageMark = ((2 * mark_2_counter) + (3 * mark_3_counter) +
-                        (4 * mark_4_counter) + (5 * mark_5_counter)) /
-                        (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter);
-                StatisticsStudentAverageMark.setText(String.valueOf(averageMark)); int colorID = android.R.color.secondary_text_dark;
-                if (averageMark < 2) { StatisticsStudentAverageMark.setText("Нет принятых лабораторных работ"); }
-                else if (averageMark < 3) { colorID = android.R.color.holo_red_dark; }
-                else if (averageMark < 4) { colorID = android.R.color.holo_red_light; }
-                else if (averageMark < 5) { colorID = android.R.color.holo_green_dark; }
-                else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
-                StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
+                if (mark_2_counter != 0 && mark_3_counter != 0 && mark_4_counter != 0 && mark_5_counter != 0)
+                {
+                    int averageMark = ((2 * mark_2_counter) + (3 * mark_3_counter) +
+                            (4 * mark_4_counter) + (5 * mark_5_counter)) /
+                            (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter);
+                    StatisticsStudentAverageMark.setText(String.valueOf(averageMark)); int colorID = android.R.color.secondary_text_dark;
+                    if (averageMark < 2) { StatisticsStudentAverageMark.setText("Нет принятых лабораторных работ"); }
+                    else if (averageMark < 3) { colorID = android.R.color.holo_red_dark; }
+                    else if (averageMark < 4) { colorID = android.R.color.holo_red_light; }
+                    else if (averageMark < 5) { colorID = android.R.color.holo_green_dark; }
+                    else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
+                    StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
+                }
 
                 ArrayList<PieChartItem> pieChartDataArrayList = new ArrayList<PieChartItem>(); List<Integer> COLORS = new ArrayList<Integer>();
                 if (inProgressCounter != 0) { pieChartDataArrayList.add(new PieChartItem("В прогрессе", inProgressCounter));
