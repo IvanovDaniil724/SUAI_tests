@@ -57,14 +57,16 @@
         app:layout_constraintTop_toTopOf="@+id/TestsDetailsStudentTextView" />
 
     <TextView
-        android:id="@+id/TestsDetailsDescriptionTextView"
+        android:id="@+id/TestsDetailsDescriptionInfoTextView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:singleLine="false"
-        android:text="Description"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:background="@drawable/item_border"
+        android:gravity="center"
+        android:text="Описание"
+        android:textColor="@color/suai_secondary"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintStart_toStartOf="@+id/TestsDetailsTitleTextView"
         app:layout_constraintTop_toBottomOf="@+id/TestsDetailsTitleTextView" />
@@ -82,7 +84,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintEnd_toStartOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintStart_toStartOf="@+id/TestsDetailsTitleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionInfoTextView" />
 
     <TextView
         android:id="@+id/TestsDetailsLanguageTextView"
@@ -96,7 +98,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionInfoTextView" />
 
     <TextView
         android:id="@+id/TestsDetailsTitleTextView"
@@ -148,7 +150,7 @@
         android:layout_height="8dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/layout_divider"
-        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsDescriptionTextView"
+        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
         app:layout_constraintStart_toStartOf="@+id/TestsDetailsTitleTextView"
         app:layout_constraintTop_toBottomOf="@id/TestsDetailsStudentTextView" />
 
@@ -160,7 +162,7 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/TestDetailsTeacherConstraintLayout"
         app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
-        app:layout_constraintStart_toStartOf="@+id/TestsDetailsDescriptionTextView"
+        app:layout_constraintStart_toStartOf="@+id/TestsDetailsTimestampTextView"
         app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDelimiterImageView">
 
         <LinearLayout
@@ -190,6 +192,21 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/TestsDetailsDescriptionTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/info_item"
+        android:padding="8dp"
+        android:text="Описание"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/TestsDetailsLanguageTextView"
+        app:layout_constraintStart_toStartOf="@+id/TestsDetailsTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/TestsDetailsDescriptionInfoTextView" />
 
     <LinearLayout
         android:id="@+id/TestDetailsStudentInfoLinearLayout"
