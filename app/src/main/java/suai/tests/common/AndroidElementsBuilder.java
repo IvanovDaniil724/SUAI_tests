@@ -47,7 +47,8 @@ public class AndroidElementsBuilder extends AppCompatActivity
         dataImageView.setColorFilter(ContextCompat.getColor(context, tintID), PorterDuff.Mode.SRC_IN);
         dataImageView.setPadding(4, 4, 4, 4);
         dataImageView.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 128, 1f));
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
 
         return dataImageView;
     }

@@ -197,8 +197,8 @@ public class TestDetailsFragment extends Fragment {
             else { TestsDetailsTeacherCommentTextView.setText("Комментарий преподавателя:\n<Отсутствует>"); }
         }
 
-        if (test[6] == null) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>"); }// + "\n\nРезультат:\n" + test[7]); }
-        else { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n" + test[6]); }// + "\n\nРезультат:\n" + test[7]); }
+        if (test[6].equals("")) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>" + "\n\nРезультат:\n" + test[7]); }
+        else { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n" + test[6] + "\n\nРезультат:\n<Отсутствует>"); }
     }
 
     private void setTeacherTestDetails(View root, String[] test)
@@ -229,8 +229,8 @@ public class TestDetailsFragment extends Fragment {
 
         TestsDetailsStudentTextView.setText(test[9] + " " + test[10] + " " + test[11]);
 
-        if (test[6] == null) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>"); }// + "\n\nРезультат:\n" + test[7]); }
-        else { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n" + test[6]); }// + "\n\nРезультат:\n" + test[7]); }
+        if (test[6].equals("")) { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n<Отсутствуют>" + "\n\nРезультат:\n" + test[7]); }
+        else { TestsDetailsResultsOrErrorsTextView.setText("Ошибки:\n" + test[6] + "\n\nРезультат:\n<Отсутствует>"); }
 
         TestDetailsStudentInfoGroupTextView.setText("Группа: " + test[12]);
         TestDetailsStudentInfoSpecialtyTextView.setText("Специальность: " + test[14] + "\n(" + test[13] + ")");
