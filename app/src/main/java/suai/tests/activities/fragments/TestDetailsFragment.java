@@ -52,7 +52,7 @@ public class TestDetailsFragment extends Fragment {
                      TestsDetailsTimestampTextView, TestsDetailsLanguageTextView, TestsDetailsSubjectTextView,
                      TestsDetailsStudentTextView, TestsDetailsStudentInfoTextView, TestsDetailsStatusMarkTextView,
                      TestDetailsStudentInfoGroupTextView, TestDetailsStudentInfoSpecialtyTextView, TestDetailsStudentInfoEmailTextView,
-                     TestsDetailsTeacherCommentTextView;
+                     TestsDetailsTeacherCommentTextView, TestsDetailsDescriptionInfoTextView;
     private ImageView TestsDetailsStatusImageView; private ConstraintLayout TestDetailsTeacherConstraintLayout;
     private LinearLayout TestDetailsStudentInfoLinearLayout; private ScrollView TestDetailsScrollView;
     private TextInputLayout TestDetailsTeacherCommentTextInputLayout; private EditText TestDetailsTeacherCommentEditText;
@@ -85,6 +85,7 @@ public class TestDetailsFragment extends Fragment {
 
         TestsDetailsTitleTextView = root.findViewById(R.id.TestsDetailsTitleTextView);
         TestsDetailsDescriptionTextView = root.findViewById(R.id.TestsDetailsDescriptionTextView);
+        TestsDetailsDescriptionInfoTextView = root.findViewById(R.id.TestsDetailsDescriptionInfoTextView);
         TestsDetailsTeacherCommentTextView = root.findViewById(R.id.TestsDetailsTeacherCommentTextView);
         TestsDetailsResultsOrErrorsTextView = root.findViewById(R.id.TestsDetailsResultsOrErrorsTextView);
         TestsDetailsTimestampTextView = root.findViewById(R.id.TestsDetailsTimestampTextView);
@@ -104,6 +105,18 @@ public class TestDetailsFragment extends Fragment {
         TestDetailsTeacherCommentEditText = root.findViewById(R.id.TestDetailsTeacherCommentEditText);
         TestDetailsTeacherChooseMarkSpinner = root.findViewById(R.id.TestDetailsTeacherChooseMarkSpinner);
         TestDetailsTeacherChooseMarkButton = root.findViewById(R.id.TestDetailsTeacherChooseMarkButton);
+
+        TestsDetailsDescriptionInfoTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: TestsDetailsDescriptionTextView.setVisibility(View.VISIBLE); break;
+                    case MotionEvent.ACTION_UP: TestsDetailsDescriptionTextView.setVisibility(View.GONE); break;
+                    case MotionEvent.ACTION_CANCEL: TestsDetailsDescriptionTextView.setVisibility(View.GONE); break;
+                }
+                return true;
+            }
+        });
 
         TestsDetailsStudentInfoTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
