@@ -19,6 +19,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import suai.tests.R;
 import suai.tests.activities.MainActivity;
 import suai.tests.activities.fragments.AccountFragment;
@@ -84,7 +89,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         if (Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
             holder.messageView.setText("Вы: "+chat.getChats()[3]);
         else holder.messageView.setText(chat.getChats()[3]);
-        holder.dateView.setText(chat.getChats()[4]);
+
         if (Integer.parseInt(chat.getChats()[5])==1 && Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
             holder.statusView.setImageResource(R.drawable.ic_message_read);
         else if (Integer.parseInt(chat.getChats()[5])==0 && Integer.parseInt(chat.getChats()[1])==AccountFragment.idUser)
@@ -121,6 +126,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                 return true;
             }
         });
+
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date chatDate = simpledateformat.parse(chat.getChats()[4],pos);
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(chatDate);
+        instance.add(Calendar.DAY_OF_MONTH, 1);
+        Date newDate = instance.getTime();
+
+        SimpleDateFormat oldMessageFormat = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+        if (newDate.getTime()>=System.currentTimeMillis())
+            holder.dateView.setText(timeFormat.format(chatDate));
+        else holder.dateView.setText(oldMessageFormat.format(chatDate));
 
     }
 

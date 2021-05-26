@@ -71,11 +71,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         Calendar instance = Calendar.getInstance();
         instance.setTime(messageDate);
         instance.add(Calendar.DAY_OF_MONTH, 1);
-
         Date newDate = instance.getTime();
+
+        SimpleDateFormat oldMessageFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
         if ((Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser) && newDate.getTime()>=System.currentTimeMillis())
         {
+            holder.dateView.setText(timeFormat.format(messageDate));
             holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -104,6 +107,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                 }
             });
         }
+        else
+        {
+            holder.dateView.setText(oldMessageFormat.format(messageDate));
+        }
 
         holder.messageView.setText(message.getMessages()[3]);
 
@@ -113,22 +120,25 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         holder.messageView.setMaxWidth((int)(width/1.25));
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
-         //   holder.messageView.setGravity(Gravity.RIGHT);
-         //   ConstraintLayout constraintLayout = findViewById(R.id.parent_layout);
             ConstraintSet constraintSet = new ConstraintSet();
-        //    constraintSet.clone(holder.layoutView);
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-
         //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
-          //  constraintSet.setMargin(holder.messageView.getId(),ConstraintSet.LEFT,100);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT);
-           // constraintSet.connect(R.id.imageView,ConstraintSet.RIGHT,R.id.check_answer1,ConstraintSet.RIGHT,0);
-           // constraintSet.connect(R.id.imageView,ConstraintSet.TOP,R.id.check_answer1,ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.layoutView);
-
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
+        }
+        else
+        {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
+            //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+            constraintSet.clear(holder.messageView.getId(),ConstraintSet.RIGHT);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
+            constraintSet.connect(holder.messageView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
+            constraintSet.applyTo(holder.layoutView);
+            holder.messageView.setBackgroundResource(R.drawable.message_box_get);
         }
         if (Integer.parseInt(message.getMessages()[4])==1 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
             holder.readView.setImageResource(R.drawable.ic_message_read);
@@ -136,11 +146,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.readView.setImageResource(R.drawable.ic_message_post);
         else if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
             holder.readView.setVisibility(View.INVISIBLE);
-        String messageText;
-        if (message.getMessages()[2].isEmpty())
-            messageText = "Нет сообщений";
-        else messageText = message.getMessages()[2];
-        holder.dateView.setText(messageText);
+
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -157,6 +163,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public int getItemCount() {
         return messages.length;
     }
+
+    public void update(MessagesClass[] newMessages) { this.messages=newMessages;}
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;
@@ -180,4 +188,5 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         }
     }
+
 }

@@ -58,7 +58,8 @@ public class ChatFragment extends Fragment
     public static ImageButton backFromEdit;
     private static Parcelable recyclerViewState;
 
-    public static MessagesClass[] messages;
+    public  MessagesClass[] messages;
+    public  MessagesAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
@@ -173,22 +174,22 @@ public class ChatFragment extends Fragment
 
         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
 
-        Handler h = new Handler();
+       Handler h = new Handler();
         Runnable run = new Runnable() {
 
             @Override
             public void run() {
               //  if (ConfirmationDialogBuilder.deletedMessage==1) {
                     //Log.v("g", "f");]
-
-                recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
+    //            if (recyclerViewState == null)
+                    recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
                 UpdateMessages(recyclerViewMessages,root,idChat,message, find);
              //       ConfirmationDialogBuilder.deletedMessage=0;
               //  }
                 h.postDelayed(this, 5000);
             }
         };
-        h.postDelayed(run, 5000);
+      //  h.postDelayed(run, 5000);
 
         buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -375,7 +376,7 @@ public class ChatFragment extends Fragment
 
     }
 
-    public static void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message, EditText find)
+    public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message, EditText find)
     {
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
@@ -387,31 +388,40 @@ public class ChatFragment extends Fragment
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
+            //   messages = response.body();
+             //   adapter = new MessagesAdapter(root.getContext(), messages, messageClickListener);
+            //    recyclerViewMessages.setAdapter(adapter);
                 if (messages==null)
                 {
                     messages = response.body();
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
                     mLayoutManager.setStackFromEnd(true);
-                    recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), messages, messageClickListener));
+                    adapter = new MessagesAdapter(root.getContext(), messages, messageClickListener);
+                    recyclerViewMessages.setAdapter(adapter);
                     recyclerViewMessages.setLayoutManager(mLayoutManager);
-                  //  recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+                    recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
              //       recyclerViewMessages.scrollToPosition();
                 //    message.setText("");
                 }
                 else
                 {
                     MessagesClass[] newMessages = response.body();
+                    adapter.update(newMessages);
+                    adapter.notifyDataSetChanged();
                     if (newMessages!=messages)
                     {
+                     //   adapter.update(newMessages);
+                     //   adapter.notifyDataSetChanged();
+                    //    recyclerViewMessages.getAdapter();
                         LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
                         mLayoutManager.setStackFromEnd(true);
-                        recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
+                      //  recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
+                      //  recyclerViewMessages.getAdapter();
                         recyclerViewMessages.setLayoutManager(mLayoutManager);
                         recyclerViewMessages.setDrawingCacheEnabled(true);
-
-                        recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                      //   message.setText("");
                     }
+                    recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                 }
 
                 for (int i=0;i<messages.length;i++) {
