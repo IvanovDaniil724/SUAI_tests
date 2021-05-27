@@ -28,6 +28,8 @@ public class TestsFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_tests, container, false);
 
+        MessengerFragment.chats = null;
+
         root.setOnTouchListener(new OnSwipeListener(root.getContext())
         {
             public void onSwipeTop() {  }
