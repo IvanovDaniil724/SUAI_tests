@@ -282,7 +282,8 @@ public class AccountFragment extends Fragment
         else
         {
             RoleTextView.setText("Студент");
-            setInformation(inflater, false,"Группа", data[0]);
+            setInformation(inflater, true,"Группа", data[0]);
+            setInformation(inflater, false,"Специальность", data[2] + " (" + data[1] + ")");
         }
 
         root.findViewById(R.id.StatisticsButton).setOnClickListener(new View.OnClickListener()
