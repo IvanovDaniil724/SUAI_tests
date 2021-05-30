@@ -1,13 +1,12 @@
 package suai.tests.activities.fragments;
 
-import android.graphics.Point;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +18,19 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,22 +63,34 @@ public class ChatFragment extends Fragment
     public static ImageButton buttonMoreAction;
     public static ImageButton buttonSendMessage;
     public static ImageButton backFromEdit;
-    private static Parcelable recyclerViewState;
+    private Parcelable recyclerViewState;
 
     public  MessagesClass[] messages;
     public  MessagesAdapter adapter;
+    Timer t;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
-      //  Display display = root;
-       // Point size = new Point();
-     //   getActivity().getWindowManager().getDefaultDisplay().getSize(size);
-       // int width = display.getWidth();
-      // int width = getResources().getConfiguration().screenWidthDp;
-       // Log.v("gerg",String.valueOf(width));
+
+      /*  OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                //FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                //transaction.addToBackStack(null).commit();
+             //   BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
+
+               // FragmentManager fragmentManager = getFragmentManager(); String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName(); Fragment currentFragment = getSupportFragmentManager() .findFragmentByTag(fragmentTag);
+
+                getActivity().getFragmentManager().beginTransaction().remove(getActivity().getFragmentManager().getFragment(savedInstanceState,"ChatFragment")).commit();
+                Navigation.findNavController(root).popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);*/
+
+        MessengerFragment.chats = null;
 
         idChat = getArguments().getInt("idChat");
         user = getArguments().getInt("idUser");
@@ -81,9 +100,7 @@ public class ChatFragment extends Fragment
             fio.setText(NewChatFragment.FIO);
         else fio.setText(MessengerFragment.FIO);
         message = root.findViewById(R.id.editTextMessage);
-
         backFromEdit = root.findViewById(R.id.imageButtonBackFromEdit);
-
 
         backFromEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -108,7 +125,6 @@ public class ChatFragment extends Fragment
         findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
         buttonMoreAction = root.findViewById(R.id.imageButtonMoreAction);
         recyclerViewMessages = root.findViewById(R.id.recyclerViewMessages);
-
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +190,7 @@ public class ChatFragment extends Fragment
 
         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
 
-       Handler h = new Handler();
+    /*   Handler h = new Handler();
         Runnable run = new Runnable() {
 
             @Override
@@ -189,7 +205,17 @@ public class ChatFragment extends Fragment
                 h.postDelayed(this, 5000);
             }
         };
-      //  h.postDelayed(run, 5000);
+        h.postDelayed(run, 5000);*/
+        t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+               // if (recyclerViewState != null)
+                    recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
+                UpdateMessages(recyclerViewMessages, root, idChat, message, find);
+                Log.e("rtg","ertjgj");
+            }
+        },1000,4000);
 
         buttonSendMessage = root.findViewById(R.id.imageButtonSend);
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -351,6 +377,8 @@ public class ChatFragment extends Fragment
                                     });
                                     isEdit = 0;
                                     message.setText("");
+                                    edit.setVisibility(View.INVISIBLE);
+                                    header.setVisibility(View.VISIBLE);
                                     buttonSendMessage.setBackgroundResource(R.drawable.ic_send);
                                 }
                                 else {
@@ -373,7 +401,13 @@ public class ChatFragment extends Fragment
             }
         });
         return root;
+    }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        t.cancel();
     }
 
     public void UpdateMessages(RecyclerView recyclerViewMessages, View root, Integer idChat, EditText message, EditText find)
@@ -406,22 +440,22 @@ public class ChatFragment extends Fragment
                 else
                 {
                     MessagesClass[] newMessages = response.body();
-                    adapter.update(newMessages);
-                    adapter.notifyDataSetChanged();
+
                     if (newMessages!=messages)
                     {
+                        adapter.update(newMessages);
+                        adapter.notifyDataSetChanged();
                      //   adapter.update(newMessages);
                      //   adapter.notifyDataSetChanged();
                     //    recyclerViewMessages.getAdapter();
                         LinearLayoutManager mLayoutManager = new LinearLayoutManager(recyclerViewMessages.getContext());
                         mLayoutManager.setStackFromEnd(true);
-                      //  recyclerViewMessages.setAdapter(new MessagesAdapter(root.getContext(), newMessages, messageClickListener));
-                      //  recyclerViewMessages.getAdapter();
                         recyclerViewMessages.setLayoutManager(mLayoutManager);
                         recyclerViewMessages.setDrawingCacheEnabled(true);
-                     //   message.setText("");
+                        recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+                        messages = newMessages;
                     }
-                    recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+
                 }
 
                 for (int i=0;i<messages.length;i++) {

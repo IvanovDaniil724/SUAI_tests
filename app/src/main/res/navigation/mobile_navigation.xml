@@ -13,7 +13,7 @@
         <action
             android:id="@+id/action_navigation_messenger_to_chatFragment"
             app:destination="@id/chatFragment"
-            app:popUpTo="@id/navigation_messenger" />
+             />
         <action
             android:id="@+id/action_navigation_messenger_to_newChatFragment"
             app:destination="@id/newChatFragment" />
@@ -56,7 +56,7 @@
         android:id="@+id/chatFragment"
         android:name="suai.tests.activities.fragments.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_chat">
         <argument
             android:name="idChat"
             app:argType="integer" />

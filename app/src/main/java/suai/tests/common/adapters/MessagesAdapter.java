@@ -76,9 +76,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         SimpleDateFormat oldMessageFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
+        if (newDate.getTime()>=System.currentTimeMillis())
+            holder.dateView.setText(timeFormat.format(messageDate));
+        else holder.dateView.setText(oldMessageFormat.format(messageDate));
+        
         if ((Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser) && newDate.getTime()>=System.currentTimeMillis())
         {
-            holder.dateView.setText(timeFormat.format(messageDate));
             holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -109,9 +112,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
         else
         {
-            holder.dateView.setText(oldMessageFormat.format(messageDate));
-        }
+            holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
 
+                }
+            });
+        }
         holder.messageView.setText(message.getMessages()[3]);
 
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -123,9 +130,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
         //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT);
+
+            constraintSet.clear(holder.dateView.getId(),ConstraintSet.LEFT);
+            constraintSet.connect(holder.dateView.getId(),ConstraintSet.RIGHT, holder.messageView.getId(), ConstraintSet.RIGHT,16);
+            constraintSet.connect(holder.dateView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
+            constraintSet.constrainWidth(holder.dateView.getId(), ConstraintSet.WRAP_CONTENT);
+
+            constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
+            constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
+            //constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
+            constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, holder.readView.getId(), ConstraintSet.LEFT, 16);
+            constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
+            constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
+
             constraintSet.applyTo(holder.layoutView);
             holder.messageView.setBackgroundResource(R.drawable.message_box_post);
         }
@@ -133,10 +154,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-            //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
+            //   constraintSet.constrainWidth(holder.layoutView.getId(), ConstraintSet.WRAP_CONTENT);
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.RIGHT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
+
+            constraintSet.clear(holder.dateView.getId(),ConstraintSet.RIGHT);
+            constraintSet.connect(holder.dateView.getId(),ConstraintSet.LEFT, holder.messageView.getId(), ConstraintSet.LEFT,16);
+            constraintSet.connect(holder.dateView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
+            constraintSet.constrainWidth(holder.dateView.getId(), ConstraintSet.WRAP_CONTENT);
+
+            constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
+            constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
+            constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, holder.dateView.getId(), ConstraintSet.RIGHT, 16);
+         //   constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT);
+            constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
+            constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
+
             constraintSet.applyTo(holder.layoutView);
             holder.messageView.setBackgroundResource(R.drawable.message_box_get);
         }
@@ -144,8 +178,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.readView.setImageResource(R.drawable.ic_message_read);
         else if (Integer.parseInt(message.getMessages()[4])==0 && Integer.parseInt(message.getMessages()[1])==AccountFragment.idUser)
             holder.readView.setImageResource(R.drawable.ic_message_post);
-        else if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
+        if (Integer.parseInt(message.getMessages()[1])!=AccountFragment.idUser)
             holder.readView.setVisibility(View.INVISIBLE);
+        else
+            holder.readView.setVisibility(View.VISIBLE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override

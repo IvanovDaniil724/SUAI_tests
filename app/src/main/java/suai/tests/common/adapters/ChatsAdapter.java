@@ -33,6 +33,7 @@ import suai.tests.activities.fragments.NewChatFragment;
 import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.ChatClass;
+import suai.tests.common.api.MessagesClass;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
 
@@ -48,8 +49,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
   //  private final OnChatTouchListener onTouchListener;
     private final OnChatClickListener onClickListener;
 
-    private final LayoutInflater inflater;
-    private final ChatClass[] chats;
+    private LayoutInflater inflater;
+    private ChatClass[] chats;
     public static Context context;
 
     public ChatsAdapter(Context context, ChatClass[] chats, OnChatClickListener onClickListener) {
@@ -96,8 +97,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             holder.statusView.setImageResource(R.drawable.ic_message_post);
         else if (Integer.parseInt(chat.getChats()[5])==0 && Integer.parseInt(chat.getChats()[1])!=AccountFragment.idUser)
             holder.statusView.setImageResource(R.drawable.avatar_placeholder);
-        else if (Integer.parseInt(chat.getChats()[5])==1 && Integer.parseInt(chat.getChats()[1])!=AccountFragment.idUser)
-            holder.statusView.setVisibility(View.INVISIBLE);
+        else holder.statusView.setVisibility(View.INVISIBLE);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -148,6 +148,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public int getItemCount() {
         return chats.length;
     }
+
+    public void update(ChatClass[] newChats) { this.chats=newChats;}
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // final ImageView imageView;

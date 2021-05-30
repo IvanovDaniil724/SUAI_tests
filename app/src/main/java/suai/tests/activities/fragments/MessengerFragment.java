@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,14 +45,19 @@ public class MessengerFragment extends Fragment
     public static ConstraintLayout header;
     public static ConstraintLayout findHeader;
     public static ImageButton buttonSearch;
-    private static Parcelable recyclerViewState;
+    private Parcelable recyclerViewState;
 
+    public static ChatsAdapter adapter;
     public static ChatClass[] chats;
+    public LinearLayoutManager mLayoutManager;
+    Timer t;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
+
+        chats = null;
 
         header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
         findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
@@ -134,29 +143,43 @@ public class MessengerFragment extends Fragment
       //  buttonNewChat.setBackgroundResource(R.drawable.round_button_tint);
         // Design
 
-
-    /*    Handler h = new Handler();
+     /*   Handler h = new Handler();
         Runnable run = new Runnable() {
 
             @Override
             public void run() {
                //  if (ConfirmationDialogBuilder.deletedChat==1) {
                      //Log.v("g", "f");]
-                if (recyclerViewState==null)
-                 recyclerViewState = recyclerViewChats.getLayoutManager().onSaveInstanceState();
+             //   if (recyclerViewState==null)
+//                 recyclerViewState = recyclerViewChats.getLayoutManager().onSaveInstanceState();
                      UpdateChats(recyclerViewChats, root, find);
                   //   ConfirmationDialogBuilder.deletedChat=0;
               //   }
-                h.postDelayed(this, 5000);
+             //   h.postDelayed(this, 5000);
             }
         };
         h.postDelayed(run, 5000);*/
+
+        t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                recyclerViewState = recyclerViewChats.getLayoutManager().onSaveInstanceState();
+                UpdateChats(recyclerViewChats, root, find);
+            }
+        },1000,4000);
+
         return root;
     }
 
-    public static void UpdateChats(RecyclerView recyclerViewChats, View root, EditText find)
-    {
+    @Override
+    public void onPause() {
+        super.onPause();
+        t.cancel();
+    }
 
+    public void UpdateChats(RecyclerView recyclerViewChats, View root, EditText find)
+    {
          ChatsAdapter.OnChatClickListener chatClickListener = new ChatsAdapter.OnChatClickListener() {
             @Override
             public void onStateClick(ChatClass chat, int position) {
@@ -175,17 +198,43 @@ public class MessengerFragment extends Fragment
                 if (chats==null)
                 {
                     chats = response.body();
-                    recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
-                    recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                    adapter = new ChatsAdapter(root.getContext(),chats,chatClickListener);
+                    recyclerViewChats.setAdapter(adapter);
+                    mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
+                    // mLayoutManager.setStackFromEnd(true);
+                    recyclerViewChats.setLayoutManager(mLayoutManager);
+                    recyclerViewChats.setDrawingCacheEnabled(true);
+                    recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+                    Log.e("g","rtgght");
+                //    recyclerViewChats.setLayoutManager(new LinearLayoutManager(recyclerViewChats.getContext()));
+              //      recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                 }
                 else
                 {
                     ChatClass[] newChats = response.body();
+
+                    Log.e("old",String.valueOf(chats.length));
+                    Log.e("new",String.valueOf(newChats.length));
+
+                                     //   adapter = new ChatsAdapter(root.getContext(),newChats,chatClickListener);
+                 //   recyclerViewChats.setAdapter(adapter);
+                //    mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
+                    // mLayoutManager.setStackFromEnd(true);
+               //     recyclerViewChats.setLayoutManager(mLayoutManager);
+              //      recyclerViewChats.setDrawingCacheEnabled(true);
+                    adapter.update(newChats);
+                    adapter.notifyDataSetChanged();
+
+              //      mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
+                   // mLayoutManager.setStackFromEnd(true);
+                  //  recyclerViewChats.setLayoutManager(mLayoutManager);
+                   // recyclerViewChats.setDrawingCacheEnabled(true);
+                   // recyclerViewChats.setLayoutManager(new LinearLayoutManager(recyclerViewChats.getContext()));
                     if (newChats!=chats)
                     {
-                        recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
-                        recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
                         recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+                        // recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                //        recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                     }
                    // recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
                   //  recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));

@@ -56,6 +56,8 @@ public class AccountFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_account, container, false);
 
+        MessengerFragment.chats = null;
+
         int birthMonthInt = birthday.get(Calendar.MONTH) + 1; String birthMonth = "";
         int birthDayInt = birthday.get(Calendar.DAY_OF_MONTH); String birthDay = "";
         if (birthMonthInt < 10) { birthMonth = "0" + birthMonthInt; } else { birthMonth = String.valueOf(birthMonthInt); }
