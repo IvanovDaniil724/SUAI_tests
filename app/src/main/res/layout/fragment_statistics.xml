@@ -70,36 +70,24 @@
 
             </LinearLayout>
 
-            <ScrollView
-                android:id="@+id/StudentMarksVerticalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <HorizontalScrollView
-                    android:id="@+id/StudentMarksHorizontalScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TableLayout
-                        android:id="@+id/StudentMarksTableLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:isScrollContainer="true"
-                        android:background="@drawable/item_border"
-                        android:dividerPadding="0dp"
-                        android:gravity="center" />
-                </HorizontalScrollView>
-            </ScrollView>
+            <TableLayout
+                android:id="@+id/StudentMarksTableLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:isScrollContainer="true"
+                android:background="@drawable/item_border"
+                android:dividerPadding="0dp"
+                android:gravity="center" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/StatisticsStudentMarksPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:layout_marginTop="8dp"
-                android:minHeight="296dp"
-                android:padding="8dp"/>
+                android:minHeight="296dp"/>
 
         </LinearLayout>
     </ScrollView>
@@ -218,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minHeight="256dp"
+                android:minHeight="296dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp" />
 
