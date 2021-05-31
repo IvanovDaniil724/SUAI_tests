@@ -72,11 +72,11 @@
 
             <TableLayout
                 android:id="@+id/StudentMarksTableLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_weight="1"
+                android:isScrollContainer="true"
                 android:background="@drawable/item_border"
                 android:dividerPadding="0dp"
                 android:gravity="center" />
@@ -85,10 +85,9 @@
                 android:id="@+id/StatisticsStudentMarksPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="256dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
+                android:layout_weight="0"
+                android:layout_marginTop="8dp"
+                android:minHeight="296dp"/>
 
         </LinearLayout>
     </ScrollView>
@@ -207,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minHeight="256dp"
+                android:minHeight="296dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp" />
 

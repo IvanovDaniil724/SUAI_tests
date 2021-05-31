@@ -48,7 +48,7 @@ public class AndroidElementsBuilder extends AppCompatActivity
         dataImageView.setPadding(4, 4, 4, 4);
         dataImageView.setLayoutParams(
                 new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
         return dataImageView;
     }
