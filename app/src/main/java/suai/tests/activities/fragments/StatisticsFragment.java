@@ -491,7 +491,9 @@ public class StatisticsFragment extends Fragment
                                                         marks[ii].getItems()[1].equals(students[i]))
                                                     {
                                                         cell = AndroidElementsBuilder.createTextView(linearLayout, marks[ii].getItems()[2]);
-                                                        if (Double.parseDouble(marks[ii].getItems()[2]) == 2)
+                                                        if (marks[ii].getItems()[2] == null)
+                                                            { colorID = android.R.color.secondary_text_dark; cell.setText("-"); }
+                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 2)
                                                             { colorID = android.R.color.holo_red_dark; mark_2_counter++; }
                                                         else if (Double.parseDouble(marks[ii].getItems()[2]) == 3)
                                                             { colorID = android.R.color.holo_red_light; mark_3_counter++; }
@@ -501,10 +503,11 @@ public class StatisticsFragment extends Fragment
                                                             { colorID = android.R.color.holo_green_light; mark_5_counter++; }
 
                                                         cell.setTextColor(getResources().getColor(colorID));
-                                                    } else { inProgressCounter++; }
+                                                    }
                                                 }
                                             }
 
+                                            if (cell.getText() == "-") { inProgressCounter++; }
                                             AndroidElementsBuilder.setTableBorders(cell,
                                                     students.length + 1, labs.length + 1, i + 1, j);
                                             linearLayout.addView(cell);
