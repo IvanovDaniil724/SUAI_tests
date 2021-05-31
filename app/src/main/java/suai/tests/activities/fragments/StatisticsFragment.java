@@ -167,7 +167,7 @@ public class StatisticsFragment extends Fragment
             {
                 ItemsPOJO[] marks = response.body();
 
-                MarksTableLayout.setStretchAllColumns(true); //MarksTableLayout.setShrinkAllColumns(true);
+                MarksTableLayout.setStretchAllColumns(true);
                 TableRow tableRow; LinearLayout linearLayout; ImageView cellImage = null; TextView cell; int status, cellsIndex;
 
                 tableRow = new TableRow(MarksTableLayout.getContext()); tableRow.setGravity(Gravity.CENTER);
@@ -236,17 +236,18 @@ public class StatisticsFragment extends Fragment
                     tableRow.addView(linearLayout); MarksTableLayout.addView(tableRow);
                 }
 
-                if (mark_2_counter != 0 && mark_3_counter != 0 && mark_4_counter != 0 && mark_5_counter != 0)
+                if (mark_2_counter != 0 || mark_3_counter != 0 || mark_4_counter != 0 || mark_5_counter != 0)
                 {
-                    int averageMark = ((2 * mark_2_counter) + (3 * mark_3_counter) +
+                    double averageMark = Math.round(((2 * mark_2_counter) + (3 * mark_3_counter) +
                             (4 * mark_4_counter) + (5 * mark_5_counter)) /
-                            (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter);
+                            (mark_2_counter + mark_3_counter + mark_4_counter + mark_5_counter));
+
                     StatisticsStudentAverageMark.setText(String.valueOf(averageMark)); int colorID = android.R.color.secondary_text_dark;
                     if (averageMark < 2) { StatisticsStudentAverageMark.setText("Нет принятых лабораторных работ"); }
-                    else if (averageMark < 3) { colorID = android.R.color.holo_red_dark; }
-                    else if (averageMark < 4) { colorID = android.R.color.holo_red_light; }
-                    else if (averageMark < 5) { colorID = android.R.color.holo_green_dark; }
-                    else if (averageMark == 5) { colorID = android.R.color.holo_green_light; }
+                    else if (averageMark < 2.6) { colorID = android.R.color.holo_red_dark; }
+                    else if (averageMark < 3.6) { colorID = android.R.color.holo_red_light; }
+                    else if (averageMark < 4.6) { colorID = android.R.color.holo_green_dark; }
+                    else { colorID = android.R.color.holo_green_light; }
                     StatisticsStudentAverageMark.setTextColor(getResources().getColor(colorID));
                 }
 
@@ -291,7 +292,9 @@ public class StatisticsFragment extends Fragment
                 Legend legend = StatisticsPieChart.getLegend();
                 legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
                 legend.setTextColor(getResources().getColor(R.color.suai_secondary));
-                legend.setXEntrySpace(128);
+                //legend.setXEntrySpace(64);
+                legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+                legend.setStackSpace(0);
 
                 StatisticsPieChart.setCenterText("Оценки по предмету \"" + StatisticsSubjectsSpinner.getSelectedItem().toString() + "\"");
                 StatisticsPieChart.setEntryLabelColor(R.color.suai_primary);

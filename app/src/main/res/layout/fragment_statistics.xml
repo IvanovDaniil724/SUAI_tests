@@ -70,16 +70,27 @@
 
             </LinearLayout>
 
-            <TableLayout
-                android:id="@+id/StudentMarksTableLayout"
+            <ScrollView
+                android:id="@+id/StudentMarksVerticalScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/item_border"
-                android:dividerPadding="0dp"
-                android:gravity="center" />
+                android:layout_height="wrap_content">
+                <HorizontalScrollView
+                    android:id="@+id/StudentMarksHorizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TableLayout
+                        android:id="@+id/StudentMarksTableLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:isScrollContainer="true"
+                        android:background="@drawable/item_border"
+                        android:dividerPadding="0dp"
+                        android:gravity="center" />
+                </HorizontalScrollView>
+            </ScrollView>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/StatisticsStudentMarksPieChart"
