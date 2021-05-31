@@ -122,14 +122,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         holder.messageView.setText(message.getMessages()[3]);
 
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-       // ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams((int)(width/1.25), ViewGroup.LayoutParams.WRAP_CONTENT);
-      //  holder.itemView.setLayoutParams(param);
         holder.messageView.setMaxWidth((int)(width/1.25));
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-        //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
 
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
@@ -142,7 +139,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
             constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
             constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
-            //constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
             constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, holder.readView.getId(), ConstraintSet.LEFT, 16);
             constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
             constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
@@ -154,7 +150,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-            //   constraintSet.constrainWidth(holder.layoutView.getId(), ConstraintSet.WRAP_CONTENT);
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.RIGHT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
@@ -167,7 +162,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
             constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
             constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, holder.dateView.getId(), ConstraintSet.RIGHT, 16);
-         //   constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT);
             constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
             constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
 
@@ -210,7 +204,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         ViewHolder(View view){
             super(view);
-            //  imageView = (ImageView)view.findViewById(R.id.image);
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);

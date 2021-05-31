@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
+import androidx.navigation.Navigation;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.activities.fragments.ChatFragment;
 import suai.tests.activities.fragments.MessengerFragment;
@@ -50,6 +53,7 @@ public class ConfirmationDialogBuilder {
                         public void onFailure(Call<String> call, Throwable t) {
                         }
                     });
+                    Navigation.findNavController(ChatFragment.root).navigate(R.id.action_chatFragment_to_navigation_messenger);
                     deletedChat = 1;
                 }
                 else

@@ -140,26 +140,6 @@ public class MessengerFragment extends Fragment
             }
         });
 
-      //  buttonNewChat.setBackgroundResource(R.drawable.round_button_tint);
-        // Design
-
-     /*   Handler h = new Handler();
-        Runnable run = new Runnable() {
-
-            @Override
-            public void run() {
-               //  if (ConfirmationDialogBuilder.deletedChat==1) {
-                     //Log.v("g", "f");]
-             //   if (recyclerViewState==null)
-//                 recyclerViewState = recyclerViewChats.getLayoutManager().onSaveInstanceState();
-                     UpdateChats(recyclerViewChats, root, find);
-                  //   ConfirmationDialogBuilder.deletedChat=0;
-              //   }
-             //   h.postDelayed(this, 5000);
-            }
-        };
-        h.postDelayed(run, 5000);*/
-
         t = new Timer();
         t.schedule(new TimerTask() {
             @Override
@@ -201,13 +181,10 @@ public class MessengerFragment extends Fragment
                     adapter = new ChatsAdapter(root.getContext(),chats,chatClickListener);
                     recyclerViewChats.setAdapter(adapter);
                     mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
-                    // mLayoutManager.setStackFromEnd(true);
                     recyclerViewChats.setLayoutManager(mLayoutManager);
                     recyclerViewChats.setDrawingCacheEnabled(true);
                     recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                     Log.e("g","rtgght");
-                //    recyclerViewChats.setLayoutManager(new LinearLayoutManager(recyclerViewChats.getContext()));
-              //      recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                 }
                 else
                 {
@@ -215,29 +192,10 @@ public class MessengerFragment extends Fragment
 
                     Log.e("old",String.valueOf(chats.length));
                     Log.e("new",String.valueOf(newChats.length));
-
-                                     //   adapter = new ChatsAdapter(root.getContext(),newChats,chatClickListener);
-                 //   recyclerViewChats.setAdapter(adapter);
-                //    mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
-                    // mLayoutManager.setStackFromEnd(true);
-               //     recyclerViewChats.setLayoutManager(mLayoutManager);
-              //      recyclerViewChats.setDrawingCacheEnabled(true);
                     adapter.update(newChats);
                     adapter.notifyDataSetChanged();
-
-              //      mLayoutManager = new LinearLayoutManager(recyclerViewChats.getContext());
-                   // mLayoutManager.setStackFromEnd(true);
-                  //  recyclerViewChats.setLayoutManager(mLayoutManager);
-                   // recyclerViewChats.setDrawingCacheEnabled(true);
-                   // recyclerViewChats.setLayoutManager(new LinearLayoutManager(recyclerViewChats.getContext()));
                     if (newChats!=chats)
-                    {
                         recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-                        // recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
-                //        recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-                    }
-                   // recyclerViewChats.setAdapter(new ChatsAdapter(root.getContext(),chats, chatClickListener));
-                  //  recyclerViewChats.setLayoutManager(new LinearLayoutManager(root.getContext()));
                 }
             }
             @Override
