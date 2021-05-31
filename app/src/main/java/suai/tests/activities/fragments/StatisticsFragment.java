@@ -289,12 +289,7 @@ public class StatisticsFragment extends Fragment
                 Description chartDescription = new Description(); chartDescription.setText("");
                 StatisticsPieChart.setDescription(chartDescription); StatisticsPieChart.setData(data);
 
-                Legend legend = StatisticsPieChart.getLegend();
-                legend.setTextSize(12); legend.setDrawInside(false); legend.setWordWrapEnabled(true);
-                legend.setTextColor(getResources().getColor(R.color.suai_secondary));
-                //legend.setXEntrySpace(64);
-                legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-                legend.setStackSpace(0);
+                StatisticsPieChart.getLegend().setEnabled(false);
 
                 StatisticsPieChart.setCenterText("Оценки по предмету \"" + StatisticsSubjectsSpinner.getSelectedItem().toString() + "\"");
                 StatisticsPieChart.setEntryLabelColor(R.color.suai_primary);
