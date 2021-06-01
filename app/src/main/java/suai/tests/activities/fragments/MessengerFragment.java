@@ -1,37 +1,30 @@
 package suai.tests.activities.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.activities.MainActivity;
-import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.api.ChatClass;
 import suai.tests.common.api.RetrofitConnection;
-
 import suai.tests.R;
 import suai.tests.common.api.messengerAPI;
 
@@ -41,12 +34,10 @@ public class MessengerFragment extends Fragment
     public static messengerAPI service = RetrofitConnection.messengerApi;
     public static RecyclerView recyclerViewChats;
     public static View root;
-
     public static ConstraintLayout header;
     public static ConstraintLayout findHeader;
     public static ImageButton buttonSearch;
     private Parcelable recyclerViewState;
-
     public static ChatsAdapter adapter;
     public static ChatClass[] chats;
     public LinearLayoutManager mLayoutManager;
@@ -58,7 +49,6 @@ public class MessengerFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_messenger, container, false);
 
         chats = null;
-
         header = root.findViewById(R.id.constraintLayoutHeaderMessenger);
         findHeader = root.findViewById(R.id.constraintLayoutSearchMessenger);
         recyclerViewChats = root.findViewById(R.id.recyclerViewChats);
@@ -86,7 +76,6 @@ public class MessengerFragment extends Fragment
         find.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -96,7 +85,6 @@ public class MessengerFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
@@ -184,14 +172,10 @@ public class MessengerFragment extends Fragment
                     recyclerViewChats.setLayoutManager(mLayoutManager);
                     recyclerViewChats.setDrawingCacheEnabled(true);
                     recyclerViewChats.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-                    Log.e("g","rtgght");
                 }
                 else
                 {
                     ChatClass[] newChats = response.body();
-
-                    Log.e("old",String.valueOf(chats.length));
-                    Log.e("new",String.valueOf(newChats.length));
                     adapter.update(newChats);
                     adapter.notifyDataSetChanged();
                     if (newChats!=chats)

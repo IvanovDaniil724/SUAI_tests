@@ -5,10 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import suai.tests.R;
 import suai.tests.common.api.UserClass;
 
@@ -40,7 +38,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(UsersAdapter.ViewHolder holder, int position) {
         UserClass user = users[position];
-        // holder.imageView.setImageResource(user.getPhoto());
         holder.fioView.setText(user.getUsers()[1]);
         holder.infoView.setText(user.getUsers()[2]);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -58,15 +55,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // final ImageView imageView;
         final TextView fioView, infoView;
 
         ViewHolder(View view){
             super(view);
-            //  imageView = (ImageView)view.findViewById(R.id.image);
             fioView = (TextView)view.findViewById(R.id.fio);
             infoView = (TextView)view.findViewById(R.id.info);
         }
-
     }
 }

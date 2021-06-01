@@ -1,12 +1,9 @@
 package suai.tests.activities.fragments;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,17 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -141,7 +132,6 @@ public class ChatFragment extends Fragment
         find.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -151,12 +141,10 @@ public class ChatFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         ImageButton back = root.findViewById(R.id.imageButtonBack);
-
         back.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -175,7 +163,6 @@ public class ChatFragment extends Fragment
         });
 
         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
-      //  firstState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
 
         t = new Timer();
         t.schedule(new TimerTask() {
@@ -183,7 +170,6 @@ public class ChatFragment extends Fragment
             public void run() {
             recyclerViewState = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
             UpdateMessages(recyclerViewMessages, root, idChat, message, find);
-            Log.e("rtg","ertjgj");
             }
         },1000,4000);
 
@@ -226,7 +212,6 @@ public class ChatFragment extends Fragment
                                             @Override
                                             public void onResponse(Call<ItemsPOJO[]> call, Response<ItemsPOJO[]> response) {
                                                 ItemsPOJO[] idChats = response.body();
-                                                Log.v("df",idChats[0].getItems()[0]);
                                                 idChat = Integer.parseInt(idChats[0].getItems()[0]);
                                                 SendMessages(root, idChat, message);
                                                 UpdateMessages(recyclerViewMessages, root, idChat, message, find);
@@ -234,7 +219,6 @@ public class ChatFragment extends Fragment
 
                                             @Override
                                             public void onFailure(Call<ItemsPOJO[]> call, Throwable t) {
-                                                Log.e("g", t.getMessage());
                                                 UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                                             }
                                         });
@@ -243,7 +227,6 @@ public class ChatFragment extends Fragment
 
                                     @Override
                                     public void onFailure(Call<String> call, Throwable t) {
-                                        Log.e("h",t.getMessage());
                                         UpdateMessages(recyclerViewMessages, root, idChat, message, find);
                                     }
                                 });
@@ -252,17 +235,14 @@ public class ChatFragment extends Fragment
                             {
                                 if (isEdit==1)
                                 {
-                                    // Log.v(":", idMessage);
                                     Call<String> editMessage = service.editMessage(idMessage, message.getText().toString());
                                     editMessage.enqueue(new Callback<String>() {
                                         @Override
                                         public void onResponse(Call<String> call, Response<String> response) {
-
                                         }
 
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
-
                                         }
                                     });
                                     isEdit = 0;
@@ -305,16 +285,12 @@ public class ChatFragment extends Fragment
         MessagesAdapter.OnMessagesClickListener messageClickListener = new MessagesAdapter.OnMessagesClickListener() {
             @Override
             public void onStateClick(MessagesClass chat, int position) {
-
             }
         };
         Call<MessagesClass[]> call = service.getMessages(idChat, String.valueOf(AccountFragment.role), find.getText().toString());
         call.enqueue(new Callback<MessagesClass[]>() {
             @Override
             public void onResponse(Call<MessagesClass[]> call, Response<MessagesClass[]> response) {
-            //   messages = response.body();
-             //   adapter = new MessagesAdapter(root.getContext(), messages, messageClickListener);
-            //    recyclerViewMessages.setAdapter(adapter);
                 if (messages==null)
                 {
                     messages = response.body();
@@ -329,7 +305,6 @@ public class ChatFragment extends Fragment
                 else
                 {
                     MessagesClass[] newMessages = response.body();
-
                     if (newMessages!=messages)
                     {
                         adapter.update(newMessages);
@@ -340,10 +315,6 @@ public class ChatFragment extends Fragment
                         recyclerViewMessages.setDrawingCacheEnabled(true);
                         recyclerViewMessages.getLayoutManager().onRestoreInstanceState(recyclerViewState);
                         messages = newMessages;
-                     //   if (recyclerViewState==firstState)
-                     //   {
-                      //      recyclerViewMessages.smoothScrollToPosition(0);
-                     //   }
                     }
 
                 }
@@ -354,12 +325,10 @@ public class ChatFragment extends Fragment
                         read.enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
-                                Log.v("result", response.body());
                             }
 
                             @Override
                             public void onFailure(Call<String> call, Throwable t) {
-                                Log.e("result", t.getMessage());
                             }
                         });
                     }
@@ -368,7 +337,6 @@ public class ChatFragment extends Fragment
 
             @Override
             public void onFailure(Call<MessagesClass[]> call, Throwable t) {
-                Log.e("result",t.getMessage());
             }
         });
     }
@@ -379,31 +347,13 @@ public class ChatFragment extends Fragment
         c.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.v("result",response.body());
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.e("result",t.getMessage());
             }
         });
         message.setText("");
-    }
-
-    public void EditMessages(View root, Integer idMessage, EditText message)
-    {
-        Call<String> call = service.editMessage(idMessage.toString(),message.getText().toString());
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.v("result",response.body());
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("result",t.getMessage());
-            }
-        });
     }
 
     public static void OpenEditField(View root)

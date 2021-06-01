@@ -7,7 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
-import suai.tests.common.api.pojo.tests.TestPOJO;
 
 public interface messengerAPI {
     @GET("messenger/chats/GetChats.php")
