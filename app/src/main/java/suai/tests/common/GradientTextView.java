@@ -1,14 +1,11 @@
 package suai.tests.common;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
-
 import suai.tests.R;
 
 public class GradientTextView extends AppCompatTextView {
@@ -26,8 +23,8 @@ public class GradientTextView extends AppCompatTextView {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom)
+    {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
             getPaint().setShader(

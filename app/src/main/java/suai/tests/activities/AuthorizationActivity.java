@@ -3,10 +3,8 @@ package suai.tests.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -14,19 +12,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 
-import org.json.JSONArray;
-
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +29,6 @@ import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.commonAPI;
-import suai.tests.common.api.pojo.common.UserPOJO;
 
 public class AuthorizationActivity extends AppCompatActivity
 {

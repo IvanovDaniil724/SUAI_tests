@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,17 +34,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
-import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.pojo.common.ItemsPOJO;
 import suai.tests.common.api.testsAPI;
 
 public class TestDetailsFragment extends Fragment {
 
-    private static final String ID_TEST = "idTest";
-
-    private int idTest;
-
+    private static final String ID_TEST = "idTest"; private int idTest;
     public static Calendar timestamp = new GregorianCalendar();
 
     private TextView TestsDetailsTitleTextView, TestsDetailsDescriptionTextView, TestsDetailsResultsOrErrorsTextView,
@@ -58,18 +53,6 @@ public class TestDetailsFragment extends Fragment {
     private TextInputLayout TestDetailsTeacherCommentTextInputLayout; private EditText TestDetailsTeacherCommentEditText;
     private Spinner TestDetailsTeacherChooseMarkSpinner; private MaterialButton TestDetailsTeacherChooseMarkButton;
 
-    public TestDetailsFragment() {
-        // Required empty public constructor
-    }
-
-    public static TestDetailsFragment newInstance(int idTest) {
-        TestDetailsFragment fragment = new TestDetailsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ID_TEST, idTest);
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +62,8 @@ public class TestDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View root = inflater.inflate(R.layout.fragment_test_details, container, false);
 
         TestsDetailsTitleTextView = root.findViewById(R.id.TestsDetailsTitleTextView);

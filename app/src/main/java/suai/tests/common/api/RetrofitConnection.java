@@ -9,9 +9,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class RetrofitConnection //extends AppCompatActivity
+public class RetrofitConnection
 {
-    public static final String BASE_URL = "http://f0530060.xsph.ru/api/"; //"http://10.0.2.2:80/suailabs/api/";
+    public static final String BASE_URL = "http://f0530060.xsph.ru/api/";
     public Retrofit retrofit;
     public static testsAPI testsApi; public static messengerAPI messengerApi; public static commonAPI commonAPI;
     public static messagesAPI messagesApi; public static UsersAPI usersAPI;

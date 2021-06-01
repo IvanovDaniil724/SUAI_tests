@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,8 +22,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.button.MaterialButton;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.nio.charset.Charset;
 import java.util.Calendar;
@@ -35,7 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
 import suai.tests.activities.AuthorizationActivity;
-import suai.tests.activities.MainActivity;
 import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.commonAPI;
@@ -51,8 +47,7 @@ public class AccountFragment extends Fragment
     private LinearLayout AccountLayout; private View informationItem, informationDivider;
     private MaterialButton ChangePasswordButton; private ImageButton AccountEmailEditImageButton;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.fragment_account, container, false);
 

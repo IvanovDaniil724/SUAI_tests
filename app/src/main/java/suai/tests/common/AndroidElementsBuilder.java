@@ -2,8 +2,6 @@ package suai.tests.common;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -11,7 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +18,7 @@ import suai.tests.R;
 
 public class AndroidElementsBuilder extends AppCompatActivity
 {
-    private static Context context;
-    public static Context getContext() { return context; }
+    private static Context context; public static Context getContext() { return context; }
     public static void setContext(Context _context) { context = _context; }
 
     private static Resources getElementsBuilderResources() { return getContext().getResources(); }
@@ -109,28 +105,5 @@ public class AndroidElementsBuilder extends AppCompatActivity
                 else { view.setBackground(setCellBorders(true, false, false, true)); }
             }
         }
-    }
-
-    public static TableRow createTableHeader(Context context, String[] headerData)
-    {
-        TableRow tableRow; LinearLayout linearLayout; TextView cell;
-
-        tableRow = new TableRow(context); tableRow.setGravity(Gravity.CENTER);
-        linearLayout = new LinearLayout(tableRow.getContext()); linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.CENTER);
-
-        cell = createTextView(linearLayout, "");
-        LayerDrawable borders = (LayerDrawable) getElementsBuilderResources().getDrawable(R.drawable.item_table_header_borders);
-        cell.setBackground(borders); linearLayout.addView(cell);
-
-        for (int i = 0; i < headerData.length; i++)
-        {
-            cell = createTextView(linearLayout, headerData[i]);
-            cell.setBackground(setCellBorders(true, false, false, true));
-            linearLayout.addView(cell);
-        }
-
-        tableRow.addView(linearLayout);
-        return tableRow;
     }
 }

@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -36,25 +35,16 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
-import suai.tests.common.AlertDialogBuilder;
 import suai.tests.common.AndroidElementsBuilder;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.commonAPI;
@@ -70,9 +60,8 @@ public class StatisticsFragment extends Fragment
     private TextView StatisticsStudentAverageMark, StatisticsTeacherGroupMarksPlaceholder;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         if (AccountFragment.role == 1) { root.findViewById(R.id.StatisticsStudentScrollView).setVisibility(View.VISIBLE); }
@@ -507,31 +496,6 @@ public class StatisticsFragment extends Fragment
                                                     }
                                                 }
                                             }
-
-                                            /*if (j == 0) { cell = AndroidElementsBuilder.createTextView(linearLayout, students[i]); }
-                                            else
-                                            {
-                                                for (int ii = 2; ii < marks.length; ii++)
-                                                {
-                                                    if (marks[ii].getItems()[0].equals(labs[j - 1]) &&
-                                                        marks[ii].getItems()[1].equals(students[i]))
-                                                    {
-                                                        cell = AndroidElementsBuilder.createTextView(linearLayout, marks[ii].getItems()[2]);
-                                                        if (marks[ii].getItems()[2] == null)
-                                                            { colorID = android.R.color.secondary_text_dark; cell.setText("-"); }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 2)
-                                                            { colorID = android.R.color.holo_red_dark; mark_2_counter++; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 3)
-                                                            { colorID = android.R.color.holo_red_light; mark_3_counter++; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 4)
-                                                            { colorID = android.R.color.holo_green_dark; mark_4_counter++; }
-                                                        else if (Double.parseDouble(marks[ii].getItems()[2]) == 5)
-                                                            { colorID = android.R.color.holo_green_light; mark_5_counter++; }
-
-                                                        cell.setTextColor(getResources().getColor(colorID));
-                                                    }
-                                                }
-                                            }*/
 
                                             if (cell.getText() == "-") { inProgressCounter++; }
                                             AndroidElementsBuilder.setTableBorders(cell,
