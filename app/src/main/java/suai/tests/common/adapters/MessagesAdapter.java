@@ -2,36 +2,25 @@ package suai.tests.common.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.checkerframework.checker.units.qual.C;
-
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-
 import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.activities.fragments.ChatFragment;
-import suai.tests.common.AndroidElementsBuilder;
 import suai.tests.common.ConfirmationDialogBuilder;
 import suai.tests.common.api.MessagesClass;
 
@@ -102,8 +91,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                             ChatFragment.buttonSendMessage.setBackgroundResource(R.drawable.ic_check_circle_outline);
                             ChatFragment.isEdit = 1;
                             ChatFragment.idMessage = message.getMessages()[0];
-                          //  message.getMessages()[3];
-                            //   new ConfirmationDialogBuilder(MessagesAdapter.context, message.getMessages()[0]).alert("Редактирование", "Вы точно хотите удалить сообщение?", 1);
                             return true;
                         }
                     });
@@ -122,14 +109,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         holder.messageView.setText(message.getMessages()[3]);
 
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-       // ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams((int)(width/1.25), ViewGroup.LayoutParams.WRAP_CONTENT);
-      //  holder.itemView.setLayoutParams(param);
         holder.messageView.setMaxWidth((int)(width/1.25));
         if (Integer.parseInt(message.getMessages()[1]) == AccountFragment.idUser)
         {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-        //    constraintSet.constrainWidth(holder.layoutView.getId(), (int)(width/1.25));
 
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.LEFT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
@@ -142,7 +126,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
             constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
             constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
-            //constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
             constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, holder.readView.getId(), ConstraintSet.LEFT, 16);
             constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
             constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
@@ -154,7 +137,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.constrainHeight(holder.messageView.getId(), ConstraintSet.WRAP_CONTENT);
-            //   constraintSet.constrainWidth(holder.layoutView.getId(), ConstraintSet.WRAP_CONTENT);
             constraintSet.clear(holder.messageView.getId(),ConstraintSet.RIGHT);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
             constraintSet.connect(holder.messageView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
@@ -167,7 +149,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             constraintSet.clear(holder.editView.getId(), ConstraintSet.RIGHT);
             constraintSet.clear(holder.editView.getId(), ConstraintSet.LEFT);
             constraintSet.connect(holder.editView.getId(), ConstraintSet.LEFT, holder.dateView.getId(), ConstraintSet.RIGHT, 16);
-         //   constraintSet.connect(holder.editView.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT);
             constraintSet.connect(holder.editView.getId(),ConstraintSet.TOP, holder.messageView.getId(),ConstraintSet.BOTTOM);
             constraintSet.constrainWidth(holder.editView.getId(), ConstraintSet.WRAP_CONTENT);
 
@@ -203,25 +184,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public void update(MessagesClass[] newMessages) { this.messages=newMessages;}
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
-        // final ImageView imageView;
         final TextView messageView, dateView, editView;
         final ImageView readView;
         final ConstraintLayout layoutView;
 
         ViewHolder(View view){
             super(view);
-            //  imageView = (ImageView)view.findViewById(R.id.image);
             dateView = (TextView)view.findViewById(R.id.date);
             messageView = (TextView)view.findViewById(R.id.message);
             readView = (ImageView)view.findViewById(R.id.read);
             editView = (TextView)view.findViewById(R.id.isEdit);
             layoutView = (ConstraintLayout)view.findViewById(R.id.layoutMessage);
-
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-
         }
     }
 

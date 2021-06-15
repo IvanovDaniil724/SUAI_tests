@@ -60,6 +60,9 @@
         <argument
             android:name="idChat"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_chatFragment_to_navigation_messenger"
+            app:destination="@id/navigation_messenger" />
     </fragment>
     <fragment
         android:id="@+id/newChatFragment"

@@ -7,26 +7,18 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.checkerframework.checker.units.qual.C;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import suai.tests.R;
-import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.adapters.UsersAdapter;
-import suai.tests.common.api.ChatClass;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.UserClass;
 import suai.tests.common.api.UsersAPI;
 import suai.tests.common.api.messengerAPI;
-import suai.tests.common.api.pojo.common.ItemsPOJO;
 
 public class NewChatFragment extends Fragment
 {
@@ -45,7 +37,6 @@ public class NewChatFragment extends Fragment
             @Override
             public void onStateClick(UserClass user, int position) {
                 MessengerFragment.FIO = "";
-
                 if (user.getUsers()[3]==null)
                 {
                     Bundle bundle = new Bundle();

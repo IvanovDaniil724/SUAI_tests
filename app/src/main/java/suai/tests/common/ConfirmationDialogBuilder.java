@@ -3,15 +3,13 @@ package suai.tests.common;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
-
+import androidx.navigation.Navigation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import suai.tests.R;
 import suai.tests.activities.fragments.AccountFragment;
 import suai.tests.activities.fragments.ChatFragment;
-import suai.tests.activities.fragments.MessengerFragment;
-import suai.tests.common.adapters.ChatsAdapter;
 import suai.tests.common.api.RetrofitConnection;
 import suai.tests.common.api.messagesAPI;
 import suai.tests.common.api.messengerAPI;
@@ -50,6 +48,7 @@ public class ConfirmationDialogBuilder {
                         public void onFailure(Call<String> call, Throwable t) {
                         }
                     });
+                    Navigation.findNavController(ChatFragment.root).navigate(R.id.action_chatFragment_to_navigation_messenger);
                     deletedChat = 1;
                 }
                 else
